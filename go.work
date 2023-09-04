@@ -1,0 +1,31 @@
+go 1.19
+
+use (
+	./utils
+	./conf
+	./log
+	./tls
+	./ginx
+	./gormx
+	./sqlx
+	./websocket
+	./etcd
+	./cache
+	./metrics
+    ./validator
+    ./jwtx
+    ./cryptx
+    ./pagination
+    ./respx
+    ./concurrency
+    ./casbinx
+    ./trace
+    ./redisx
+    ./retelimit
+    ./zlog
+    ./stringx
+    ./slogx
+    ./encoding
+    ./config
+	.
+)
