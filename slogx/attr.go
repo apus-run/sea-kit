@@ -1,10 +1,10 @@
-package sloghelper
+package slogx
 
 import "log/slog"
 
 var ErrorKey = "error"
 
-func Error(err error) slog.Attr {
+func ErrorString(err error) slog.Attr {
 	return slog.String(ErrorKey, err.Error())
 }
 

@@ -27,5 +27,6 @@ use (
     ./slogx
     ./encoding
     ./config
+    ./mediator
 	.
 )

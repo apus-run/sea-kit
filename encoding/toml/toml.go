@@ -1,8 +1,9 @@
 package toml
 
 import (
-	"github.com/go-jimu/components/encoding"
 	"github.com/pelletier/go-toml/v2"
+
+	"github.com/apus-run/sea-kit/encoding"
 )
 
 type tomlCodec struct{}

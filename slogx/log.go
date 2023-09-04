@@ -1,9 +1,11 @@
 package slogx
 
 import (
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/natefinch/lumberjack"
@@ -12,19 +14,17 @@ import (
 const LOGGER_KEY = "slogLogger"
 
 var factory = &LoggerFactory{
-	loggers: make(map[string]*SlogLogger),
+	loggers: make(map[string]*slog.Logger),
 }
 
 type LoggerFactory struct {
 	mu      sync.Mutex
-	loggers map[string]*SlogLogger
+	loggers map[string]*slog.Logger
 }
 
-type SlogLogger struct {
-	logger *slog.Logger
-}
+var defaultHandler *Handler
 
-func NewLogger(opts ...Option) *SlogLogger {
+func NewLogger(opts ...Option) *slog.Logger {
 	options := Apply(opts...)
 
 	factory.mu.Lock()
@@ -41,15 +41,32 @@ func NewLogger(opts ...Option) *SlogLogger {
 	level := getLogLevel(options.logLevel)
 
 	var handler slog.Handler
-	if len(options.logFilename) == 0 && options.encoding == "console" {
-		handler = textHandler(os.Stdout, level)
+	handlerOptions := &slog.HandlerOptions{
+		Level:     level,
+		AddSource: true,
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == slog.SourceKey {
+				if src, ok := a.Value.Any().(*slog.Source); ok {
+					a.Value = slog.StringValue(fmt.Sprintf("%s:%d", src.File, src.Line))
+				}
+			}
+			return a
+		},
+	}
+	if len(options.logFilename) == 0 && strings.ToLower(options.encoding) == "console" {
+		handler = slog.NewTextHandler(os.Stdout, handlerOptions)
 	} else {
-		handler = jsonHandler(writerSyncer, level)
+		handler = slog.NewJSONHandler(writerSyncer, handlerOptions)
 	}
 
-	l := slog.New(handler)
-	logger := &SlogLogger{l}
+	defaultHandler = NewHandler(handler).(*Handler)
+	logger := slog.New(defaultHandler)
+	// 此处设置默认日志, 最好手动设置
+	// slog.SetDefault(l)
+
 	factory.loggers[options.logFilename] = logger
+
+	logger.Info("the log module has been initialized successfully.", slog.Any("options", options))
 
 	return logger
 }
@@ -64,20 +81,6 @@ func getLogWriter(opts *Options) io.WriteCloser {
 	}
 }
 
-func jsonHandler(w io.Writer, level slog.Level) slog.Handler {
-	return slog.NewJSONHandler(w, &slog.HandlerOptions{
-		Level:     level,
-		AddSource: true,
-	})
-}
-
-func textHandler(w io.Writer, level slog.Level) slog.Handler {
-	return slog.NewTextHandler(w, &slog.HandlerOptions{
-		Level:     level,
-		AddSource: true,
-	})
-}
-
 func getLogLevel(logLevel string) slog.Level {
 	level := new(slog.Level)
 	err := level.UnmarshalText([]byte(logLevel))
@@ -88,18 +91,6 @@ func getLogLevel(logLevel string) slog.Level {
 	return *level
 }
 
-func (l *SlogLogger) Debug(msg string, args ...any) {
-	l.logger.Debug(msg, args...)
-}
-
-func (l *SlogLogger) Info(msg string, args ...any) {
-	l.logger.Info(msg, args...)
-}
-
-func (l *SlogLogger) Warn(msg string, args ...any) {
-	l.logger.Warn(msg, args...)
-}
-
-func (l *SlogLogger) Error(msg string, args ...any) {
-	l.logger.Error(msg, args...)
+func ApplyHandlerOption(opt HandlerOption) {
+	defaultHandler.Apply(opt)
 }

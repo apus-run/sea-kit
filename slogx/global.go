@@ -1,6 +1,7 @@
 package slogx
 
 import (
+	"log/slog"
 	"sync"
 )
 
@@ -11,7 +12,7 @@ var global = &loggerAppliance{}
 // make logger change will affect all sub-logger.
 type loggerAppliance struct {
 	lock sync.Mutex
-	SlogLogger
+	slog.Logger
 }
 
 func init() {
@@ -20,21 +21,21 @@ func init() {
 	global.SetLogger(*logger)
 }
 
-func (a *loggerAppliance) SetLogger(in SlogLogger) {
+func (a *loggerAppliance) SetLogger(in slog.Logger) {
 	a.lock.Lock()
 	defer a.lock.Unlock()
-	a.SlogLogger = in
+	a.Logger = in
 }
 
 // SetLogger should be called before any other log call.
 // And it is NOT THREAD SAFE.
-func SetLogger(logger SlogLogger) {
+func SetLogger(logger slog.Logger) {
 	global.SetLogger(logger)
 }
 
 // GetLogger returns global logger appliance as logger in current process.
-func GetLogger() SlogLogger {
-	return global.SlogLogger
+func GetLogger() slog.Logger {
+	return global.Logger
 }
 
 func Info(msg string, args ...any) {

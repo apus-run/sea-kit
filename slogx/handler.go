@@ -1,9 +1,14 @@
-package sloghelper
+package slogx
 
 import (
 	"context"
 	"log/slog"
 	"runtime/debug"
+)
+
+var (
+	_        slog.Handler = (*Handler)(nil)
+	keyStack              = "stack"
 )
 
 type (
@@ -17,11 +22,6 @@ type (
 	HandlerOption func(*Handler)
 
 	HandleFunc func(context.Context, *slog.Record)
-)
-
-var (
-	_        slog.Handler = (*Handler)(nil)
-	keyStack              = "stack"
 )
 
 func NewHandler(hdl slog.Handler, opts ...HandlerOption) slog.Handler {

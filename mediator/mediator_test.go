@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-jimu/components/mediator"
+	"github.com/apus-run/sea-kit/mediator"
 )
 
 type testEvent struct {
