@@ -16,8 +16,8 @@
 //	      memcached.New("localhost:11211"),
 //	  )
 //
-//	  cache.Save("foo", "bar")
+//	  cache.Set("foo", "bar")
 //
-//	  fmt.Println(cache.Fetch("foo"))
+//	  fmt.Println(cache.Get("foo"))
 //	}
 package cache
