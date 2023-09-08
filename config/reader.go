@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 
