@@ -3,7 +3,11 @@ module github.com/apus-run/sea-kit/gormx
 go 1.19
 
 require (
+	github.com/apus-run/sea-kit/log v0.0.0-20230908142142-a6b719f02c24
+	github.com/apus-run/sea-kit/pagination v0.0.0-20230908142142-a6b719f02c24
+	github.com/go-sql-driver/mysql v1.7.0
 	github.com/pkg/errors v0.9.1
+	github.com/stretchr/testify v1.8.2
 	golang.org/x/sync v0.2.0
 	gorm.io/driver/clickhouse v0.5.1
 	gorm.io/driver/mysql v1.5.1
@@ -17,9 +21,9 @@ require (
 	github.com/ClickHouse/ch-go v0.53.0 // indirect
 	github.com/ClickHouse/clickhouse-go/v2 v2.8.3 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-faster/city v1.0.1 // indirect
 	github.com/go-faster/errors v0.6.1 // indirect
-	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -34,6 +38,7 @@ require (
 	github.com/microsoft/go-mssqldb v1.1.0 // indirect
 	github.com/paulmach/orb v0.9.0 // indirect
 	github.com/pierrec/lz4/v4 v4.1.17 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect

@@ -1,4 +1,4 @@
-module github.com/apus-run/sea-kit/retelimit
+module github.com/apus-run/sea-kit/retelimit_bbr
 
 go 1.19
 

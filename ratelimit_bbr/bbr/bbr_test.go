@@ -9,8 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/exp/rand"
 
-	"github.com/apus-run/sea-kit/retelimit"
-	"github.com/apus-run/sea-kit/retelimit/bbr/window"
+	ratelimit "github.com/apus-run/sea-kit/ratelimit_bbr"
+	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr/window"
 )
 
 var (

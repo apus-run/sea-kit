@@ -1,6 +1,7 @@
 package slogx
 
 import (
+	"context"
 	"log/slog"
 	"sync"
 )
@@ -42,14 +43,34 @@ func Info(msg string, args ...any) {
 	global.Info(msg, args...)
 }
 
+func InfoContext(ctx context.Context, msg string, args ...any) {
+	global.InfoContext(ctx, msg, args...)
+}
+
 func Error(msg string, args ...any) {
 	global.Error(msg, args...)
+}
+
+func ErrorContext(ctx context.Context, msg string, args ...any) {
+	global.ErrorContext(ctx, msg, args...)
 }
 
 func Debug(msg string, args ...any) {
 	global.Debug(msg, args...)
 }
 
+func DebugContext(ctx context.Context, msg string, args ...any) {
+	global.DebugContext(ctx, msg, args...)
+}
+
 func Warn(msg string, args ...any) {
 	global.Warn(msg, args...)
+}
+
+func WarnContext(ctx context.Context, msg string, args ...any) {
+	global.WarnContext(ctx, msg, args...)
+}
+
+func WithGroup(name string) *slog.Logger {
+	return global.WithGroup(name)
 }

@@ -1,4 +1,4 @@
-package ratelimit
+package ratelimit_bbr
 
 import (
 	"errors"

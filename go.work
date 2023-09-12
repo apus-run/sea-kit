@@ -21,7 +21,8 @@ use (
     ./casbinx
     ./trace
     ./redisx
-    ./retelimit
+    ./ratelimit_bbr
+    ./ratelimit_redis
     ./zlog
     ./stringx
     ./slogx

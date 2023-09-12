@@ -3,8 +3,8 @@ package bbr
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/apus-run/sea-kit/retelimit"
-	"github.com/apus-run/sea-kit/retelimit/bbr"
+	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr"
+	ratelimit "github.com/apus-run/sea-kit/retelimit_bbr"
 )
 
 type Builder struct {

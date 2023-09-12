@@ -1,3 +1,5 @@
+// https://tonybai.com/2023/09/01/slog-a-new-choice-for-logging-in-go/
+
 package slogx
 
 import (
