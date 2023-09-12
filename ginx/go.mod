@@ -4,11 +4,9 @@ go 1.19
 
 require (
 	github.com/apus-run/sea-kit/jwtx v0.0.0-20230908142142-a6b719f02c24
-	github.com/apus-run/sea-kit/retelimit v0.0.0-20230908142142-a6b719f02c24
 	github.com/gin-gonic/gin v1.9.1
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/pkg/errors v0.9.1
-	github.com/redis/go-redis/v9 v9.1.0
 	github.com/spf13/cast v1.5.1
 	github.com/stretchr/testify v1.8.4
 )
