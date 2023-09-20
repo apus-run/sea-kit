@@ -6,10 +6,9 @@ import (
 	"sync/atomic"
 	"time"
 
+	ratelimit "github.com/apus-run/sea-kit/ratelimit_bbr"
 	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr/cpu"
 	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr/window"
-
-	ratelimit "github.com/apus-run/sea-kit/ratelimit_bbr"
 )
 
 var (
@@ -21,9 +20,6 @@ var (
 
 type (
 	cpuGetter func() int64
-
-	// Option function for bbr limiter
-	Option func(*options)
 )
 
 func init() {
@@ -75,46 +71,6 @@ type counterCache struct {
 	time time.Time
 }
 
-// options of bbr limiter.
-type options struct {
-	// WindowSize defines time duration per window
-	Window time.Duration
-	// BucketNum defines bucket number for each window
-	Bucket int
-	// CPUThreshold
-	CPUThreshold int64
-	// CPUQuota
-	CPUQuota float64
-}
-
-// WithWindow with window size.
-func WithWindow(d time.Duration) Option {
-	return func(o *options) {
-		o.Window = d
-	}
-}
-
-// WithBucket with bucket ize.
-func WithBucket(b int) Option {
-	return func(o *options) {
-		o.Bucket = b
-	}
-}
-
-// WithCPUThreshold with cpu threshold;
-func WithCPUThreshold(threshold int64) Option {
-	return func(o *options) {
-		o.CPUThreshold = threshold
-	}
-}
-
-// WithCPUQuota with real cpu quota(if it can not collect from process correct);
-func WithCPUQuota(quota float64) Option {
-	return func(o *options) {
-		o.CPUQuota = quota
-	}
-}
-
 // BBR implements bbr-like limiter.
 // It is inspired by sentinel.
 // https://github.com/alibaba/Sentinel/wiki/%E7%B3%BB%E7%BB%9F%E8%87%AA%E9%80%82%E5%BA%94%E9%99%90%E6%B5%81
@@ -136,15 +92,7 @@ type BBR struct {
 
 // NewLimiter returns a bbr limiter
 func NewLimiter(opts ...Option) *BBR {
-	opt := options{
-		Window:       time.Second * 10,
-		Bucket:       100,
-		CPUThreshold: 800,
-	}
-	for _, o := range opts {
-		o(&opt)
-	}
-
+	opt := Apply(opts...)
 	bucketDuration := opt.Window / time.Duration(opt.Bucket)
 	passStat := window.NewRollingCounter(window.RollingCounterOpts{Size: opt.Bucket, BucketDuration: bucketDuration})
 	rtStat := window.NewRollingCounter(window.RollingCounterOpts{Size: opt.Bucket, BucketDuration: bucketDuration})
