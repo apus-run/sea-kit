@@ -1,31 +1,100 @@
 package pagination
 
-const PageLimit = 20
+import "errors"
 
-type ListReq struct {
-	PageNumber int    `json:"pageNumber,optional,default=1" form:"pageNumber,optional,default=1"`
-	PageSize   int    `json:"pageSize,optional,default=10" form:"pageSize,optional,default=10"`
-	Keyword    string `json:"keyword,optional" form:"keyword,optional"`
+var _ Pager = (*Pagination)(nil)
+
+// New .
+func New(options ...Option) *Pagination {
+	opts := Apply(options...)
+
+	remain := opts.total % opts.pageSize
+	totalPages := opts.total / opts.pageSize
+	if remain > 0 {
+		totalPages++
+	}
+
+	hasNext := opts.total-opts.pageNumber-opts.pageSize > 0
+
+	return &Pagination{
+		pageNumber: opts.pageNumber,
+		pageSize:   opts.pageSize,
+		total:      opts.total,
+		data:       opts.data,
+		totalPages: totalPages,
+		hasNext:    hasNext,
+		keyword:    opts.keyword,
+	}
 }
 
-func (page *ListReq) Limit() int {
-	if page.PageSize < 1 {
-		return PageLimit
+func (p *Pagination) Limit() int {
+	if p.pageSize < 1 {
+		return 10
 	}
-	return page.PageSize
+	return p.pageSize
 }
-func (page *ListReq) Offset() int {
-	if page.PageNumber == 0 {
-		page.PageNumber = 1
+func (p *Pagination) Offset() int {
+	if p.pageNumber == 0 {
+		p.pageNumber = 1
 	}
-	if page.PageSize < 1 {
-		page.PageSize = PageLimit
+	if p.pageSize < 1 {
+		p.pageSize = 10
 	}
-	offset := (page.PageNumber - 1) * page.PageSize
+	offset := (p.pageNumber - 1) * p.pageSize
 	return offset
 }
 
 type OrderBy struct {
-	OrderKey string `json:"orderKey"`
+	OrderKey string `json:"order_key"`
 	Sort     string `json:"sort"`
+}
+
+func (p *Pagination) PageNumber() int {
+	return p.pageNumber
+}
+
+func (p *Pagination) PageSize() int {
+	return p.pageSize
+}
+
+func (p *Pagination) TotalPages() int {
+	return p.totalPages
+}
+
+func (p *Pagination) Total() int {
+	return p.total
+}
+
+func (p *Pagination) Data() []interface{} {
+	return p.data
+}
+
+func (p *Pagination) DataSize() int {
+	return len(p.data)
+}
+
+func (p *Pagination) HasNext() bool {
+	return p.hasNext
+}
+
+func (p *Pagination) HasData() bool {
+	return p.DataSize() > 0
+}
+
+func (p *Pagination) Valid() error {
+	if p.pageNumber == 0 {
+		p.pageNumber = 1
+	}
+	if p.pageSize == 0 {
+		p.pageSize = 10
+	}
+
+	if p.pageNumber < 0 {
+		return errors.New("current MUST be larger than 0")
+	}
+
+	if p.pageSize < 0 {
+		return errors.New("invalid pageSize")
+	}
+	return nil
 }
