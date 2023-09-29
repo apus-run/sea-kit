@@ -7,7 +7,7 @@ import (
 func TestGlobalLog(t *testing.T) {
 	la := &loggerAppliance{}
 	logger := NewLogger()
-	la.SetLogger(*logger)
+	la.SetLogger(logger)
 
 	Info("test info")
 	Error("test error")

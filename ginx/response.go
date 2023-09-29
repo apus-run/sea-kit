@@ -9,44 +9,44 @@ import (
 	"net/url"
 )
 
-// IResponse代表返回方法
-type IResponse interface {
+// Response 代表返回方法
+type Response interface {
 	// Json输出
-	IJson(obj interface{}) IResponse
+	Json(obj interface{}) Response
 
 	// Jsonp输出
-	IJsonp(obj interface{}) IResponse
+	Jsonp(obj interface{}) Response
 
 	//xml输出
-	IXml(obj interface{}) IResponse
+	Xml(obj interface{}) Response
 
 	// html输出
-	IHtml(template string, obj interface{}) IResponse
+	Html(template string, obj interface{}) Response
 
 	// string
-	IText(format string, values ...interface{}) IResponse
+	Text(format string, values ...interface{}) Response
 
 	// 重定向
-	IRedirect(path string) IResponse
+	Redirect(path string) Response
 
 	// header
-	ISetHeader(key string, val string) IResponse
+	SetHeader(key string, val string) Response
 
 	// Cookie
-	ISetCookie(key string, val string, maxAge int, path, domain string, secure, httpOnly bool) IResponse
+	SetCookie(key string, val string, maxAge int, path, domain string, secure, httpOnly bool) Response
 
 	// 设置状态码
-	ISetStatus(code int) IResponse
+	SetStatus(code int) Response
 
 	// 设置200状态
-	ISetOkStatus() IResponse
+	SetOkStatus() Response
 }
 
 // Jsonp输出
-func (ctx *Context) IJsonp(obj interface{}) IResponse {
+func (ctx *Context) Jsonp(obj interface{}) Response {
 	// 获取请求参数callback
 	callbackFunc := ctx.Query("callback")
-	ctx.ISetHeader("Content-Type", "application/javascript")
+	ctx.SetHeader("Content-Type", "application/javascript")
 	// 输出到前端页面的时候需要注意下进行字符过滤，否则有可能造成xss攻击
 	callback := template.JSEscapeString(callbackFunc)
 
@@ -78,18 +78,18 @@ func (ctx *Context) IJsonp(obj interface{}) IResponse {
 }
 
 // xml输出
-func (ctx *Context) IXml(obj interface{}) IResponse {
+func (ctx *Context) Xml(obj interface{}) Response {
 	byt, err := xml.Marshal(obj)
 	if err != nil {
-		return ctx.ISetStatus(http.StatusInternalServerError)
+		return ctx.SetStatus(http.StatusInternalServerError)
 	}
-	ctx.ISetHeader("Content-Type", "application/html")
+	ctx.SetHeader("Content-Type", "application/html")
 	ctx.Writer.Write(byt)
 	return ctx
 }
 
 // html输出
-func (ctx *Context) IHtml(file string, obj interface{}) IResponse {
+func (ctx *Context) Html(file string, obj interface{}) Response {
 	// 读取模版文件，创建template实例
 	t, err := template.New("output").ParseFiles(file)
 	if err != nil {
@@ -100,32 +100,40 @@ func (ctx *Context) IHtml(file string, obj interface{}) IResponse {
 		return ctx
 	}
 
-	ctx.ISetHeader("Content-Type", "application/html")
+	ctx.SetHeader("Content-Type", "application/html")
 	return ctx
 }
 
 // string
-func (ctx *Context) IText(format string, values ...interface{}) IResponse {
+func (ctx *Context) Text(format string, values ...interface{}) Response {
 	out := fmt.Sprintf(format, values...)
-	ctx.ISetHeader("Content-Type", "application/json; charset=UTF-8")
+	ctx.SetHeader("Content-Type", "application/json; charset=UTF-8")
 	ctx.Writer.Write([]byte(out))
 	return ctx
 }
 
 // 重定向
-func (ctx *Context) IRedirect(path string) IResponse {
+func (ctx *Context) Redirect(path string) Response {
 	http.Redirect(ctx.Writer, ctx.Request, path, http.StatusMovedPermanently)
 	return ctx
 }
 
 // header
-func (ctx *Context) ISetHeader(key string, val string) IResponse {
+func (ctx *Context) SetHeader(key string, val string) Response {
 	ctx.Writer.Header().Add(key, val)
 	return ctx
 }
 
 // Cookie
-func (ctx *Context) ISetCookie(key string, val string, maxAge int, path string, domain string, secure bool, httpOnly bool) IResponse {
+func (ctx *Context) SetCookie(
+	key string,
+	val string,
+	maxAge int,
+	path string,
+	domain string,
+	secure bool,
+	httpOnly bool,
+) Response {
 	if path == "" {
 		path = "/"
 	}
@@ -143,23 +151,23 @@ func (ctx *Context) ISetCookie(key string, val string, maxAge int, path string, 
 }
 
 // 设置状态码
-func (ctx *Context) ISetStatus(code int) IResponse {
+func (ctx *Context) SetStatus(code int) Response {
 	ctx.Writer.WriteHeader(code)
 	return ctx
 }
 
 // 设置200状态
-func (ctx *Context) ISetOkStatus() IResponse {
+func (ctx *Context) SetOkStatus() Response {
 	ctx.Writer.WriteHeader(http.StatusOK)
 	return ctx
 }
 
-func (ctx *Context) IJson(obj interface{}) IResponse {
+func (ctx *Context) Json(obj interface{}) Response {
 	byt, err := json.Marshal(obj)
 	if err != nil {
-		return ctx.ISetStatus(http.StatusInternalServerError)
+		return ctx.SetStatus(http.StatusInternalServerError)
 	}
-	ctx.ISetHeader("Content-Type", "application/json")
+	ctx.SetHeader("Content-Type", "application/json")
 	ctx.Writer.Write(byt)
 	return ctx
 }

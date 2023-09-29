@@ -3,9 +3,19 @@ package ginx
 import (
 	"context"
 	"net/http"
+	"net/http/httputil"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
+
+const requestIdFieldKey = "REQUEST_ID"
+
+// AcceptLanguageHeaderName represents the header name of accept language
+const AcceptLanguageHeaderName = "Accept-Language"
+
+// ClientTimezoneOffsetHeaderName represents the header name of client timezone offset
+const ClientTimezoneOffsetHeaderName = "X-Timezone-Offset"
 
 // Context a wrapper of gin.Context
 type Context struct {
@@ -13,15 +23,37 @@ type Context struct {
 }
 
 // HandlerFunc defines the handler to wrap gin.Context
-type HandlerFunc func(c *Context)
+type HandlerFunc func(*Context)
+
+// ProxyHandlerFunc represents the reverse proxy handler function
+type ProxyHandlerFunc func(*Context) (*httputil.ReverseProxy, error)
+
+// WrapContext returns a context wrapped by this file
+func WrapContext(c *gin.Context) *Context {
+	return &Context{
+		Context: c,
+	}
+}
 
 // Handle convert HandlerFunc to gin.HandlerFunc
 func Handle(h HandlerFunc) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		ctx := &Context{
-			c,
+	return func(ginCtx *gin.Context) {
+		c := WrapContext(ginCtx)
+		h(c)
+	}
+}
+
+func ProxyHandle(fn ProxyHandlerFunc) gin.HandlerFunc {
+	return func(ginCtx *gin.Context) {
+		c := WrapContext(ginCtx)
+		proxy, err := fn(c)
+
+		if err != nil {
+			c.Data(http.StatusOK, "text/text", []byte(err.Error()))
+			c.Abort()
+		} else {
+			proxy.ServeHTTP(c.Writer, c.Request)
 		}
-		h(ctx)
 	}
 }
 
@@ -38,24 +70,24 @@ func FromGinContext(ctx context.Context) (c *gin.Context, ok bool) {
 	return
 }
 
-// Response defines HTTP JSON response
-type Response struct {
-	Code    int         `json:"code"`
-	Msg     string      `json:"msg"`
-	Data    interface{} `json:"data"`
-	Details []string    `json:"details,omitempty"`
+// Result defines HTTP JSON response
+type Result struct {
+	Code    int      `json:"code"`
+	Msg     string   `json:"msg"`
+	Data    any      `json:"data"`
+	Details []string `json:"details,omitempty"`
 }
 
 // JSON returns JSON response
 // e.x. {"code":<code>, "msg":<msg>, "data":<data>, "details":<details>}
-func (c *Context) JSON(httpStatus int, resp Response) {
-	c.Context.JSON(httpStatus, resp)
+func (ctx *Context) JSON(httpStatus int, resp Result) {
+	ctx.Context.JSON(httpStatus, resp)
 }
 
 // JSONOK returns JSON response with successful business code and data
 // e.x. {"code": 200, "msg":"成功", "data":<data>}
-func (c *Context) JSONOK(msg string, data any) {
-	j := new(Response)
+func (ctx *Context) JSONOK(msg string, data any) {
+	j := new(Result)
 	j.Code = 200
 	j.Msg = msg
 
@@ -68,13 +100,13 @@ func (c *Context) JSONOK(msg string, data any) {
 		j.Data = data
 	}
 
-	c.Context.JSON(http.StatusOK, j)
+	ctx.Context.JSON(http.StatusOK, j)
 }
 
 // JSONE returns JSON response with failure business code ,msg and data
 // e.x. {"code":<code>, "msg":<msg>, "data":<data>}
-func (c *Context) JSONE(code int, msg string, data any) {
-	j := new(Response)
+func (ctx *Context) JSONE(code int, msg string, data any) {
+	j := new(Result)
 	j.Code = code
 	j.Msg = msg
 
@@ -87,10 +119,55 @@ func (c *Context) JSONE(code int, msg string, data any) {
 		j.Data = data
 	}
 
-	c.Context.JSON(http.StatusOK, j)
+	ctx.Context.JSON(http.StatusOK, j)
+}
+
+// Bind wraps gin context.Bind() with custom validator
+func (ctx *Context) Bind(obj interface{}) (err error) {
+	return validate(ctx.Context.Bind(obj))
+}
+
+// ShouldBind wraps gin context.ShouldBind() with custom validator
+func (ctx *Context) ShouldBind(obj interface{}) (err error) {
+	return validate(ctx.Context.ShouldBind(obj))
 }
 
 // NotFound 未找到相关路由
-func (c *Context) NotFound() {
-	c.String(http.StatusNotFound, "the route not found")
+func (ctx *Context) NotFound() {
+	ctx.String(http.StatusNotFound, "the route not found")
+}
+
+// GetClientLocale returns the client locale name
+func (ctx *Context) GetClientLocale() string {
+	value := ctx.GetHeader(AcceptLanguageHeaderName)
+
+	return value
+}
+
+// GetClientTimezoneOffset returns the client timezone offset
+func (ctx *Context) GetClientTimezoneOffset() (int16, error) {
+	value := ctx.GetHeader(ClientTimezoneOffsetHeaderName)
+	offset, err := strconv.Atoi(value)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int16(offset), nil
+}
+
+// SetRequestId sets the given request id to context
+func (ctx *Context) SetRequestId(requestId string) {
+	ctx.Set(requestIdFieldKey, requestId)
+}
+
+// GetRequestId returns the current request id
+func (ctx *Context) GetRequestId() string {
+	requestId, exists := ctx.Get(requestIdFieldKey)
+
+	if !exists {
+		return ""
+	}
+
+	return requestId.(string)
 }

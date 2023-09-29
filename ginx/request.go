@@ -9,7 +9,7 @@ import (
 // const defaultMultipartMemory = 32 << 20 // 32 MB
 
 // 代表请求包含的方法
-type IRequest interface {
+type Request interface {
 	// 请求地址url中带的参数
 	// 形如: foo.com?a=1&b=bar&c[]=bar
 	DefaultQueryInt(key string, def int) (int, bool)

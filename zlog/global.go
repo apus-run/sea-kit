@@ -19,7 +19,7 @@ type loggerAppliance struct {
 func init() {
 	logger := NewLogger()
 
-	global.SetLogger(*logger)
+	global.SetLogger(logger)
 }
 
 func (a *loggerAppliance) SetLogger(in Logger) {
