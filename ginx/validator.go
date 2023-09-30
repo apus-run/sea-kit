@@ -2,7 +2,6 @@ package ginx
 
 import (
 	"errors"
-	"github.com/apus-run/sea-kit/ginx/validators"
 	"log"
 	"reflect"
 	"strings"
@@ -13,6 +12,8 @@ import (
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	tzh "github.com/go-playground/validator/v10/translations/zh"
+
+	"github.com/apus-run/sea-kit/ginx/validators"
 )
 
 func init() {

@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/apus-run/sea-kit/jwtx v0.0.0-20230908142142-a6b719f02c24
 	github.com/apus-run/sea-kit/ratelimit_bbr v0.0.0-20230920075144-d10228b97f01
-	github.com/apus-run/sea-kit/ratelimit_redis v0.0.0-20230920075144-d10228b97f01
+	github.com/apus-run/sea-kit/ratelimit_redis v0.0.0-20230929051753-6f988327bc8a
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-playground/locales v0.14.1
 	github.com/go-playground/universal-translator v0.18.1
@@ -14,6 +14,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cast v1.5.1
 	github.com/stretchr/testify v1.8.4
+	go.uber.org/mock v0.3.0
 )
 
 require (

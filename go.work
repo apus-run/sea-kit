@@ -29,5 +29,7 @@ use (
     ./encoding
     ./config
     ./mediator
+    ./lru_cache
+    ./httpclient
 	.
 )

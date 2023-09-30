@@ -9,6 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	// CodeOK means a successful response
+	CodeOK = 0
+	// CodeErr means a failure response
+	CodeErr = 1
+)
+
 const requestIdFieldKey = "REQUEST_ID"
 
 // AcceptLanguageHeaderName represents the header name of accept language
@@ -88,7 +95,7 @@ func (ctx *Context) JSON(httpStatus int, resp Result) {
 // e.x. {"code": 200, "msg":"成功", "data":<data>}
 func (ctx *Context) JSONOK(msg string, data any) {
 	j := new(Result)
-	j.Code = 200
+	j.Code = CodeOK
 	j.Msg = msg
 
 	switch d := data.(type) {
