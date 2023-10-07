@@ -31,5 +31,7 @@ use (
     ./mediator
     ./lru_cache
     ./httpclient
+    ./bash
+    ./prof
 	.
 )

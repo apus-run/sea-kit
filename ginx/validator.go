@@ -20,8 +20,6 @@ func init() {
 	binding.Validator = &defaultValidator{}
 }
 
-var trans ut.Translator
-
 type defaultValidator struct {
 	once     sync.Once
 	validate *validator.Validate
@@ -29,7 +27,7 @@ type defaultValidator struct {
 
 var _ binding.StructValidator = &defaultValidator{}
 
-func (v *defaultValidator) ValidateStruct(obj interface{}) error {
+func (v *defaultValidator) ValidateStruct(obj any) error {
 	value := reflect.ValueOf(obj)
 	valueType := value.Kind()
 	if valueType == reflect.Ptr {
@@ -54,20 +52,27 @@ func newValidator() *validator.Validate {
 	zhTranslator := zh.New()
 	uni := ut.New(zhTranslator, zhTranslator)
 	trans, _ = uni.GetTranslator("zh")
-	validate := validator.New()
-	validate.RegisterValidation("notBlank", validators.NotBlank)
-	validate.RegisterValidation("email", validators.ValidEmail)
-	validate.RegisterTagNameFunc(func(field reflect.StructField) string {
+	v := validator.New()
+	v.RegisterValidation("notBlank", validators.NotBlank)
+	v.RegisterValidation("email", validators.ValidEmail)
+	v.RegisterTagNameFunc(func(field reflect.StructField) string {
 		label := field.Tag.Get("label")
 		if label == "" {
 			return field.Name
 		}
 		return label
 	})
-	if err := tzh.RegisterDefaultTranslations(validate, trans); err != nil {
+	v.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("yaml"), ",", 2)[0]
+		if name == "-" {
+			return ""
+		}
+		return name
+	})
+	if err := tzh.RegisterDefaultTranslations(v, trans); err != nil {
 		log.Fatal("Gin fail to registered Translation")
 	}
-	return validate
+	return v
 }
 
 func (v *defaultValidator) lazyInit() {
@@ -76,6 +81,8 @@ func (v *defaultValidator) lazyInit() {
 		v.validate.SetTagName("binding")
 	})
 }
+
+var trans ut.Translator
 
 func validate(errs error) error {
 	if validationErrors, ok := errs.(validator.ValidationErrors); ok {

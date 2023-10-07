@@ -110,8 +110,24 @@ func (ctx *Context) JSONOK(msg string, data any) {
 	ctx.Context.JSON(http.StatusOK, j)
 }
 
+// Success c.Success()
+func (ctx *Context) Success(data ...any) {
+	j := new(Result)
+	j.Code = CodeOK
+	j.Msg = "ok"
+
+	if len(data) > 0 {
+		j.Data = data[0]
+	} else {
+		j.Data = ""
+	}
+
+	ctx.Context.JSON(http.StatusOK, j)
+}
+
 // JSONE returns JSON response with failure business code ,msg and data
 // e.x. {"code":<code>, "msg":<msg>, "data":<data>}
+// c.JSONE(5, "系统错误", err)
 func (ctx *Context) JSONE(code int, msg string, data any) {
 	j := new(Result)
 	j.Code = code

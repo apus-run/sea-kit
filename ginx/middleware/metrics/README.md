@@ -1,36 +1,43 @@
-### tracing
+## metrics
+
+gin metrics library, collect five metrics, `uptime`, `http_request_count_total`, `http_request_duration_seconds`, `http_request_size_bytes`, `http_response_size_bytes`.
+
+<br>
+
+### Usage
 
 ```go
-func InitTrace(serviceName string) {
-	exporter, err := tracer.NewJaegerAgentExporter("192.168.3.37", "6831")
-	if err != nil {
-		panic(err)
-	}
+	import "github.com/apus-run/sea-kit/ginx/middleware/metrics"
 
-	resource := tracer.NewResource(
-		tracer.WithServiceName(serviceName),
-		tracer.WithEnvironment("dev"),
-		tracer.WithServiceVersion("demo"),
-	)
+	r := gin.Default()
 
-	tracer.Init(exporter, resource) // collect all by default
-}
-
-func NewRouter(
-    r := gin.Default()
-    r.Use(middleware.Tracing("your-service-name"))
-
-    // ......
-)
-
-// if necessary, you can create a span in the program
-func SpanDemo(serviceName string, spanName string, ctx context.Context) {
-	_, span := otel.Tracer(serviceName).Start(
-		ctx, spanName,
-		trace.WithAttributes(attribute.String(spanName, time.Now().String())),
-	)
-	defer span.End()
-
-	// ......
-}
+	r.Use(metrics.Metrics(r,
+		//metrics.WithMetricsPath("/demo/metrics"), // default is /metrics
+		metrics.WithIgnoreStatusCodes(http.StatusNotFound), // ignore status codes
+		//metrics.WithIgnoreRequestMethods(http.MethodHead),  // ignore request methods
+		//metrics.WithIgnoreRequestPaths("/ping", "/health"), // ignore request paths
+	))
 ```
+
+
+<br>
+
+### Metrics
+
+Details about exposed Prometheus metrics.
+
+| Name | Type | Exposed Information |
+| ---- | ---- | ---------------------|
+| gin_uptime						| Counter	| HTTP service uptime. |
+| gin_http_request_count_total		| Counter	| Total number of HTTP requests made. |
+| gin_http_request_duration_seconds | Histogram | HTTP request latencies in seconds. |
+| gin_http_request_size_bytes 		| Summary	| HTTP request sizes in bytes. |
+| gin_http_response_size_bytes 		| Summary	| HTTP response sizes in bytes. |
+
+<br>
+
+### Grafana charts
+
+import [gin_grafana.json](gin_grafana.json) to your grafana, datasource name is `Prometheus`, change the name of the datasource according to your actual datasource.
+
+![metrics](gin_grafana.jpg)

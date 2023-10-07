@@ -1,43 +1,96 @@
-package middleware
+package tracing
 
 import (
 	"context"
+	"log/slog"
+	"net/http"
+	"net/http/httptest"
+	"os"
 	"testing"
 	"time"
 
-	"github.com/zhufuyi/sponge/pkg/gin/response"
-	"github.com/zhufuyi/sponge/pkg/gohttp"
-	"github.com/zhufuyi/sponge/pkg/utils"
-
+	"github.com/gavv/httpexpect/v2"
 	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"go.opentelemetry.io/otel/propagation"
 	oteltrace "go.opentelemetry.io/otel/trace"
 )
 
+func GinHandler(r *gin.Engine) *gin.Engine {
+	helloFun := func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 0,
+			"msg":  "hello world",
+		})
+	}
+
+	pingFun := func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 0,
+			"msg":  "ping",
+		})
+	}
+
+	fooFun := func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"code": 0,
+			"msg":  "foo",
+		})
+	}
+
+	r.GET("/foo", fooFun)
+	r.GET("/hello", helloFun)
+	r.GET("/ping", pingFun)
+	r.DELETE("/hello", helloFun)
+	r.POST("/hello", helloFun)
+	r.PUT("/hello", helloFun)
+	r.PATCH("/hello", helloFun)
+
+	return r
+}
+
 func TestTracing(t *testing.T) {
-	serverAddr, requestAddr := utils.GetLocalHTTPAddrPairs()
+	// Create a slog logger, which:
+	//   - Logs to stdout.
+	w := os.Stdout
+	logger := slog.New(
+		slog.NewJSONHandler(
+			w,
+			&slog.HandlerOptions{
+				Level:     slog.LevelDebug,
+				AddSource: true,
+			},
+		),
+	)
+	logger.WithGroup("http").
+		With("environment", "production").
+		With("server", "gin/1.9.0").
+		With("server_start_time", time.Now()).
+		With("gin_mode", gin.EnvGinMode)
+	// [SetDefault]还更新了[log]包使用的默认logger
+	slog.SetDefault(logger)
 
 	gin.SetMode(gin.ReleaseMode)
-	r := gin.New()
-	r.Use(Tracing("demo"))
+	engine := gin.Default()
 
-	r.GET("/hello", func(c *gin.Context) {
-		response.Success(c, "hello world")
-	})
+	engine.Use(Tracing("demo"))
 
-	go func() {
-		err := r.Run(serverAddr)
-		if err != nil {
-			panic(err)
-		}
-	}()
+	handler := GinHandler(engine)
 
-	time.Sleep(time.Millisecond * 200)
-	result := &gohttp.StdResult{}
-	err := gohttp.Get(result, requestAddr+"/hello")
-	assert.NoError(t, err)
-	t.Log(result)
+	// run server using httptest
+	server := httptest.NewServer(handler)
+	defer server.Close()
+
+	e := httpexpect.Default(t, server.URL)
+
+	e.GET("/ping").
+		Expect().
+		Status(http.StatusOK).JSON().Object().HasValue("msg", "ping")
+	e.GET("/foo").
+		Expect().
+		Status(http.StatusOK).JSON().Object().HasValue("msg", "foo")
+	e.GET("/hello").
+		Expect().
+		Status(http.StatusOK).JSON().Object().HasValue("msg", "hello world")
 }
 
 type propagators struct {
