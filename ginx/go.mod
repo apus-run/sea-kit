@@ -16,11 +16,13 @@ require (
 	github.com/google/uuid v1.3.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.17.0
+	github.com/redis/go-redis/v9 v9.2.1
 	github.com/spf13/cast v1.5.1
 	github.com/stretchr/testify v1.8.4
 	go.opentelemetry.io/contrib v1.20.0
 	go.opentelemetry.io/otel v1.19.0
 	go.opentelemetry.io/otel/trace v1.19.0
+	go.uber.org/atomic v1.11.0
 	go.uber.org/mock v0.3.0
 )
 
@@ -65,7 +67,6 @@ require (
 	github.com/prometheus/client_model v0.4.1-0.20230718164431-9a2bf3000d16 // indirect
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.11.1 // indirect
-	github.com/redis/go-redis/v9 v9.2.1 // indirect
 	github.com/sanity-io/litter v1.5.5 // indirect
 	github.com/sergi/go-diff v1.0.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.23.7 // indirect

@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/apus-run/sea-kit/pagination"
-	
 )
 
 func LikeByBigIntColumn(db *gorm.DB, column, val string) *gorm.DB {
@@ -65,7 +64,7 @@ func CreateTimeRange(startTime, endTime *time.Time) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func Paginate(page *pagination.ListReq) func(db *gorm.DB) *gorm.DB {
+func Paginate(page *pagination.Pagination) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if page == nil {
 			return db

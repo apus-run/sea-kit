@@ -1,6 +1,7 @@
 package gormx
 
 import (
+	"context"
 	"reflect"
 	"testing"
 	"time"
@@ -35,9 +36,10 @@ func initDB() *gorm.DB {
 }
 
 func TestNew(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
-	val, err := New(db, &user{
+	val, err := New(ctx, db, &user{
 		Name:    "mockname",
 		Age:     11,
 		Enabled: true,
@@ -45,7 +47,7 @@ func TestNew(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEmpty(t, val.UUID)
 
-	p, err := New(db, &product{
+	p, err := New(ctx, db, &product{
 		UUID:   "aaaa",
 		Name:   "demoproduct",
 		CanBuy: true,
@@ -55,64 +57,67 @@ func TestNew(t *testing.T) {
 }
 
 func TestCount(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
-	count, err := Count[user](db, nil)
+	count, err := Count[user](ctx, db, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, 1, count)
 
 	db.Create(&user{Name: "user2", Email: "user2@example.com", Age: 20})
-	count, err = Count[user](db, nil)
+	count, err = Count[user](ctx, db, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, 2, count)
 
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
-	count, err = Count[user](db, nil)
+	count, err = Count[user](ctx, db, nil)
 	assert.Nil(t, err)
 	assert.Equal(t, 3, count)
 }
 
 func TestDelete(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
 	db.Create(&user{Name: "user2", Email: "user2@example.com", Age: 20})
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
 
-	err := Delete(db, &user{Name: "user1"})
+	err := Delete(ctx, db, &user{Name: "user1"})
 	assert.Nil(t, err)
-	count, _ := Count[user](db, nil)
+	count, _ := Count[user](ctx, db, nil)
 	assert.Equal(t, 2, count)
 
-	err = Delete(db, &user{UUID: 2})
+	err = Delete(ctx, db, &user{UUID: 2})
 	assert.Nil(t, err)
-	count, _ = Count[user](db, nil)
+	count, _ = Count[user](ctx, db, nil)
 	assert.Equal(t, 1, count)
 
 	// with age = -1, unable to delete
-	err = Delete(db, &user{UUID: 3, Name: "user3", Age: -1})
+	err = Delete(ctx, db, &user{UUID: 3, Name: "user3", Age: -1})
 	assert.Nil(t, err)
-	count, _ = Count[user](db, nil)
+	count, _ = Count[user](ctx, db, nil)
 	assert.Equal(t, 1, count)
 
-	err = Delete(db, &user{}, "name", "user3")
+	err = Delete(ctx, db, &user{}, "name", "user3")
 	assert.Nil(t, err)
-	count, _ = Count[user](db, nil)
+	count, _ = Count[user](ctx, db, nil)
 	assert.Equal(t, 0, count)
 }
 
 func TestDeleteByID(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 	{
 		db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
 		db.Create(&user{Name: "user2", Email: "user2@example.com", Age: 20})
 		db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
 
-		err := DeleteByID[user](db, 1)
+		err := DeleteByID[user](ctx, db, 1)
 		assert.Nil(t, err)
 
-		count, _ := Count[user](db, nil)
+		count, _ := Count[user](ctx, db, nil)
 		assert.Equal(t, 2, count)
 	}
 	{
@@ -120,25 +125,26 @@ func TestDeleteByID(t *testing.T) {
 		db.Create(&product{UUID: "bbbb", Name: "demoproduct", CanBuy: true})
 		db.Create(&product{UUID: "cccc", Name: "demoproduct", CanBuy: true})
 
-		err := DeleteByID[product](db, "aaaa")
+		err := DeleteByID[product](ctx, db, "aaaa")
 		assert.Nil(t, err)
 
-		count, _ := Count[product](db, nil)
+		count, _ := Count[product](ctx, db, nil)
 		assert.Equal(t, 2, count)
 	}
 }
 
 func TestDeleteByMap(t *testing.T) {
+	ctx := context.Background()
 	{
 		db := initDB()
 		db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
 		db.Create(&user{Name: "user2", Email: "user2@example.com", Age: 20})
 		db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
 
-		err := DeleteByMap[user](db, map[string]any{"name": "user1"})
+		err := DeleteByMap[user](ctx, db, map[string]any{"name": "user1"})
 		assert.Nil(t, err)
 
-		count, _ := Count[user](db, nil)
+		count, _ := Count[user](ctx, db, nil)
 		assert.Equal(t, 2, count)
 	}
 	{
@@ -147,61 +153,64 @@ func TestDeleteByMap(t *testing.T) {
 		db.Create(&product{UUID: "bbbb", Name: "demoproductB", CanBuy: true})
 		db.Create(&product{UUID: "cccc", Name: "demoproductC", CanBuy: true})
 
-		err := DeleteByMap[product](db, map[string]any{"uuid": "aaaa"})
+		err := DeleteByMap[product](ctx, db, map[string]any{"uuid": "aaaa"})
 		assert.Nil(t, err)
-		count, _ := Count[product](db, nil)
+		count, _ := Count[product](ctx, db, nil)
 		assert.Equal(t, 2, count)
 
-		err = DeleteByMap[product](db, map[string]any{"name": "demoproductB"})
+		err = DeleteByMap[product](ctx, db, map[string]any{"name": "demoproductB"})
 		assert.Nil(t, err)
-		count, _ = Count[product](db, nil)
+		count, _ = Count[product](ctx, db, nil)
 		assert.Equal(t, 1, count)
 	}
 }
 
 func TestGet(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "demo", Enabled: true})
 	{
-		val, err := Get(db, &user{})
+		val, err := Get(ctx, db, &user{})
 		assert.Nil(t, err)
 		assert.NotNil(t, val)
 	}
 	{
-		val, err := Get(db, &user{Name: "demo", Enabled: true})
+		val, err := Get(ctx, db, &user{Name: "demo", Enabled: true})
 		assert.Nil(t, err)
 		assert.NotNil(t, val)
 	}
 	{
-		val, err := Get(db, &user{}, "enabled", true)
+		val, err := Get(ctx, db, &user{}, "enabled", true)
 		assert.Nil(t, err)
 		assert.NotNil(t, val)
 	}
 }
 
 func TestUpdateByID(t *testing.T) {
+	ctx := context.Background()
 	{
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := UpdateByID(db, 1, &user{Name: "update"}, "email", "demo@example.com")
+		err := UpdateByID(ctx, db, 1, &user{Name: "update"}, "email", "demo@example.com")
 		assert.Nil(t, err)
 
-		val, _ := Get(db, &user{Name: "update"})
+		val, _ := Get(ctx, db, &user{Name: "update"})
 		assert.Equal(t, "update", val.Name)
 	}
 }
 
 func TestUpdate(t *testing.T) {
+	ctx := context.Background()
 	{
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := Update(db, &user{UUID: 1, Name: "update"}, "email", "demo@example.com")
+		err := Update(ctx, db, &user{UUID: 1, Name: "update"}, "email", "demo@example.com")
 		assert.Nil(t, err)
 
-		val, _ := Get(db, &user{Name: "update"})
+		val, _ := Get(ctx, db, &user{Name: "update"})
 		assert.Equal(t, "update", val.Name)
 	}
 	// not found
@@ -209,10 +218,10 @@ func TestUpdate(t *testing.T) {
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := Update(db, &user{UUID: 1, Name: "update", Email: "update@example.com"}, "name", "xxx")
+		err := Update(ctx, db, &user{UUID: 1, Name: "update", Email: "update@example.com"}, "name", "xxx")
 		assert.Nil(t, err)
 
-		_, err = Get(db, &user{Name: "update"})
+		_, err = Get(ctx, db, &user{Name: "update"})
 		assert.NotNil(t, err)
 	}
 	// Update by string id
@@ -220,24 +229,25 @@ func TestUpdate(t *testing.T) {
 		db := initDB()
 		db.Create(&product{UUID: "aaa", Name: "productAAA"})
 
-		err := Update(db, &product{UUID: "aaa", Name: "productBBB"})
+		err := Update(ctx, db, &product{UUID: "aaa", Name: "productBBB"})
 		assert.Nil(t, err)
 
-		val, err := GetByID[product](db, "aaa")
+		val, err := GetByID[product](ctx, db, "aaa")
 		assert.Nil(t, err)
 		assert.Equal(t, "productBBB", val.Name)
 	}
 }
 
 func TestUpdateMap(t *testing.T) {
+	ctx := context.Background()
 	{
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := UpdateMapByID[user](db, 1, map[string]any{"name": "update"}, "email", "demo@example.com")
+		err := UpdateMapByID[user](ctx, db, 1, map[string]any{"name": "update"}, "email", "demo@example.com")
 		assert.Nil(t, err)
 
-		val, _ := Get(db, &user{Name: "update"})
+		val, _ := Get(ctx, db, &user{Name: "update"})
 		assert.Equal(t, "update", val.Name)
 	}
 	// not found
@@ -245,26 +255,27 @@ func TestUpdateMap(t *testing.T) {
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := UpdateMapByID[user](db, 1, map[string]any{"name": "update"}, "name", "xxx")
+		err := UpdateMapByID[user](ctx, db, 1, map[string]any{"name": "update"}, "name", "xxx")
 		assert.Nil(t, err)
 
-		_, err = Get(db, &user{Name: "update"})
+		_, err = Get(ctx, db, &user{Name: "update"})
 		assert.NotNil(t, err)
 	}
 }
 
 func TestUpdateSelect(t *testing.T) {
+	ctx := context.Background()
 	{
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := UpdateSelectByID(db, 1,
+		err := UpdateSelectByID(ctx, db, 1,
 			[]string{"name", "email", "enabled"},
 			&user{Name: "update", Email: "", Age: 12, Enabled: false},
 		)
 		assert.Nil(t, err)
 
-		val, _ := Get(db, &user{Name: "update"})
+		val, _ := Get(ctx, db, &user{Name: "update"})
 		assert.Equal(t, "", val.Email)      // ok
 		assert.Equal(t, "update", val.Name) // ok
 		assert.Equal(t, false, val.Enabled) // ok
@@ -275,32 +286,34 @@ func TestUpdateSelect(t *testing.T) {
 		db := initDB()
 		db.Create(&user{UUID: 1, Name: "demo", Email: "demo@example.com", Age: 11, Enabled: true})
 
-		err := UpdateSelectByID(db, 1, []string{"uuid", "name", "email"}, &user{UUID: 1, Name: "update", Email: ""})
+		err := UpdateSelectByID(ctx, db, 1, []string{"uuid", "name", "email"}, &user{UUID: 1, Name: "update", Email: ""})
 		assert.NotNil(t, err)
 	}
 }
 
 func TestGetByMap(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "demo", Enabled: true})
 
-	val, err := GetByMap[user](db, map[string]any{"name": "demo", "enabled": true})
+	val, err := GetByMap[user](ctx, db, map[string]any{"name": "demo", "enabled": true})
 	assert.Nil(t, err)
 	assert.NotNil(t, val)
 }
 
 func TestGetByID(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	{
 		db.Create(&user{Name: "demo", Enabled: true})
 
-		val, err := GetByID[user](db, 1)
+		val, err := GetByID[user](ctx, db, 1)
 		assert.Nil(t, err)
 		assert.NotEmpty(t, val.UUID)
 
-		val, err = GetByID[user](db, 1, "name = ? AND enabled = ?", "demo", true)
+		val, err = GetByID[user](ctx, db, 1, "name = ? AND enabled = ?", "demo", true)
 		assert.Nil(t, err)
 		assert.NotEmpty(t, val.UUID)
 	}
@@ -308,18 +321,19 @@ func TestGetByID(t *testing.T) {
 		db.Create(&product{UUID: "aaaa", Name: "demoproduct"})
 
 		// SELECT * FROM `products` WHERE uuid = "aaaa" LIMIT 1
-		val, err := GetByID[product](db, "aaaa")
+		val, err := GetByID[product](ctx, db, "aaaa")
 		assert.Nil(t, err)
 		assert.NotNil(t, val)
 
 		// SELECT * FROM `products` WHERE `name` = "demoproduct" AND uuid = "aaaa" LIMIT 1
-		val, err = GetByID[product](db, "aaaa", "name = ? AND can_buy = ?", "demoproduct", false)
+		val, err = GetByID[product](ctx, db, "aaaa", "name = ? AND can_buy = ?", "demoproduct", false)
 		assert.Nil(t, err)
 		assert.NotNil(t, val)
 	}
 }
 
 func TestListPage(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Enabled: true})
@@ -327,21 +341,21 @@ func TestListPage(t *testing.T) {
 	db.Create(&user{Name: "user3", Enabled: true})
 
 	{
-		list, count, err := ListPos[user](db, 0, 2)
+		list, count, err := ListPos[user](ctx, db, 0, 2)
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 2, len(list))
 		assert.Equal(t, "user1", list[0].Name)
 	}
 	{
-		list, count, err := ListPage[user](db, 1, 2)
+		list, count, err := ListPage[user](ctx, db, 1, 2)
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 2, len(list))
 		assert.Equal(t, "user1", list[0].Name)
 	}
 	{
-		list, count, err := ListPage[user](db, 1, 2, "name", "user1")
+		list, count, err := ListPage[user](ctx, db, 1, 2, "name", "user1")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, 1, len(list))
@@ -350,6 +364,7 @@ func TestListPage(t *testing.T) {
 }
 
 func TestListKeyword(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Enabled: true})
@@ -357,32 +372,32 @@ func TestListKeyword(t *testing.T) {
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Enabled: true})
 
 	{
-		list, count, err := ListKeyword[user](db, map[string]string{"name": "", "email": "example"})
+		list, count, err := ListKeyword[user](ctx, db, map[string]string{"name": "", "email": "example"})
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 3, len(list))
 	}
 	{
-		list, count, err := ListKeyword[user](db, map[string]string{"name": "1"})
+		list, count, err := ListKeyword[user](ctx, db, map[string]string{"name": "1"})
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, 1, len(list))
 	}
 	{
 		search := map[string]string{"name": "1"}
-		list, count, err := ListKeyword[user](db, search, "name", "user1")
+		list, count, err := ListKeyword[user](ctx, db, search, "name", "user1")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, 1, len(list))
 
-		list, count, err = ListKeyword[user](db, search, "name", "user2")
+		list, count, err = ListKeyword[user](ctx, db, search, "name", "user2")
 		assert.Nil(t, err)
 		assert.Equal(t, 0, count)
 		assert.Equal(t, 0, len(list))
 	}
 	{
 		search := map[string]string{"name": "2", "email": "example"}
-		list, count, err := ListKeyword[user](db, search, "name", "user2")
+		list, count, err := ListKeyword[user](ctx, db, search, "name", "user2")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, 1, len(list))
@@ -390,6 +405,7 @@ func TestListKeyword(t *testing.T) {
 }
 
 func TestListPageKeyword(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Enabled: true})
@@ -397,36 +413,36 @@ func TestListPageKeyword(t *testing.T) {
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Enabled: true})
 
 	{
-		list, count, err := ListPageKeyword[user](db, 1, 2, map[string]string{"name": "", "email": "example"})
+		list, count, err := ListPageKeyword[user](ctx, db, 1, 2, map[string]string{"name": "", "email": "example"})
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 2, len(list))
 	}
 	{
-		list, count, err := ListPageKeyword[user](db, 1, 2, nil)
+		list, count, err := ListPageKeyword[user](ctx, db, 1, 2, nil)
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 2, len(list))
 	}
 	{
-		list, count, err := ListPageKeyword[user](db, 1, 1, map[string]string{"name": "12"})
+		list, count, err := ListPageKeyword[user](ctx, db, 1, 1, map[string]string{"name": "12"})
 		assert.Nil(t, err)
 		assert.Equal(t, 0, count)
 		assert.Equal(t, 0, len(list))
 	}
 	{
-		list, count, err := ListPageKeyword[user](db, 0, 101, nil)
+		list, count, err := ListPageKeyword[user](ctx, db, 0, 101, nil)
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 3, len(list))
 	}
 	{
-		list, count, err := ListPageKeyword[user](db, 1, 101, map[string]string{"name": "1"}, "name", "user1")
+		list, count, err := ListPageKeyword[user](ctx, db, 1, 101, map[string]string{"name": "1"}, "name", "user1")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, 1, len(list))
 
-		list, count, err = ListPageKeyword[user](db, 1, 101, map[string]string{"name": "2"}, "name", "user1")
+		list, count, err = ListPageKeyword[user](ctx, db, 1, 101, map[string]string{"name": "2"}, "name", "user1")
 		assert.Nil(t, err)
 		assert.Equal(t, 0, count)
 		assert.Equal(t, 0, len(list))
@@ -434,6 +450,7 @@ func TestListPageKeyword(t *testing.T) {
 }
 
 func TestListPageKeywordOrder(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
@@ -441,19 +458,19 @@ func TestListPageKeywordOrder(t *testing.T) {
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
 
 	{
-		list, count, err := ListPageKeywordOrder[user](db, 1, 1, nil, "")
+		list, count, err := ListPageKeywordOrder[user](ctx, db, 1, 1, nil, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 1, len(list))
 		assert.Equal(t, "user1", list[0].Name)
 
-		list, count, err = ListPageKeywordOrder[user](db, 1, 3, nil, "age DESC")
+		list, count, err = ListPageKeywordOrder[user](ctx, db, 1, 3, nil, "age DESC")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 3, len(list))
 		assert.Equal(t, "user3", list[0].Name)
 
-		list, count, err = ListPageKeywordOrder[user](db, 1, 3, nil, "age ASC")
+		list, count, err = ListPageKeywordOrder[user](ctx, db, 1, 3, nil, "age ASC")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 3, len(list))
@@ -462,6 +479,7 @@ func TestListPageKeywordOrder(t *testing.T) {
 }
 
 func TestListPosKeywordFilterOrder(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
@@ -469,7 +487,7 @@ func TestListPosKeywordFilterOrder(t *testing.T) {
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
 
 	{
-		list, count, err := ListPosKeywordFilterOrder[user](db, 0, 5, nil, nil, "")
+		list, count, err := ListPosKeywordFilterOrder[user](ctx, db, 0, 5, nil, nil, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, 3, len(list))
@@ -477,12 +495,12 @@ func TestListPosKeywordFilterOrder(t *testing.T) {
 
 	// Order
 	{
-		list, count, err := ListPosKeywordFilterOrder[user](db, 0, 5, nil, nil, "age DESC")
+		list, count, err := ListPosKeywordFilterOrder[user](ctx, db, 0, 5, nil, nil, "age DESC")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user3", list[0].Name)
 
-		list, count, err = ListPosKeywordFilterOrder[user](db, 0, 5, nil, nil, "age ASC")
+		list, count, err = ListPosKeywordFilterOrder[user](ctx, db, 0, 5, nil, nil, "age ASC")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user1", list[0].Name)
@@ -491,19 +509,19 @@ func TestListPosKeywordFilterOrder(t *testing.T) {
 	// Keyword
 	{
 		keywords := map[string]string{"name": "user1", "email": "user1"}
-		list, count, err := ListPosKeywordFilterOrder[user](db, 0, 5, keywords, nil, "")
+		list, count, err := ListPosKeywordFilterOrder[user](ctx, db, 0, 5, keywords, nil, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, "user1", list[0].Name)
 
 		keywords = map[string]string{"name": "user", "email": "user"}
-		list, count, err = ListPosKeywordFilterOrder[user](db, 0, 5, keywords, nil, "")
+		list, count, err = ListPosKeywordFilterOrder[user](ctx, db, 0, 5, keywords, nil, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user1", list[0].Name)
 
 		keywords = map[string]string{"age": "0"}
-		list, count, err = ListPosKeywordFilterOrder[user](db, 0, 5, keywords, nil, "")
+		list, count, err = ListPosKeywordFilterOrder[user](ctx, db, 0, 5, keywords, nil, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user1", list[0].Name)
@@ -515,7 +533,7 @@ func TestListPosKeywordFilterOrder(t *testing.T) {
 			{Name: "name", Op: "=", Value: "user2"},
 			{Name: "age", Op: "=", Value: 20},
 		}
-		list, count, err := ListPageKeywordFilterOrder[user](db, 0, 5, nil, filters, "")
+		list, count, err := ListPageKeywordFilterOrder[user](ctx, db, 0, 5, nil, filters, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 1, count)
 		assert.Equal(t, "user2", list[0].Name)
@@ -529,7 +547,7 @@ func TestListPosKeywordFilterOrder(t *testing.T) {
 		}
 		keywords := map[string]string{"name": "user", "email": "example"}
 
-		list, count, err := ListPageKeywordFilterOrder[user](db, 0, 5, keywords, filters, "age DESC")
+		list, count, err := ListPageKeywordFilterOrder[user](ctx, db, 0, 5, keywords, filters, "age DESC")
 		assert.Nil(t, err)
 		assert.Equal(t, 2, count)
 		assert.Equal(t, "user3", list[0].Name)
@@ -537,6 +555,7 @@ func TestListPosKeywordFilterOrder(t *testing.T) {
 }
 
 func TestListContext(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
@@ -544,13 +563,13 @@ func TestListContext(t *testing.T) {
 	db.Create(&user{Name: "user3", Email: "user3@example.com", Age: 30})
 
 	{
-		list, count, err := List[user](db, nil)
+		list, count, err := List[user](ctx, db, nil)
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user1", list[0].Name)
 	}
 	{
-		list, count, err := List[user](db, &ListContext{
+		list, count, err := List[user](ctx, db, &ListContext{
 			Pos:      0,
 			Limit:    5,
 			Keywords: map[string]string{"name": "user", "email": "example"},
@@ -565,6 +584,7 @@ func TestListContext(t *testing.T) {
 }
 
 func TestListModelContext(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
@@ -577,13 +597,13 @@ func TestListModelContext(t *testing.T) {
 	}
 
 	{
-		list, count, err := ListModel[user, uservo](db, nil)
+		list, count, err := ListModel[user, uservo](ctx, db, nil)
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user1", list[0].Name)
 	}
 	{
-		list, count, err := ListModel[user, uservo](db, &ListContext{
+		list, count, err := ListModel[user, uservo](ctx, db, &ListContext{
 			Pos:      0,
 			Limit:    5,
 			Keywords: map[string]string{"name": "user", "email": "example"},
@@ -598,6 +618,7 @@ func TestListModelContext(t *testing.T) {
 }
 
 func TestListPosKeywordFilterOrderModel(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
@@ -610,7 +631,7 @@ func TestListPosKeywordFilterOrderModel(t *testing.T) {
 	}
 
 	{
-		list, count, err := ListPosKeywordFilterOrderModel[user, uservo](db, 0, 5, nil, nil, "")
+		list, count, err := ListPosKeywordFilterOrderModel[user, uservo](ctx, db, 0, 5, nil, nil, "")
 		assert.Nil(t, err)
 		assert.Equal(t, 3, count)
 		assert.Equal(t, "user1", list[0].Name)
@@ -657,6 +678,7 @@ func TestFilterScopes(t *testing.T) {
 }
 
 func TestKeywordScopes(t *testing.T) {
+	ctx := context.Background()
 	db := initDB()
 
 	db.Create(&user{Name: "user1", Email: "user1@example.com", Age: 10})
@@ -666,21 +688,21 @@ func TestKeywordScopes(t *testing.T) {
 	{
 		var list []user
 		keywords := map[string]string{"name": "user"}
-		r := db.Scopes(KeywordScope(keywords)).Find(&list)
+		r := db.Scopes(KeywordScope(ctx, keywords)).Find(&list)
 		assert.Nil(t, r.Error)
 		assert.Equal(t, 3, len(list))
 	}
 	{
 		var list []user
 		keywords := map[string]string{"name": "user1", "email": "user2"}
-		r := db.Scopes(KeywordScope(keywords)).Find(&list)
+		r := db.Scopes(KeywordScope(ctx, keywords)).Find(&list)
 		assert.Nil(t, r.Error)
 		assert.Equal(t, 2, len(list))
 	}
 	{
 		var list []user
 		keywords := map[string]string{"name": "notexist", "email": "notexist", "age": "0"}
-		r := db.Scopes(KeywordScope(keywords)).Find(&list)
+		r := db.Scopes(KeywordScope(ctx, keywords)).Find(&list)
 		assert.Nil(t, r.Error)
 		assert.Equal(t, 3, len(list))
 	}

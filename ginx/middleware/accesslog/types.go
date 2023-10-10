@@ -28,6 +28,7 @@ type AccessLog struct {
 type responseWriter struct {
 	al *AccessLog
 	gin.ResponseWriter
+	maxLength int64
 }
 
 func (r responseWriter) WriteHeader(statusCode int) {
@@ -36,11 +37,19 @@ func (r responseWriter) WriteHeader(statusCode int) {
 }
 
 func (r responseWriter) Write(data []byte) (int, error) {
+	curLen := int64(len(data))
+	if curLen >= r.maxLength {
+		data = data[:r.maxLength]
+	}
 	r.al.RespBody = string(data)
 	return r.ResponseWriter.Write(data)
 }
 
 func (r responseWriter) WriteString(data string) (int, error) {
+	curLen := int64(len(data))
+	if curLen >= r.maxLength {
+		data = data[:r.maxLength]
+	}
 	r.al.RespBody = data
 	return r.ResponseWriter.WriteString(data)
 }

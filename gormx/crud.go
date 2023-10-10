@@ -172,24 +172,24 @@ func getFieldByJsonTag(rt reflect.Type, jsonTag string) (reflect.StructField, bo
 
 // gorm functions
 
-func UpdateFields[T any](db *gorm.DB, model *T, vals map[string]any) error {
-	return db.Model(model).Updates(vals).Error
+func UpdateFields[T any](ctx context.Context, db *gorm.DB, model *T, vals map[string]any) error {
+	return db.WithContext(ctx).Model(model).Updates(vals).Error
 }
 
-func New[T any](db *gorm.DB, val *T) (*T, error) {
-	result := db.Create(val)
+func New[T any](ctx context.Context, db *gorm.DB, val *T) (*T, error) {
+	result := db.WithContext(ctx).Create(val)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return val, nil
 }
 
-func Count[T any](db *gorm.DB, where ...any) (int, error) {
+func Count[T any](ctx context.Context, db *gorm.DB, where ...any) (int, error) {
 	var count int64
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
-	result := db.Model(new(T)).Count(&count)
+	result := db.WithContext(ctx).Model(new(T)).Count(&count)
 	if result.Error != nil {
 		return 0, result.Error
 	}
@@ -199,60 +199,60 @@ func Count[T any](db *gorm.DB, where ...any) (int, error) {
 // Delete
 func Delete[T any](ctx context.Context, db *gorm.DB, val *T, where ...any) error {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
-	return db.Where(val).Delete(val).Error
+	return db.WithContext(ctx).Where(val).Delete(val).Error
 }
 
 func DeleteByID[T any, E ~int | ~string](ctx context.Context, db *gorm.DB, id E, where ...any) error {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
-	return db.Where(GetPkColumnName[T](), id).Delete(new(T)).Error
+	return db.WithContext(ctx).Where(GetPkColumnName[T](), id).Delete(new(T)).Error
 }
 
 func DeleteByMap[T any](ctx context.Context, db *gorm.DB, m map[string]any, where ...any) error {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
-	return db.Where(m).Delete(new(T)).Error
+	return db.WithContext(ctx).Where(m).Delete(new(T)).Error
 }
 
 // Get
-func Get[T any](db *gorm.DB, val *T, where ...any) (*T, error) {
+func Get[T any](ctx context.Context, db *gorm.DB, val *T, where ...any) (*T, error) {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
 
-	result := db.Where(val).Take(val)
+	result := db.WithContext(ctx).Where(val).Take(val)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return val, nil
 }
 
-func GetByMap[T any](db *gorm.DB, m map[string]any, where ...any) (*T, error) {
+func GetByMap[T any](ctx context.Context, db *gorm.DB, m map[string]any, where ...any) (*T, error) {
 	var val T
 
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
 
-	result := db.Model(&val).Where(m).Take(&val)
+	result := db.WithContext(ctx).Model(&val).Where(m).Take(&val)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	return &val, nil
 }
 
-func GetByID[T any, E ~int | ~string](db *gorm.DB, id E, where ...any) (*T, error) {
+func GetByID[T any, E ~int | ~string](ctx context.Context, db *gorm.DB, id E, where ...any) (*T, error) {
 	var val T
 
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
 
-	result := db.Take(&val, GetPkColumnName[T](), id)
+	result := db.WithContext(ctx).Take(&val, GetPkColumnName[T](), id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -260,29 +260,22 @@ func GetByID[T any, E ~int | ~string](db *gorm.DB, id E, where ...any) (*T, erro
 }
 
 // Update
-func Update[T any](db *gorm.DB, val *T, where ...any) error {
+func Update[T any](ctx context.Context, db *gorm.DB, val *T, where ...any) error {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
-	return db.Model(val).Updates(val).Error
+	return db.WithContext(ctx).Model(val).Updates(val).Error
 }
 
-// Updates record
-// the param of 'table' must be pointer, eg: &StructName
-func Updates(ctx context.Context, db *gorm.DB, table interface{}, update KV, queryCondition interface{}, args ...interface{}) error {
-	return db.WithContext(ctx).Model(table).Where(queryCondition, args...).Updates(update).Error
-}
-
-
-func UpdateByID[T any, E ~string | ~int](db *gorm.DB, id E, val *T, where ...any) error {
+func UpdateByID[T any, E ~string | ~int](ctx context.Context, db *gorm.DB, id E, val *T, where ...any) error {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
 
-	return db.Model(new(T)).Where(GetPkColumnName[T](), id).Updates(val).Error
+	return db.WithContext(ctx).Model(new(T)).Where(GetPkColumnName[T](), id).Updates(val).Error
 }
 
-func UpdateSelectByID[T any, E ~string | ~int](db *gorm.DB, id E, selects []string, val *T, where ...any) error {
+func UpdateSelectByID[T any, E ~string | ~int](ctx context.Context, db *gorm.DB, id E, selects []string, val *T, where ...any) error {
 	pk := GetPkColumnName[T]()
 
 	for _, s := range selects {
@@ -292,67 +285,67 @@ func UpdateSelectByID[T any, E ~string | ~int](db *gorm.DB, id E, selects []stri
 	}
 
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
 
-	return db.Model(new(T)).Where(GetPkColumnName[T](), id).Select(selects).Updates(val).Error
+	return db.WithContext(ctx).Model(new(T)).Where(GetPkColumnName[T](), id).Select(selects).Updates(val).Error
 }
 
-func UpdateMapByID[T any, E ~string | ~int](db *gorm.DB, id E, m map[string]any, where ...any) error {
+func UpdateMapByID[T any, E ~string | ~int](ctx context.Context, db *gorm.DB, id E, m map[string]any, where ...any) error {
 	if len(where) > 0 {
-		db = db.Where(where[0], where[1:]...)
+		db = db.WithContext(ctx).Where(where[0], where[1:]...)
 	}
-	return db.Model(new(T)).Where(GetPkColumnName[T](), id).Updates(m).Error
+	return db.WithContext(ctx).Model(new(T)).Where(GetPkColumnName[T](), id).Updates(m).Error
 }
 
 // Query List
-func ListPos[T any](db *gorm.DB, pos, limit int, where ...any) ([]T, int, error) {
-	return ListPosKeyword[T](db, pos, limit, nil, where...)
+func ListPos[T any](ctx context.Context, db *gorm.DB, pos, limit int, where ...any) ([]T, int, error) {
+	return ListPosKeyword[T](ctx, db, pos, limit, nil, where...)
 }
 
-func ListOrder[T any](db *gorm.DB, order string, where ...any) ([]T, int, error) {
-	return ListPosOrder[T](db, 0, -1, order, where...)
+func ListOrder[T any](ctx context.Context, db *gorm.DB, order string, where ...any) ([]T, int, error) {
+	return ListPosOrder[T](ctx, db, 0, -1, order, where...)
 }
 
-func ListKeyword[T any](db *gorm.DB, keys map[string]string, where ...any) ([]T, int, error) {
-	return ListPosKeyword[T](db, 0, -1, keys, where...)
+func ListKeyword[T any](ctx context.Context, db *gorm.DB, keys map[string]string, where ...any) ([]T, int, error) {
+	return ListPosKeyword[T](ctx, db, 0, -1, keys, where...)
 }
 
-func ListFilter[T any](db *gorm.DB, filter []Filter, where ...any) ([]T, int, error) {
-	return ListPosFilter[T](db, 0, -1, filter, where...)
+func ListFilter[T any](ctx context.Context, db *gorm.DB, filter []Filter, where ...any) ([]T, int, error) {
+	return ListPosFilter[T](ctx, db, 0, -1, filter, where...)
 }
 
-func ListPosKeyword[T any](db *gorm.DB, pos, limit int, keys map[string]string, where ...any) ([]T, int, error) {
-	return ListPosKeywordOrder[T](db, pos, limit, keys, "", where...)
+func ListPosKeyword[T any](ctx context.Context, db *gorm.DB, pos, limit int, keys map[string]string, where ...any) ([]T, int, error) {
+	return ListPosKeywordOrder[T](ctx, db, pos, limit, keys, "", where...)
 }
 
-func ListPosOrder[T any](db *gorm.DB, pos, limit int, order string, where ...any) ([]T, int, error) {
-	return ListPosKeywordOrder[T](db, pos, limit, nil, order, where...)
+func ListPosOrder[T any](ctx context.Context, db *gorm.DB, pos, limit int, order string, where ...any) ([]T, int, error) {
+	return ListPosKeywordOrder[T](ctx, db, pos, limit, nil, order, where...)
 }
 
-func ListPosFilter[T any](db *gorm.DB, pos, limit int, filter []Filter, where ...any) ([]T, int, error) {
-	return ListPosKeywordFilterOrder[T](db, pos, limit, nil, filter, "", where...)
+func ListPosFilter[T any](ctx context.Context, db *gorm.DB, pos, limit int, filter []Filter, where ...any) ([]T, int, error) {
+	return ListPosKeywordFilterOrder[T](ctx, db, pos, limit, nil, filter, "", where...)
 }
 
-func ListPosKeywordOrder[T any](db *gorm.DB, pos, limit int, keys map[string]string, order string, where ...any) ([]T, int, error) {
-	return ListPosKeywordFilterOrder[T](db, pos, limit, keys, nil, order, where...)
+func ListPosKeywordOrder[T any](ctx context.Context, db *gorm.DB, pos, limit int, keys map[string]string, order string, where ...any) ([]T, int, error) {
+	return ListPosKeywordFilterOrder[T](ctx, db, pos, limit, keys, nil, order, where...)
 }
 
-func ListPosKeywordFilter[T any](db *gorm.DB, pos, limit int, keys map[string]string, filter []Filter, where ...any) ([]T, int, error) {
-	return ListPosKeywordFilterOrder[T](db, pos, limit, keys, filter, "", where...)
+func ListPosKeywordFilter[T any](ctx context.Context, db *gorm.DB, pos, limit int, keys map[string]string, filter []Filter, where ...any) ([]T, int, error) {
+	return ListPosKeywordFilterOrder[T](ctx, db, pos, limit, keys, filter, "", where...)
 }
 
-func ListPosKeywordFilterOrder[T any](db *gorm.DB, pos, limit int, keys map[string]string, filters []Filter, order string, where ...any) ([]T, int, error) {
-	return ListPosKeywordFilterOrderModel[T, T](db, pos, limit, keys, filters, order, where...)
+func ListPosKeywordFilterOrder[T any](ctx context.Context, db *gorm.DB, pos, limit int, keys map[string]string, filters []Filter, order string, where ...any) ([]T, int, error) {
+	return ListPosKeywordFilterOrderModel[T, T](ctx, db, pos, limit, keys, filters, order, where...)
 }
 
 // List Model
-func ListPosKeywordFilterOrderModel[T, R any](db *gorm.DB, pos, limit int, keys map[string]string, filters []Filter, order string, where ...any) ([]R, int, error) {
+func ListPosKeywordFilterOrderModel[T, R any](ctx context.Context, db *gorm.DB, pos, limit int, keys map[string]string, filters []Filter, order string, where ...any) ([]R, int, error) {
 	var items []R = make([]R, 0)
 	var count int64
 
 	db = db.Model(new(T))
-	db = db.Scopes(KeywordScope(keys))
+	db = db.Scopes(KeywordScope(ctx, keys))
 	db = db.Scopes(FilterScope(filters))
 
 	if len(where) > 0 {
@@ -386,9 +379,9 @@ type ListContext struct {
 	Where    []any
 }
 
-func List[T any](db *gorm.DB, ctx *ListContext) ([]T, int, error) {
+func List[T any](c context.Context, db *gorm.DB, ctx *ListContext) ([]T, int, error) {
 	if ctx == nil {
-		return ListPosKeywordFilterOrder[T](db, 0, 50, nil, nil, "", nil)
+		return ListPosKeywordFilterOrder[T](c, db, 0, 50, nil, nil, "", nil)
 	}
 
 	pos, limit := ctx.Pos, ctx.Limit
@@ -401,12 +394,12 @@ func List[T any](db *gorm.DB, ctx *ListContext) ([]T, int, error) {
 	case limit > 200:
 		limit = 200
 	}
-	return ListPosKeywordFilterOrder[T](db, pos, limit, ctx.Keywords, ctx.Filters, ctx.Order, ctx.Where...)
+	return ListPosKeywordFilterOrder[T](c, db, pos, limit, ctx.Keywords, ctx.Filters, ctx.Order, ctx.Where...)
 }
 
-func ListModel[T, R any](db *gorm.DB, ctx *ListContext) ([]R, int, error) {
+func ListModel[T, R any](c context.Context, db *gorm.DB, ctx *ListContext) ([]R, int, error) {
 	if ctx == nil {
-		return ListPosKeywordFilterOrderModel[T, R](db, 0, 50, nil, nil, "", nil)
+		return ListPosKeywordFilterOrderModel[T, R](c, db, 0, 50, nil, nil, "", nil)
 	}
 
 	pos, limit := ctx.Pos, ctx.Limit
@@ -419,38 +412,38 @@ func ListModel[T, R any](db *gorm.DB, ctx *ListContext) ([]R, int, error) {
 	case limit > 200:
 		limit = 200
 	}
-	return ListPosKeywordFilterOrderModel[T, R](db, pos, limit, ctx.Keywords, ctx.Filters, ctx.Order, ctx.Where...)
+	return ListPosKeywordFilterOrderModel[T, R](c, db, pos, limit, ctx.Keywords, ctx.Filters, ctx.Order, ctx.Where...)
 }
 
 // Pagination functions
 
-func ListPage[T any](db *gorm.DB, page int, pageSize int, where ...any) ([]T, int, error) {
-	return ListPos[T](db, (page-1)*pageSize, pageSize, where...)
+func ListPage[T any](ctx context.Context, db *gorm.DB, page int, pageSize int, where ...any) ([]T, int, error) {
+	return ListPos[T](ctx, db, (page-1)*pageSize, pageSize, where...)
 }
 
-func ListPageKeyword[T any](db *gorm.DB, page, pageSize int, keys map[string]string, where ...any) ([]T, int, error) {
-	return ListPosKeywordOrder[T](db, (page-1)*pageSize, pageSize, keys, "", where...)
+func ListPageKeyword[T any](ctx context.Context, db *gorm.DB, page, pageSize int, keys map[string]string, where ...any) ([]T, int, error) {
+	return ListPosKeywordOrder[T](ctx, db, (page-1)*pageSize, pageSize, keys, "", where...)
 }
 
-func ListPageOrder[T any](db *gorm.DB, page, pageSize int, order string, where ...any) ([]T, int, error) {
-	return ListPosOrder[T](db, (page-1)*pageSize, pageSize, order, where...)
+func ListPageOrder[T any](ctx context.Context, db *gorm.DB, page, pageSize int, order string, where ...any) ([]T, int, error) {
+	return ListPosOrder[T](ctx, db, (page-1)*pageSize, pageSize, order, where...)
 }
 
-func ListPageKeywordOrder[T any](db *gorm.DB, page, pageSize int, keys map[string]string, order string, where ...any) ([]T, int, error) {
-	return ListPosKeywordFilterOrder[T](db, (page-1)*pageSize, pageSize, keys, nil, order, where...)
+func ListPageKeywordOrder[T any](ctx context.Context, db *gorm.DB, page, pageSize int, keys map[string]string, order string, where ...any) ([]T, int, error) {
+	return ListPosKeywordFilterOrder[T](ctx, db, (page-1)*pageSize, pageSize, keys, nil, order, where...)
 }
 
-func ListPageKeywordFilterOrder[T any](db *gorm.DB, page, pageSize int, keys map[string]string, filters []Filter, order string, where ...any) ([]T, int, error) {
-	return ListPosKeywordFilterOrder[T](db, (page-1)*pageSize, pageSize, keys, filters, order, where...)
+func ListPageKeywordFilterOrder[T any](ctx context.Context, db *gorm.DB, page, pageSize int, keys map[string]string, filters []Filter, order string, where ...any) ([]T, int, error) {
+	return ListPosKeywordFilterOrder[T](ctx, db, (page-1)*pageSize, pageSize, keys, filters, order, where...)
 }
 
-func ListPageKeywordFilterOrderModel[T, R any](db *gorm.DB, page, pageSize int, keys map[string]string, filters []Filter, order string, where ...any) ([]R, int, error) {
-	return ListPosKeywordFilterOrderModel[T, R](db, (page-1)*pageSize, pageSize, keys, filters, order, where...)
+func ListPageKeywordFilterOrderModel[T, R any](ctx context.Context, db *gorm.DB, page, pageSize int, keys map[string]string, filters []Filter, order string, where ...any) ([]R, int, error) {
+	return ListPosKeywordFilterOrderModel[T, R](ctx, db, (page-1)*pageSize, pageSize, keys, filters, order, where...)
 }
 
 // {"name": "mockname", "nick": "mocknick" }
 // => name LIKE '%mockname%' OR nick LIKE '%mocknick%'
-func KeywordScope(keys map[string]string) func(db *gorm.DB) *gorm.DB {
+func KeywordScope(ctx context.Context, keys map[string]string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		var where string
 
@@ -468,7 +461,7 @@ func KeywordScope(keys map[string]string) func(db *gorm.DB) *gorm.DB {
 			return db
 		}
 
-		return db.Where(where)
+		return db.WithContext(ctx).Where(where)
 	}
 }
 

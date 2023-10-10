@@ -1,9 +1,10 @@
 package locallimit
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"go.uber.org/atomic"
-	"net/http"
 )
 
 type LocalActiveLimit struct {

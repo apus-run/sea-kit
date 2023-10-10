@@ -10,29 +10,30 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/atomic"
 )
 
 // Builder 记录HTTP请求/响应细节
 type Builder struct {
-	allowReqBody  bool
-	allowRespBody bool
+	allowReqBody  *atomic.Bool
+	allowRespBody *atomic.Bool
 
 	// http response body 的 max length; request URL 的 max length.
-	maxLength int
+	maxLength *atomic.Int64
 
 	// 忽略指定路由的日志打印
 	ignoreRoutes map[string]struct{}
 
-	logFunc func(ctx context.Context, al AccessLog)
+	logFunc func(ctx context.Context, al *AccessLog)
 }
 
-func NewBuilder(fn func(ctx context.Context, al AccessLog)) *Builder {
+func NewBuilder(fn func(ctx context.Context, al *AccessLog)) *Builder {
 	return &Builder{
 		// 默认不打印
-		allowReqBody:  false,
-		allowRespBody: false,
+		allowReqBody:  atomic.NewBool(false),
+		allowRespBody: atomic.NewBool(false),
 
-		maxLength: 1 << 20, // 1 MiB
+		maxLength: atomic.NewInt64(1024), // 1 MiB
 
 		ignoreRoutes: map[string]struct{}{
 			"/ping":   {},
@@ -45,17 +46,17 @@ func NewBuilder(fn func(ctx context.Context, al AccessLog)) *Builder {
 }
 
 func (b *Builder) AllowReqBody() *Builder {
-	b.allowReqBody = true
+	b.allowReqBody.Store(true)
 	return b
 }
 
 func (b *Builder) AllowRespBody() *Builder {
-	b.allowRespBody = true
+	b.allowRespBody.Store(true)
 	return b
 }
 
-func (b *Builder) SetMaxLength(maxLength int) *Builder {
-	b.maxLength = maxLength
+func (b *Builder) MaxLength(maxLength int64) *Builder {
+	b.maxLength.Store(maxLength)
 	return b
 }
 
@@ -71,6 +72,9 @@ func (b *Builder) Build() gin.HandlerFunc {
 	pid := strconv.Itoa(os.Getpid())
 	return func(c *gin.Context) {
 		start := time.Now()
+		maxLength := b.maxLength.Load()
+		allowReqBody := b.allowReqBody.Load()
+		allowRespBody := b.allowRespBody.Load()
 
 		// ignore printing of the specified route
 		if _, ok := b.ignoreRoutes[c.Request.URL.Path]; ok {
@@ -84,10 +88,11 @@ func (b *Builder) Build() gin.HandlerFunc {
 		// URL 有可能会很长, 保护起来
 		url := c.Request.URL
 		urlStr := url.String()
-		if len(urlStr) > b.maxLength {
-			urlStr = urlStr[:b.maxLength]
+		urlLen := int64(len(urlStr))
+		if urlLen >= maxLength {
+			urlStr = urlStr[:maxLength]
 		}
-		al := AccessLog{
+		accessLog := &AccessLog{
 			PID:      pid,
 			Referer:  c.Request.Header.Get("Referer"),
 			Protocol: url.Scheme,
@@ -102,7 +107,7 @@ func (b *Builder) Build() gin.HandlerFunc {
 			Path:   url.Path,
 		}
 
-		if b.allowReqBody && c.Request.Body != nil {
+		if allowReqBody && c.Request.Body != nil {
 			// 可以直接忽略 error，不影响程序运行
 			// GetRawData 实现了 io.ReadAll(c.Request.Body)
 			body, _ := c.GetRawData()
@@ -111,23 +116,25 @@ func (b *Builder) Build() gin.HandlerFunc {
 			c.Request.Body = io.NopCloser(bytes.NewBuffer(body))
 
 			// 防止body内容过大, 保护起来
-			if len(body) > b.maxLength {
-				body = body[:b.maxLength]
+			if int64(len(body)) >= maxLength {
+				body = body[:maxLength]
 			}
-			al.ReqBody = string(body)
+			//注意资源的消耗
+			accessLog.ReqBody = string(body)
 		}
 
-		if b.allowRespBody {
+		if allowRespBody {
 			c.Writer = responseWriter{
-				al:             &al,
+				al:             accessLog,
 				ResponseWriter: c.Writer,
+				maxLength:      maxLength,
 			}
 		}
 
 		defer func() {
 			duration := time.Since(start)
-			al.Duration = duration.String()
-			b.logFunc(c, al)
+			accessLog.Duration = duration.String()
+			b.logFunc(c, accessLog)
 		}()
 
 		c.Next()

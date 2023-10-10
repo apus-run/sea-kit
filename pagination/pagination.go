@@ -1,6 +1,9 @@
 package pagination
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 var _ Pager = (*Pagination)(nil)
 
@@ -19,6 +22,7 @@ func New(options ...Option) *Pagination {
 	return &Pagination{
 		pageNumber: opts.pageNumber,
 		pageSize:   opts.pageSize,
+		sort:       getSort(opts.sort),
 		total:      opts.total,
 		data:       opts.data,
 		totalPages: totalPages,
@@ -42,6 +46,10 @@ func (p *Pagination) Offset() int {
 	}
 	offset := (p.pageNumber - 1) * p.pageSize
 	return offset
+}
+
+func (p *Pagination) Sort() string {
+	return p.sort
 }
 
 type OrderBy struct {
@@ -97,4 +105,29 @@ func (p *Pagination) Valid() error {
 		return errors.New("invalid pageSize")
 	}
 	return nil
+}
+
+// convert to mysql sort, each column name preceded by a '-' sign, indicating descending order, otherwise ascending order, example:
+//
+//	columnNames="name" means sort by name in ascending order,
+//	columnNames="-name" means sort by name descending,
+//	columnNames="name,age" means sort by name in ascending order, otherwise sort by age in ascending order,
+//	columnNames="-name,-age" means sort by name descending before sorting by age descending.
+func getSort(columnNames string) string {
+	columnNames = strings.Replace(columnNames, " ", "", -1)
+	if columnNames == "" {
+		return "id DESC"
+	}
+
+	names := strings.Split(columnNames, ",")
+	strs := make([]string, 0, len(names))
+	for _, name := range names {
+		if name[0] == '-' && len(name) > 1 {
+			strs = append(strs, name[1:]+" DESC")
+		} else {
+			strs = append(strs, name+" ASC")
+		}
+	}
+
+	return strings.Join(strs, ", ")
 }

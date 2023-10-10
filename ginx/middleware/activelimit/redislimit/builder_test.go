@@ -3,16 +3,18 @@ package redislimit
 import (
 	"context"
 	"errors"
-	redismocks "github.com/ecodeclub/ginx/internal/mocks"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
+
+	"github.com/apus-run/sea-kit/ginx/internal/mocks"
 )
 
 func TestRedisActiveLimit_Build(t *testing.T) {

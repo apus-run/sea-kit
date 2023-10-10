@@ -2,10 +2,11 @@ package redislimit
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/atomic"
-	"net/http"
 )
 
 type RedisActiveLimit struct {

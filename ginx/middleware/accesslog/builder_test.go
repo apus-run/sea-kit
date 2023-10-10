@@ -75,12 +75,12 @@ func TestRequest(t *testing.T) {
 	engine.Use(requstid.RequestID())
 	// custom print log
 	engine.Use(NewBuilder(
-		func(ctx context.Context, al AccessLog) {
+		func(ctx context.Context, al *AccessLog) {
 			logger.Debug("Gin 收到请求", slog.Any("req", al))
 		}).
 		AllowReqBody().
 		AllowRespBody().
-		SetMaxLength(1024).
+		MaxLength(1024).
 		IgnoreRoutes("/foo").
 		Build())
 

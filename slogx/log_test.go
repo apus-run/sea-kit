@@ -9,6 +9,12 @@ import (
 	"time"
 )
 
+type Password string
+
+func (Password) LogValue() slog.Value {
+	return slog.StringValue("******")
+}
+
 func TestLog(t *testing.T) {
 	logger := NewLogger(WithEncoding("json"), WithFilename("test.log"))
 	logger.Debug("This is a debug message", slog.Any("key", "value"))
@@ -25,6 +31,8 @@ func TestLog(t *testing.T) {
 	)
 
 	log.Print("This is a print message")
+
+	slog.Info("敏感数据", slog.Any("password", Password("1234567890")))
 
 	// 设置slog为默认日志
 	slog.SetDefault(logger)

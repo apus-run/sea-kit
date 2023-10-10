@@ -1,4 +1,4 @@
 .PHONY: mock
 mock:
-	@mockgen -package=redismocks -destination ./ginx/middleware/activelimit/mocks/cmd.mock.go github.com/redis/go-redis/v9 Cmdable
+	@mockgen -source=/Users/moocss/gowork/pkg/mod/github.com/redis/go-redis/v9@v9.2.1/commands.go -package=redismocks -destination=/Users/moocss/work/GoProjects/sea-kit/ginx/internal/mocks/cmd.mock.go
 	@go mod tidy

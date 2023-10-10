@@ -28,6 +28,9 @@ type Pager interface {
 
 	Limit() int
 	Offset() int
+
+	// Sort get sort field
+	Sort() string
 }
 
 // Pagination is the default implementation of Page interface
@@ -36,6 +39,8 @@ type Pagination struct {
 	pageNumber int `json:"page_number,optional,default=1" form:"page_number,optional,default=1"`
 	// pageSize 分页数
 	pageSize int `json:"page_size,optional,default=10" form:"page_size,optional,default=10"`
+	// sort fields, default is id backwards, you can add - sign before the field to indicate reverse order, no - sign to indicate ascending order, multiple fields separated by comma
+	sort string `json:"sort"`
 	// total means total page count
 	total int `json:"total"`
 	// data 数据
@@ -80,12 +85,21 @@ func WithPageNumber(pageNumber int) Option {
 	}
 }
 
+// WithSort .
+func WithSort(sort string) Option {
+	return func(o *Pagination) {
+		o.sort = sort
+	}
+}
+
+// WithTotal .
 func WithTotal(total int) Option {
 	return func(o *Pagination) {
 		o.total = total
 	}
 }
 
+// WithData .
 func WithData(data []any) Option {
 	return func(o *Pagination) {
 		o.data = data
