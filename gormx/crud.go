@@ -1,6 +1,7 @@
 package gormx
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 
@@ -196,21 +197,21 @@ func Count[T any](db *gorm.DB, where ...any) (int, error) {
 }
 
 // Delete
-func Delete[T any](db *gorm.DB, val *T, where ...any) error {
+func Delete[T any](ctx context.Context, db *gorm.DB, val *T, where ...any) error {
 	if len(where) > 0 {
 		db = db.Where(where[0], where[1:]...)
 	}
 	return db.Where(val).Delete(val).Error
 }
 
-func DeleteByID[T any, E ~int | ~string](db *gorm.DB, id E, where ...any) error {
+func DeleteByID[T any, E ~int | ~string](ctx context.Context, db *gorm.DB, id E, where ...any) error {
 	if len(where) > 0 {
 		db = db.Where(where[0], where[1:]...)
 	}
 	return db.Where(GetPkColumnName[T](), id).Delete(new(T)).Error
 }
 
-func DeleteByMap[T any](db *gorm.DB, m map[string]any, where ...any) error {
+func DeleteByMap[T any](ctx context.Context, db *gorm.DB, m map[string]any, where ...any) error {
 	if len(where) > 0 {
 		db = db.Where(where[0], where[1:]...)
 	}
@@ -265,6 +266,13 @@ func Update[T any](db *gorm.DB, val *T, where ...any) error {
 	}
 	return db.Model(val).Updates(val).Error
 }
+
+// Updates record
+// the param of 'table' must be pointer, eg: &StructName
+func Updates(ctx context.Context, db *gorm.DB, table interface{}, update KV, queryCondition interface{}, args ...interface{}) error {
+	return db.WithContext(ctx).Model(table).Where(queryCondition, args...).Updates(update).Error
+}
+
 
 func UpdateByID[T any, E ~string | ~int](db *gorm.DB, id E, val *T, where ...any) error {
 	if len(where) > 0 {
