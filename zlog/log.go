@@ -104,28 +104,28 @@ func getLogLevel(logLevel string) zapcore.Level {
 	return *level
 }
 
-func (l *ZapLogger) Info(msg string, tags ...zap.Field) {
-	l.logger.Info(msg, tags...)
+func (l *ZapLogger) Info(msg string, tags ...Field) {
+	l.logger.Info(msg, l.toZapFields(tags)...)
 }
 
-func (l *ZapLogger) Error(msg string, tags ...zap.Field) {
-	l.logger.Error(msg, tags...)
+func (l *ZapLogger) Error(msg string, tags ...Field) {
+	l.logger.Error(msg, l.toZapFields(tags)...)
 }
 
-func (l *ZapLogger) Debug(msg string, tags ...zap.Field) {
-	l.logger.Debug(msg, tags...)
+func (l *ZapLogger) Debug(msg string, tags ...Field) {
+	l.logger.Debug(msg, l.toZapFields(tags)...)
 }
 
-func (l *ZapLogger) Warn(msg string, tags ...zap.Field) {
-	l.logger.Warn(msg, tags...)
+func (l *ZapLogger) Warn(msg string, tags ...Field) {
+	l.logger.Warn(msg, l.toZapFields(tags)...)
 }
 
-func (l *ZapLogger) Fatal(msg string, tags ...zap.Field) {
-	l.logger.Fatal(msg, tags...)
+func (l *ZapLogger) Fatal(msg string, tags ...Field) {
+	l.logger.Fatal(msg, l.toZapFields(tags)...)
 }
 
-func (l *ZapLogger) Panic(msg string, tags ...zap.Field) {
-	l.logger.Panic(msg, tags...)
+func (l *ZapLogger) Panic(msg string, tags ...Field) {
+	l.logger.Panic(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Debugf(format string, args ...any) {
@@ -164,4 +164,12 @@ func (l *ZapLogger) Close() {
 
 func (l *ZapLogger) Sync() {
 	_ = l.logger.Sync()
+}
+
+func (l *ZapLogger) toZapFields(args []Field) []zap.Field {
+	res := make([]zap.Field, 0, len(args))
+	for _, arg := range args {
+		res = append(res, zap.Any(arg.Key, arg.Value))
+	}
+	return res
 }

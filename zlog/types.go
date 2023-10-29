@@ -1,9 +1,5 @@
 package zlog
 
-import (
-	"go.uber.org/zap"
-)
-
 type Logger interface {
 	Debugf(format string, args ...any)
 	Infof(format string, args ...any)
@@ -12,13 +8,18 @@ type Logger interface {
 	Fatalf(format string, args ...any)
 	Panicf(format string, args ...any)
 
-	Info(msg string, tags ...zap.Field)
-	Error(msg string, tags ...zap.Field)
-	Debug(msg string, tags ...zap.Field)
-	Warn(msg string, tags ...zap.Field)
-	Fatal(msg string, tags ...zap.Field)
-	Panic(msg string, tags ...zap.Field)
+	Info(msg string, tags ...Field)
+	Error(msg string, tags ...Field)
+	Debug(msg string, tags ...Field)
+	Warn(msg string, tags ...Field)
+	Fatal(msg string, tags ...Field)
+	Panic(msg string, tags ...Field)
 
 	Close()
 	Sync()
+}
+
+type Field struct {
+	Key   string
+	Value any
 }

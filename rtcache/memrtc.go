@@ -4,7 +4,7 @@ import (
 	"context"
 
 	lru "github.com/hashicorp/golang-lru"
-	"go.skia.org/infra/go/skerr"
+	"github.com/pkg/errors"
 )
 
 // MemReadThroughCache implements the ReadThroughCache interface.
@@ -27,7 +27,7 @@ func New(rtf ReadThroughFunc, maxCachedItems int, maxConcurrentReadThroughCalls 
 
 	lruCache, err := lru.New(maxCachedItems)
 	if err != nil {
-		return nil, skerr.Wrapf(err, "making LRU with %d items", maxCachedItems)
+		return nil, errors.Wrapf(err, "making LRU with %d items", maxCachedItems)
 	}
 
 	ret := &MemReadThroughCache{
@@ -43,7 +43,7 @@ func New(rtf ReadThroughFunc, maxCachedItems int, maxConcurrentReadThroughCalls 
 func (m *MemReadThroughCache) Get(ctx context.Context, id string) (interface{}, error) {
 	r, err := m.GetAll(ctx, []string{id})
 	if err != nil {
-		return nil, skerr.Wrap(err)
+		return nil, err
 	}
 	return r[0], nil
 }
@@ -73,7 +73,7 @@ func (m *MemReadThroughCache) GetAll(ctx context.Context, ids []string) ([]inter
 	}()
 	vals, err := m.rtf(ctx, missedIDs)
 	if err != nil {
-		return nil, skerr.Wrap(err)
+		return nil, err
 	}
 	for i, val := range vals {
 		m.cache.Add(missedIDs[i], val)

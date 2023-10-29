@@ -16,7 +16,6 @@ use (
     ./jwtx
     ./cryptx
     ./pagination
-    ./respx
     ./concurrency
     ./casbinx
     ./trace
@@ -33,5 +32,6 @@ use (
     ./httpclient
     ./bash
     ./prof
+    ./codegen
 	.
 )

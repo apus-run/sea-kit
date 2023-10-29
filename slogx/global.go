@@ -39,6 +39,11 @@ func GetLogger() slog.Logger {
 	return global.Logger
 }
 
+// L 是 GetLogger 简写
+func L() slog.Logger {
+	return global.Logger
+}
+
 func Info(msg string, args ...any) {
 	global.Info(msg, args...)
 }

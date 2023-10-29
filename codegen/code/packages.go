@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"golang.org/x/tools/go/packages"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
+
+	"golang.org/x/tools/go/packages"
 )
 
 var mode = packages.NeedName |

@@ -11,6 +11,7 @@ import (
 type Pagination struct {
 	query        string
 	where        string
+	group        string
 	sort         []string
 	descending   []string
 	page         int
@@ -19,12 +20,14 @@ type Pagination struct {
 	statusField  string
 	searchFields []string
 	structType   interface{}
+	withVacuum   bool
 }
 
 func Instance(structType interface{}) Pagination {
 	pagination := Pagination{
 		query:        "",
 		where:        " WHERE 1=1 ",
+		group:        " GROUP BY ",
 		sort:         []string{},
 		descending:   []string{},
 		page:         1,
@@ -33,6 +36,7 @@ func Instance(structType interface{}) Pagination {
 		statusField:  "",
 		searchFields: []string{},
 		structType:   structType,
+		withVacuum:   false,
 	}
 
 	return pagination
@@ -43,12 +47,22 @@ func (pagination *Pagination) Query(query string) *Pagination {
 	return pagination
 }
 
-func (pagination *Pagination) WhereArgs(whereArgs string) *Pagination {
-	if strings.Contains(pagination.where, "WHERE 1=1") {
-		pagination.where = " WHERE " + whereArgs + " "
-	} else {
-		pagination.where += " " + whereArgs + " "
+func (pagination *Pagination) WhereArgs(operation, whereArgs string) *Pagination {
+	pagination.where += fmt.Sprintf(" %s %s ", operation, whereArgs)
+
+	return pagination
+}
+
+func (pagination *Pagination) GroupBy(columns ...string) *Pagination {
+
+	for index, column := range columns {
+		if index == len(columns)-1 {
+			pagination.group += column
+			continue
+		}
+		pagination.group += column + ", "
 	}
+
 	return pagination
 }
 
@@ -78,9 +92,14 @@ func (pagination *Pagination) SearchBy(search string, fields ...string) *Paginat
 	return pagination
 }
 
+func (pagination *Pagination) WithVacuum() *Pagination {
+	pagination.withVacuum = true
+	return pagination
+}
+
 func (pagination Pagination) Select() (*string, *string) {
 	query := pagination.query
-	countQuery := generateQueryCount(query, "SELECT", "FROM")
+	countQuery := generateQueryCount(query, "SELECT", "FROM", pagination.withVacuum)
 	query += pagination.where
 	countQuery += pagination.where
 
@@ -106,22 +125,25 @@ func (pagination Pagination) Select() (*string, *string) {
 		}
 	}
 
-	if pagination.search != "" {
+	if pagination.search != "" && len(pagination.searchFields) > 0 {
 		for i, p := range pagination.searchFields {
-
-			if i == 0 {
-				countQuery += "and ((" + p + "::TEXT ilike '%" + pagination.search + "%') "
-				query += "and ((" + p + "::TEXT ilike '%" + pagination.search + "%') "
-			} else {
-				countQuery += "or (" + p + "::TEXT ilike '%" + pagination.search + "%') "
-				query += "or (" + p + "::TEXT ilike '%" + pagination.search + "%') "
+			if p != "" {
+				p = getFieldName(p, "json", pagination.structType, "paginate")
+				if i == 0 {
+					countQuery += "and ((" + p + "::TEXT ilike $1) "
+					query += "and ((" + p + "::TEXT ilike $1) "
+				} else {
+					countQuery += "or (" + p + "::TEXT ilike $1) "
+					query += "or (" + p + "::TEXT ilike $1) "
+				}
 			}
-
 		}
 
 		if len(pagination.searchFields) > 0 {
-			countQuery += ") "
-			query += ") "
+			if pagination.searchFields[0] != "" {
+				countQuery += ") "
+				query += ") "
+			}
 		}
 	}
 
@@ -130,15 +152,40 @@ func (pagination Pagination) Select() (*string, *string) {
 
 		for s, sort := range pagination.sort {
 			if s == len(pagination.sort)-1 {
-				query += getFieldName(sort, "json", pagination.structType) + " " + descs[s] + ` `
+				query += getFieldName(sort, "json", pagination.structType, "db") + " " + descs[s] + ` `
 			} else {
-				query += getFieldName(sort, "json", pagination.structType) + " " + descs[s] + `, `
+				query += getFieldName(sort, "json", pagination.structType, "db") + " " + descs[s] + `, `
 			}
 		}
 	}
 
+	if pagination.group != " GROUP BY " {
+		query += pagination.group
+		countQuery += pagination.group
+	}
+
 	if pagination.itemsPerPage > -1 {
-		query += fmt.Sprintf(" LIMIT %v OFFSET %v;", pagination.itemsPerPage, offset)
+		query += fmt.Sprintf(" LIMIT %d OFFSET %d;", pagination.itemsPerPage, offset)
+	}
+
+	if pagination.withVacuum {
+		countQuery = "SELECT count_estimate($" + strings.ReplaceAll(
+			countQuery,
+			"COUNT(dl.id)",
+			"1",
+		) + "$);"
+
+		countQuery = strings.ReplaceAll(
+			countQuery,
+			"'",
+			"''",
+		)
+
+		countQuery = strings.ReplaceAll(
+			countQuery,
+			"$",
+			"'",
+		)
 	}
 
 	return &query, &countQuery
@@ -147,7 +194,7 @@ func (pagination Pagination) Select() (*string, *string) {
 func getSearchFieldsBetween(str string, start string, end string) (result []string) {
 	a := strings.SplitAfterN(str, start, 2)
 	b := strings.SplitAfterN(a[len(a)-1], end, 2)
-	fields := strings.Split(strings.Replace(b[0][0:len(b[0])-len(end)], " ", "", -1), ",")
+	fields := strings.Split(strings.Replace((b[0][0:len(b[0])-len(end)]), " ", "", -1), ",")
 
 	searchFields := []string{}
 	for _, field := range fields {
@@ -159,12 +206,12 @@ func getSearchFieldsBetween(str string, start string, end string) (result []stri
 	return searchFields
 }
 
-func generateQueryCount(str string, start string, end string) (result string) {
+func generateQueryCount(str string, start string, end string, vacuum bool) (result string) {
 	a := strings.SplitAfterN(str, start, 2)
 	b := strings.SplitAfterN(a[len(a)-1], end, 2)
 	columns := b[0][0 : len(b[0])-len(end)]
 
-	fields := strings.Split(strings.Replace(b[0][0:len(b[0])-len(end)], " ", "", -1), ",")
+	fields := strings.Split(strings.Replace((b[0][0:len(b[0])-len(end)]), " ", "", -1), ",")
 
 	fieldWhithID := "id"
 	for _, field := range fields {
@@ -179,10 +226,14 @@ func generateQueryCount(str string, start string, end string) (result string) {
 		}
 	}
 
+	if vacuum {
+		return strings.ReplaceAll(str, columns, " 1 ")
+	}
+
 	return strings.ReplaceAll(str, columns, " COUNT("+fieldWhithID+") ")
 }
 
-func getFieldName(tag, key string, s interface{}) (fieldName string) {
+func getFieldName(tag, key string, s interface{}, keyTarget string) (fieldname string) {
 	rt := reflect.TypeOf(s)
 	if rt.Kind() != reflect.Struct {
 		panic("bad type")
@@ -191,7 +242,7 @@ func getFieldName(tag, key string, s interface{}) (fieldName string) {
 		f := rt.Field(i)
 		v := strings.Split(f.Tag.Get(key), ",")[0] // use split to ignore tag "options" like omitempty, etc.
 		if v == tag {
-			return f.Tag.Get("db")
+			return f.Tag.Get(keyTarget)
 		}
 	}
 	return ""

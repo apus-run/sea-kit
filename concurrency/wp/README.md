@@ -1,4 +1,4 @@
-# 通用动态工作池、协程池
+# worker pool 通用动态工作池、协程池
 
 A dynamic golang worker pool, coroutine pool
 
