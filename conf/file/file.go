@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"project-layout/pkg/conf"
+	"github.com/apus-run/sea-kit/conf"
 )
 
 var _ conf.Source = (*file)(nil)

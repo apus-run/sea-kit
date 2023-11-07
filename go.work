@@ -33,5 +33,6 @@ use (
     ./bash
     ./prof
     ./codegen
+    ./slice
 	.
 )

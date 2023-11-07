@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"project-layout/pkg/conf"
+	"github.com/apus-run/sea-kit/conf"
 )
 
 const (

@@ -5,15 +5,22 @@ import (
 	"log/slog"
 )
 
-var ctxKey = &struct{ key string }{"context"}
+type ContextLogKey struct{}
 
-func NewContext(ctx context.Context, logger *slog.Logger) context.Context {
-	return context.WithValue(ctx, ctxKey, logger)
+func NewContext(ctx context.Context, l *slog.Logger) context.Context {
+	return context.WithValue(ctx, ContextLogKey{}, l)
+}
+
+func WithContext(ctx context.Context, l *slog.Logger) context.Context {
+	if _, ok := ctx.Value(ContextLogKey{}).(*slog.Logger); ok {
+		return ctx
+	}
+	return context.WithValue(ctx, ContextLogKey{}, l)
 }
 
 func FromContext(ctx context.Context) *slog.Logger {
-	if logger, ok := ctx.Value(ctxKey).(*slog.Logger); ok {
-		return logger
+	if l, ok := ctx.Value(ContextLogKey{}).(*slog.Logger); ok {
+		return l
 	}
 	return slog.Default()
 }
