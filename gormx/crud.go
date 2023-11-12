@@ -218,7 +218,7 @@ func DeleteByMap[T any](ctx context.Context, db *gorm.DB, m map[string]any, wher
 	return db.WithContext(ctx).Where(m).Delete(new(T)).Error
 }
 
-// Get
+// Get .
 func Get[T any](ctx context.Context, db *gorm.DB, val *T, where ...any) (*T, error) {
 	if len(where) > 0 {
 		db = db.WithContext(ctx).Where(where[0], where[1:]...)
@@ -259,7 +259,7 @@ func GetByID[T any, E ~int | ~string](ctx context.Context, db *gorm.DB, id E, wh
 	return &val, nil
 }
 
-// Update
+// Update .
 func Update[T any](ctx context.Context, db *gorm.DB, val *T, where ...any) error {
 	if len(where) > 0 {
 		db = db.WithContext(ctx).Where(where[0], where[1:]...)

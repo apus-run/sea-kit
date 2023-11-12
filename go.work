@@ -14,7 +14,7 @@ use (
 	./metrics
     ./validator
     ./jwtx
-    ./cryptx
+    ./cryptox
     ./pagination
     ./concurrency
     ./casbinx

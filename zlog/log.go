@@ -16,6 +16,14 @@ type ZapLogger struct {
 	logger *zap.Logger
 }
 
+// NewZapLogger 只包装了 zap
+func NewZapLogger(l *zap.Logger) Logger {
+	return &ZapLogger{
+		logger: l,
+	}
+}
+
+// NewLogger 包装了 zap 和日志文件切割归档
 func NewLogger(opts ...Option) *ZapLogger {
 	options := Apply(opts...)
 
@@ -24,13 +32,13 @@ func NewLogger(opts ...Option) *ZapLogger {
 	writerSyncer := getLogConsoleWriter(options)
 
 	// 编码器配置
-	encoder := getEncoder(options.encoding)
+	encoder := getEncoder(options.Encoding)
 
 	// 日志级别
-	level := getLogLevel(options.logLevel)
+	level := getLogLevel(options.LogLevel)
 
 	core := zapcore.NewCore(encoder, writerSyncer, level)
-	if options.mode != "prod" {
+	if options.Mode != "prod" {
 		return &ZapLogger{
 			zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel)),
 		}
@@ -71,11 +79,11 @@ func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 
 func getLogWriter(opts *Options) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   opts.logFilename,
-		MaxSize:    opts.maxSize, // megabytes
-		MaxBackups: opts.maxBackups,
-		MaxAge:     opts.maxAge, //days
-		Compress:   opts.compress,
+		Filename:   opts.LogFilename,
+		MaxSize:    opts.MaxSize, // megabytes
+		MaxBackups: opts.MaxBackups,
+		MaxAge:     opts.MaxAge, //days
+		Compress:   opts.Compress,
 	}
 	return zapcore.AddSync(lumberJackLogger)
 }
@@ -83,11 +91,11 @@ func getLogWriter(opts *Options) zapcore.WriteSyncer {
 func getLogConsoleWriter(opts *Options) zapcore.WriteSyncer {
 	// 日志文件切割归档
 	lumberJackLogger := &lumberjack.Logger{
-		Filename:   opts.logFilename,
-		MaxSize:    opts.maxSize, // megabytes
-		MaxBackups: opts.maxBackups,
-		MaxAge:     opts.maxAge, //days
-		Compress:   opts.compress,
+		Filename:   opts.LogFilename,
+		MaxSize:    opts.MaxSize, // megabytes
+		MaxBackups: opts.MaxBackups,
+		MaxAge:     opts.MaxAge, //days
+		Compress:   opts.Compress,
 	}
 
 	// 打印到控制台和文件
@@ -102,6 +110,11 @@ func getLogLevel(logLevel string) zapcore.Level {
 	}
 
 	return *level
+}
+
+func (l *ZapLogger) With(args ...Field) Logger {
+	z := l.logger.With(l.toZapFields(args)...)
+	return NewZapLogger(z)
 }
 
 func (l *ZapLogger) Info(msg string, tags ...Field) {

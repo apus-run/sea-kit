@@ -1,4 +1,4 @@
-package cryptx
+package cryptox
 
 import "testing"
 

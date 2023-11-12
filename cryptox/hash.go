@@ -1,4 +1,4 @@
-package cryptx
+package cryptox
 
 import "golang.org/x/crypto/bcrypt"
 

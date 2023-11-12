@@ -90,10 +90,62 @@ func Apply(opts ...DBOption) *DBConfig {
 	return config
 }
 
-// WithGormConfig 表示自行配置Gorm的配置信息
-func WithGormConfig(f func(options *DBConfig)) DBOption {
+// WithConfig 设置所有配置
+func WithConfig(fn func(options *DBConfig)) DBOption {
 	return func(config *DBConfig) error {
-		f(config)
+		fn(config)
+		return nil
+	}
+}
+
+// WithDsn 设置dsn
+func WithDsn(dsn string) DBOption {
+	return func(config *DBConfig) error {
+		config.Dsn = dsn
+		return nil
+	}
+}
+
+// WithDriverType 设置DriverType
+func WithDriverType(d DriverType) DBOption {
+	return func(config *DBConfig) error {
+		config.DriverType = d
+		return nil
+	}
+}
+
+func WithConnMaxOpen(maxOpen int) DBOption {
+	return func(config *DBConfig) error {
+		config.ConnMaxOpen = maxOpen
+		return nil
+	}
+}
+
+func WithConnMaxIdle(maxIdle int) DBOption {
+	return func(config *DBConfig) error {
+		config.ConnMaxIdle = maxIdle
+		return nil
+	}
+}
+
+func WithConnMaxLifetime(maxLifetime string) DBOption {
+	return func(config *DBConfig) error {
+		config.ConnMaxLifetime = maxLifetime
+		return nil
+	}
+}
+
+func WithConnMaxIdleTime(maxIdleTime string) DBOption {
+	return func(config *DBConfig) error {
+		config.ConnMaxIdleTime = maxIdleTime
+		return nil
+	}
+}
+
+// WithGormConfig 设置gorm.Config
+func WithGormConfig(config *gorm.Config) DBOption {
+	return func(conf *DBConfig) error {
+		conf.Config = config
 		return nil
 	}
 }

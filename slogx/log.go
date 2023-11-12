@@ -30,7 +30,7 @@ func NewLogger(opts ...Option) *slog.Logger {
 	options := Apply(opts...)
 
 	factory.mu.Lock()
-	if logger, ok := factory.loggers[options.logFilename]; ok {
+	if logger, ok := factory.loggers[options.LogFilename]; ok {
 		factory.mu.Unlock()
 		return logger
 	}
@@ -40,7 +40,7 @@ func NewLogger(opts ...Option) *slog.Logger {
 	writerSyncer := getLogWriter(options)
 
 	// 日志级别
-	level := getLogLevel(options.logLevel)
+	level := getLogLevel(options.LogLevel)
 
 	var handler slog.Handler
 	handlerOptions := &slog.HandlerOptions{
@@ -55,7 +55,7 @@ func NewLogger(opts ...Option) *slog.Logger {
 			return a
 		},
 	}
-	if len(options.logFilename) == 0 && strings.ToLower(options.encoding) == "console" {
+	if len(options.LogFilename) == 0 && strings.ToLower(options.Encoding) == "console" {
 		handler = slog.NewTextHandler(os.Stdout, handlerOptions)
 	} else {
 		handler = slog.NewJSONHandler(writerSyncer, handlerOptions)
@@ -66,7 +66,7 @@ func NewLogger(opts ...Option) *slog.Logger {
 	// 此处设置默认日志, 最好手动设置
 	// slog.SetDefault(l)
 
-	factory.loggers[options.logFilename] = logger
+	factory.loggers[options.LogFilename] = logger
 
 	logger.Info("the log module has been initialized successfully.", slog.Any("options", options))
 
@@ -75,11 +75,11 @@ func NewLogger(opts ...Option) *slog.Logger {
 
 func getLogWriter(opts *Options) io.WriteCloser {
 	return &lumberjack.Logger{
-		Filename:   opts.logFilename,
-		MaxSize:    opts.maxSize, // megabytes
-		MaxBackups: opts.maxBackups,
-		MaxAge:     opts.maxAge, //days
-		Compress:   opts.compress,
+		Filename:   opts.LogFilename,
+		MaxSize:    opts.MaxSize, // megabytes
+		MaxBackups: opts.MaxBackups,
+		MaxAge:     opts.MaxAge, //days
+		Compress:   opts.Compress,
 	}
 }
 

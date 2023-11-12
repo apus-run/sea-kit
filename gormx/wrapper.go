@@ -21,7 +21,7 @@ import (
 	"github.com/apus-run/sea-kit/log"
 )
 
-// 字段数据重复出现冲突, 状态码
+// DuplicateEntryErrCode 字段数据重复出现冲突, 状态码
 const DuplicateEntryErrCode uint16 = 1062
 
 var _ Wrapper = (*Helper)(nil)
@@ -42,7 +42,7 @@ type Wrapper interface {
 	// CanConnect 是否可以连接
 	CanConnect(ctx context.Context, db *gorm.DB) (bool, error)
 
-	// Table 相关
+	// GetTables Table 相关
 	GetTables(ctx context.Context, db *gorm.DB) ([]string, error)
 	HasTable(ctx context.Context, db *gorm.DB, table string) (bool, error)
 	GetTableColumns(ctx context.Context, db *gorm.DB, table string) ([]TableColumn, error)
@@ -208,4 +208,43 @@ func (h *Helper) GetTableColumns(ctx context.Context, db *gorm.DB, table string)
 func IsDuplicateEntryErr(err error) bool {
 	var mysqlErr *mysql2.MySQLError
 	return errors.As(err, &mysqlErr) && mysqlErr.Number == DuplicateEntryErrCode
+}
+
+func (h *Helper) CloseAllDB() {
+	for name, db := range h.dbs {
+		sqlDB, err := db.DB()
+		if err != nil {
+			log.Errorf("get db instance error: ", err.Error())
+			continue
+		}
+
+		err = sqlDB.Close()
+		if err != nil {
+			log.Errorf("close current db error: ", err)
+			continue
+		}
+
+		// 销毁连接句柄标识
+		delete(h.dbs, name)
+	}
+}
+
+// CloseDbByName 关闭指定name的db engine
+func (h *Helper) CloseDbByName(name string) error {
+	if db, ok := h.dbs[name]; ok {
+		sqlDB, err := db.DB()
+		if err != nil {
+			return err
+		}
+
+		err = sqlDB.Close()
+		if err != nil {
+			return err
+		}
+
+		// 销毁连接句柄标识
+		delete(h.dbs, name)
+	}
+
+	return errors.New("current db engine not exist")
 }
