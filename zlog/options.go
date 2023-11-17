@@ -61,7 +61,7 @@ func WithEncoding(encoding string) Option {
 	}
 }
 
-// WithFilename 日志文件
+// WithFilename 日志文件路径，建议 /logs/log.log，如果为空则不输出日志到文件
 func WithFilename(filename string) Option {
 	return func(o *Options) {
 		o.LogFilename = filename
@@ -75,7 +75,7 @@ func WithMaxSize(maxSize int) Option {
 	}
 }
 
-// WithMaxBackups 日志文件最大备份数
+// WithMaxBackups 日志文件最大备份数, 保留日志文件最大的数量，为 0 是保留所有旧的日志文件
 func WithMaxBackups(maxBackups int) Option {
 	return func(o *Options) {
 		o.MaxBackups = maxBackups
