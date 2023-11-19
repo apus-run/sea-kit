@@ -19,6 +19,296 @@ type MockCmdable struct {
 	recorder *MockCmdableMockRecorder
 }
 
+func (m *MockCmdable) JSONArrAppend(ctx context.Context, key, path string, values ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrIndex(ctx context.Context, key, path string, value ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrIndexWithArgs(ctx context.Context, key, path string, options *redis.JSONArrIndexArgs, value ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrInsert(ctx context.Context, key, path string, index int64, values ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrLen(ctx context.Context, key, path string) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrPop(ctx context.Context, key, path string, index int) *redis.StringSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrTrim(ctx context.Context, key, path string) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrTrimWithArgs(ctx context.Context, key, path string, options *redis.JSONArrTrimArgs) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONClear(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONDebugMemory(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONDel(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONForget(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONGet(ctx context.Context, key string, paths ...string) *redis.JSONCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONGetWithArgs(ctx context.Context, key string, options *redis.JSONGetArgs, paths ...string) *redis.JSONCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMerge(ctx context.Context, key, path string, value string) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMSetArgs(ctx context.Context, docs []redis.JSONSetArgs) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMSet(ctx context.Context, params ...interface{}) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMGet(ctx context.Context, path string, keys ...string) *redis.JSONSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONNumIncrBy(ctx context.Context, key, path string, value float64) *redis.JSONCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONObjKeys(ctx context.Context, key, path string) *redis.SliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONObjLen(ctx context.Context, key, path string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONSet(ctx context.Context, key, path string, value interface{}) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONSetMode(ctx context.Context, key, path string, value interface{}, mode string) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONStrAppend(ctx context.Context, key, path, value string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONStrLen(ctx context.Context, key, path string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONToggle(ctx context.Context, key, path string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONType(ctx context.Context, key, path string) *redis.JSONSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) BFReserveWithArgs(ctx context.Context, key string, options *redis.BFReserveOptions) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) CFReserveWithArgs(ctx context.Context, key string, options *redis.CFReserveOptions) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSAdd(ctx context.Context, key string, timestamp interface{}, value float64) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSAddWithArgs(ctx context.Context, key string, timestamp interface{}, value float64, options *redis.TSOptions) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSCreate(ctx context.Context, key string) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSCreateWithArgs(ctx context.Context, key string, options *redis.TSOptions) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSAlter(ctx context.Context, key string, options *redis.TSAlterOptions) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSCreateRule(ctx context.Context, sourceKey string, destKey string, aggregator redis.Aggregator, bucketDuration int) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSCreateRuleWithArgs(ctx context.Context, sourceKey string, destKey string, aggregator redis.Aggregator, bucketDuration int, options *redis.TSCreateRuleOptions) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSIncrBy(ctx context.Context, Key string, timestamp float64) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSIncrByWithArgs(ctx context.Context, key string, timestamp float64, options *redis.TSIncrDecrOptions) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSDecrBy(ctx context.Context, Key string, timestamp float64) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSDecrByWithArgs(ctx context.Context, key string, timestamp float64, options *redis.TSIncrDecrOptions) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSDel(ctx context.Context, Key string, fromTimestamp int, toTimestamp int) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSDeleteRule(ctx context.Context, sourceKey string, destKey string) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSGet(ctx context.Context, key string) *redis.TSTimestampValueCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSGetWithArgs(ctx context.Context, key string, options *redis.TSGetOptions) *redis.TSTimestampValueCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSInfo(ctx context.Context, key string) *redis.MapStringInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSInfoWithArgs(ctx context.Context, key string, options *redis.TSInfoOptions) *redis.MapStringInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMAdd(ctx context.Context, ktvSlices [][]interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSQueryIndex(ctx context.Context, filterExpr []string) *redis.StringSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSRevRange(ctx context.Context, key string, fromTimestamp int, toTimestamp int) *redis.TSTimestampValueSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSRevRangeWithArgs(ctx context.Context, key string, fromTimestamp int, toTimestamp int, options *redis.TSRevRangeOptions) *redis.TSTimestampValueSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSRange(ctx context.Context, key string, fromTimestamp int, toTimestamp int) *redis.TSTimestampValueSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSRangeWithArgs(ctx context.Context, key string, fromTimestamp int, toTimestamp int, options *redis.TSRangeOptions) *redis.TSTimestampValueSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMRange(ctx context.Context, fromTimestamp int, toTimestamp int, filterExpr []string) *redis.MapStringSliceInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMRangeWithArgs(ctx context.Context, fromTimestamp int, toTimestamp int, filterExpr []string, options *redis.TSMRangeOptions) *redis.MapStringSliceInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMRevRange(ctx context.Context, fromTimestamp int, toTimestamp int, filterExpr []string) *redis.MapStringSliceInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMRevRangeWithArgs(ctx context.Context, fromTimestamp int, toTimestamp int, filterExpr []string, options *redis.TSMRevRangeOptions) *redis.MapStringSliceInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMGet(ctx context.Context, filters []string) *redis.MapStringSliceInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) TSMGetWithArgs(ctx context.Context, filters []string, options *redis.TSMGetOptions) *redis.MapStringSliceInterfaceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
 // MockCmdableMockRecorder is the mock recorder for MockCmdable.
 type MockCmdableMockRecorder struct {
 	mock *MockCmdable
@@ -95,6 +385,287 @@ func (m *MockCmdable) Append(arg0 context.Context, arg1, arg2 string) *redis.Int
 func (mr *MockCmdableMockRecorder) Append(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Append", reflect.TypeOf((*MockCmdable)(nil).Append), arg0, arg1, arg2)
+}
+
+// BFAdd mocks base method.
+func (m *MockCmdable) BFAdd(arg0 context.Context, arg1 string, arg2 interface{}) *redis.BoolCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFAdd", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BoolCmd)
+	return ret0
+}
+
+// BFAdd indicates an expected call of BFAdd.
+func (mr *MockCmdableMockRecorder) BFAdd(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFAdd", reflect.TypeOf((*MockCmdable)(nil).BFAdd), arg0, arg1, arg2)
+}
+
+// BFCard mocks base method.
+func (m *MockCmdable) BFCard(arg0 context.Context, arg1 string) *redis.IntCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFCard", arg0, arg1)
+	ret0, _ := ret[0].(*redis.IntCmd)
+	return ret0
+}
+
+// BFCard indicates an expected call of BFCard.
+func (mr *MockCmdableMockRecorder) BFCard(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFCard", reflect.TypeOf((*MockCmdable)(nil).BFCard), arg0, arg1)
+}
+
+// BFExists mocks base method.
+func (m *MockCmdable) BFExists(arg0 context.Context, arg1 string, arg2 interface{}) *redis.BoolCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFExists", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BoolCmd)
+	return ret0
+}
+
+// BFExists indicates an expected call of BFExists.
+func (mr *MockCmdableMockRecorder) BFExists(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFExists", reflect.TypeOf((*MockCmdable)(nil).BFExists), arg0, arg1, arg2)
+}
+
+// BFInfo mocks base method.
+func (m *MockCmdable) BFInfo(arg0 context.Context, arg1 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfo", arg0, arg1)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfo indicates an expected call of BFInfo.
+func (mr *MockCmdableMockRecorder) BFInfo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfo", reflect.TypeOf((*MockCmdable)(nil).BFInfo), arg0, arg1)
+}
+
+// BFInfoArg mocks base method.
+func (m *MockCmdable) BFInfoArg(arg0 context.Context, arg1, arg2 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfoArg", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfoArg indicates an expected call of BFInfoArg.
+func (mr *MockCmdableMockRecorder) BFInfoArg(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfoArg", reflect.TypeOf((*MockCmdable)(nil).BFInfoArg), arg0, arg1, arg2)
+}
+
+// BFInfoCapacity mocks base method.
+func (m *MockCmdable) BFInfoCapacity(arg0 context.Context, arg1 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfoCapacity", arg0, arg1)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfoCapacity indicates an expected call of BFInfoCapacity.
+func (mr *MockCmdableMockRecorder) BFInfoCapacity(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfoCapacity", reflect.TypeOf((*MockCmdable)(nil).BFInfoCapacity), arg0, arg1)
+}
+
+// BFInfoExpansion mocks base method.
+func (m *MockCmdable) BFInfoExpansion(arg0 context.Context, arg1 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfoExpansion", arg0, arg1)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfoExpansion indicates an expected call of BFInfoExpansion.
+func (mr *MockCmdableMockRecorder) BFInfoExpansion(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfoExpansion", reflect.TypeOf((*MockCmdable)(nil).BFInfoExpansion), arg0, arg1)
+}
+
+// BFInfoFilters mocks base method.
+func (m *MockCmdable) BFInfoFilters(arg0 context.Context, arg1 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfoFilters", arg0, arg1)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfoFilters indicates an expected call of BFInfoFilters.
+func (mr *MockCmdableMockRecorder) BFInfoFilters(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfoFilters", reflect.TypeOf((*MockCmdable)(nil).BFInfoFilters), arg0, arg1)
+}
+
+// BFInfoItems mocks base method.
+func (m *MockCmdable) BFInfoItems(arg0 context.Context, arg1 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfoItems", arg0, arg1)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfoItems indicates an expected call of BFInfoItems.
+func (mr *MockCmdableMockRecorder) BFInfoItems(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfoItems", reflect.TypeOf((*MockCmdable)(nil).BFInfoItems), arg0, arg1)
+}
+
+// BFInfoSize mocks base method.
+func (m *MockCmdable) BFInfoSize(arg0 context.Context, arg1 string) *redis.BFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFInfoSize", arg0, arg1)
+	ret0, _ := ret[0].(*redis.BFInfoCmd)
+	return ret0
+}
+
+// BFInfoSize indicates an expected call of BFInfoSize.
+func (mr *MockCmdableMockRecorder) BFInfoSize(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInfoSize", reflect.TypeOf((*MockCmdable)(nil).BFInfoSize), arg0, arg1)
+}
+
+// BFInsert mocks base method.
+func (m *MockCmdable) BFInsert(arg0 context.Context, arg1 string, arg2 *redis.BFInsertOptions, arg3 ...interface{}) *redis.BoolSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1, arg2}
+	for _, a := range arg3 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "BFInsert", varargs...)
+	ret0, _ := ret[0].(*redis.BoolSliceCmd)
+	return ret0
+}
+
+// BFInsert indicates an expected call of BFInsert.
+func (mr *MockCmdableMockRecorder) BFInsert(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFInsert", reflect.TypeOf((*MockCmdable)(nil).BFInsert), varargs...)
+}
+
+// BFLoadChunk mocks base method.
+func (m *MockCmdable) BFLoadChunk(arg0 context.Context, arg1 string, arg2 int64, arg3 interface{}) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFLoadChunk", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// BFLoadChunk indicates an expected call of BFLoadChunk.
+func (mr *MockCmdableMockRecorder) BFLoadChunk(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFLoadChunk", reflect.TypeOf((*MockCmdable)(nil).BFLoadChunk), arg0, arg1, arg2, arg3)
+}
+
+// BFMAdd mocks base method.
+func (m *MockCmdable) BFMAdd(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.BoolSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "BFMAdd", varargs...)
+	ret0, _ := ret[0].(*redis.BoolSliceCmd)
+	return ret0
+}
+
+// BFMAdd indicates an expected call of BFMAdd.
+func (mr *MockCmdableMockRecorder) BFMAdd(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFMAdd", reflect.TypeOf((*MockCmdable)(nil).BFMAdd), varargs...)
+}
+
+// BFMExists mocks base method.
+func (m *MockCmdable) BFMExists(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.BoolSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "BFMExists", varargs...)
+	ret0, _ := ret[0].(*redis.BoolSliceCmd)
+	return ret0
+}
+
+// BFMExists indicates an expected call of BFMExists.
+func (mr *MockCmdableMockRecorder) BFMExists(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFMExists", reflect.TypeOf((*MockCmdable)(nil).BFMExists), varargs...)
+}
+
+// BFReserve mocks base method.
+func (m *MockCmdable) BFReserve(arg0 context.Context, arg1 string, arg2 float64, arg3 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFReserve", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// BFReserve indicates an expected call of BFReserve.
+func (mr *MockCmdableMockRecorder) BFReserve(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFReserve", reflect.TypeOf((*MockCmdable)(nil).BFReserve), arg0, arg1, arg2, arg3)
+}
+
+// BFReserveArgs mocks base method.
+func (m *MockCmdable) BFReserveArgs(arg0 context.Context, arg1 string, arg2 *redis.BFReserveOptions) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFReserveArgs", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// BFReserveArgs indicates an expected call of BFReserveArgs.
+func (mr *MockCmdableMockRecorder) BFReserveArgs(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFReserveArgs", reflect.TypeOf((*MockCmdable)(nil).BFReserveArgs), arg0, arg1, arg2)
+}
+
+// BFReserveExpansion mocks base method.
+func (m *MockCmdable) BFReserveExpansion(arg0 context.Context, arg1 string, arg2 float64, arg3, arg4 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFReserveExpansion", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// BFReserveExpansion indicates an expected call of BFReserveExpansion.
+func (mr *MockCmdableMockRecorder) BFReserveExpansion(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFReserveExpansion", reflect.TypeOf((*MockCmdable)(nil).BFReserveExpansion), arg0, arg1, arg2, arg3, arg4)
+}
+
+// BFReserveNonScaling mocks base method.
+func (m *MockCmdable) BFReserveNonScaling(arg0 context.Context, arg1 string, arg2 float64, arg3 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFReserveNonScaling", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// BFReserveNonScaling indicates an expected call of BFReserveNonScaling.
+func (mr *MockCmdableMockRecorder) BFReserveNonScaling(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFReserveNonScaling", reflect.TypeOf((*MockCmdable)(nil).BFReserveNonScaling), arg0, arg1, arg2, arg3)
+}
+
+// BFScanDump mocks base method.
+func (m *MockCmdable) BFScanDump(arg0 context.Context, arg1 string, arg2 int64) *redis.ScanDumpCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BFScanDump", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.ScanDumpCmd)
+	return ret0
+}
+
+// BFScanDump indicates an expected call of BFScanDump.
+func (mr *MockCmdableMockRecorder) BFScanDump(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BFScanDump", reflect.TypeOf((*MockCmdable)(nil).BFScanDump), arg0, arg1, arg2)
 }
 
 // BLMPop mocks base method.
@@ -402,6 +973,358 @@ func (m *MockCmdable) BitPosSpan(arg0 context.Context, arg1 string, arg2 int8, a
 func (mr *MockCmdableMockRecorder) BitPosSpan(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BitPosSpan", reflect.TypeOf((*MockCmdable)(nil).BitPosSpan), arg0, arg1, arg2, arg3, arg4, arg5)
+}
+
+// CFAdd mocks base method.
+func (m *MockCmdable) CFAdd(arg0 context.Context, arg1 string, arg2 interface{}) *redis.BoolCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFAdd", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BoolCmd)
+	return ret0
+}
+
+// CFAdd indicates an expected call of CFAdd.
+func (mr *MockCmdableMockRecorder) CFAdd(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFAdd", reflect.TypeOf((*MockCmdable)(nil).CFAdd), arg0, arg1, arg2)
+}
+
+// CFAddNX mocks base method.
+func (m *MockCmdable) CFAddNX(arg0 context.Context, arg1 string, arg2 interface{}) *redis.BoolCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFAddNX", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BoolCmd)
+	return ret0
+}
+
+// CFAddNX indicates an expected call of CFAddNX.
+func (mr *MockCmdableMockRecorder) CFAddNX(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFAddNX", reflect.TypeOf((*MockCmdable)(nil).CFAddNX), arg0, arg1, arg2)
+}
+
+// CFCount mocks base method.
+func (m *MockCmdable) CFCount(arg0 context.Context, arg1 string, arg2 interface{}) *redis.IntCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFCount", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.IntCmd)
+	return ret0
+}
+
+// CFCount indicates an expected call of CFCount.
+func (mr *MockCmdableMockRecorder) CFCount(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFCount", reflect.TypeOf((*MockCmdable)(nil).CFCount), arg0, arg1, arg2)
+}
+
+// CFDel mocks base method.
+func (m *MockCmdable) CFDel(arg0 context.Context, arg1 string, arg2 interface{}) *redis.BoolCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFDel", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BoolCmd)
+	return ret0
+}
+
+// CFDel indicates an expected call of CFDel.
+func (mr *MockCmdableMockRecorder) CFDel(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFDel", reflect.TypeOf((*MockCmdable)(nil).CFDel), arg0, arg1, arg2)
+}
+
+// CFExists mocks base method.
+func (m *MockCmdable) CFExists(arg0 context.Context, arg1 string, arg2 interface{}) *redis.BoolCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFExists", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.BoolCmd)
+	return ret0
+}
+
+// CFExists indicates an expected call of CFExists.
+func (mr *MockCmdableMockRecorder) CFExists(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFExists", reflect.TypeOf((*MockCmdable)(nil).CFExists), arg0, arg1, arg2)
+}
+
+// CFInfo mocks base method.
+func (m *MockCmdable) CFInfo(arg0 context.Context, arg1 string) *redis.CFInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFInfo", arg0, arg1)
+	ret0, _ := ret[0].(*redis.CFInfoCmd)
+	return ret0
+}
+
+// CFInfo indicates an expected call of CFInfo.
+func (mr *MockCmdableMockRecorder) CFInfo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFInfo", reflect.TypeOf((*MockCmdable)(nil).CFInfo), arg0, arg1)
+}
+
+// CFInsert mocks base method.
+func (m *MockCmdable) CFInsert(arg0 context.Context, arg1 string, arg2 *redis.CFInsertOptions, arg3 ...interface{}) *redis.BoolSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1, arg2}
+	for _, a := range arg3 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CFInsert", varargs...)
+	ret0, _ := ret[0].(*redis.BoolSliceCmd)
+	return ret0
+}
+
+// CFInsert indicates an expected call of CFInsert.
+func (mr *MockCmdableMockRecorder) CFInsert(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFInsert", reflect.TypeOf((*MockCmdable)(nil).CFInsert), varargs...)
+}
+
+// CFInsertNX mocks base method.
+func (m *MockCmdable) CFInsertNX(arg0 context.Context, arg1 string, arg2 *redis.CFInsertOptions, arg3 ...interface{}) *redis.IntSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1, arg2}
+	for _, a := range arg3 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CFInsertNX", varargs...)
+	ret0, _ := ret[0].(*redis.IntSliceCmd)
+	return ret0
+}
+
+// CFInsertNX indicates an expected call of CFInsertNX.
+func (mr *MockCmdableMockRecorder) CFInsertNX(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFInsertNX", reflect.TypeOf((*MockCmdable)(nil).CFInsertNX), varargs...)
+}
+
+// CFLoadChunk mocks base method.
+func (m *MockCmdable) CFLoadChunk(arg0 context.Context, arg1 string, arg2 int64, arg3 interface{}) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFLoadChunk", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CFLoadChunk indicates an expected call of CFLoadChunk.
+func (mr *MockCmdableMockRecorder) CFLoadChunk(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFLoadChunk", reflect.TypeOf((*MockCmdable)(nil).CFLoadChunk), arg0, arg1, arg2, arg3)
+}
+
+// CFMExists mocks base method.
+func (m *MockCmdable) CFMExists(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.BoolSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CFMExists", varargs...)
+	ret0, _ := ret[0].(*redis.BoolSliceCmd)
+	return ret0
+}
+
+// CFMExists indicates an expected call of CFMExists.
+func (mr *MockCmdableMockRecorder) CFMExists(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFMExists", reflect.TypeOf((*MockCmdable)(nil).CFMExists), varargs...)
+}
+
+// CFReserve mocks base method.
+func (m *MockCmdable) CFReserve(arg0 context.Context, arg1 string, arg2 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFReserve", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CFReserve indicates an expected call of CFReserve.
+func (mr *MockCmdableMockRecorder) CFReserve(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFReserve", reflect.TypeOf((*MockCmdable)(nil).CFReserve), arg0, arg1, arg2)
+}
+
+// CFReserveArgs mocks base method.
+func (m *MockCmdable) CFReserveArgs(arg0 context.Context, arg1 string, arg2 *redis.CFReserveOptions) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFReserveArgs", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CFReserveArgs indicates an expected call of CFReserveArgs.
+func (mr *MockCmdableMockRecorder) CFReserveArgs(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFReserveArgs", reflect.TypeOf((*MockCmdable)(nil).CFReserveArgs), arg0, arg1, arg2)
+}
+
+// CFReserveBucketSize mocks base method.
+func (m *MockCmdable) CFReserveBucketSize(arg0 context.Context, arg1 string, arg2, arg3 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFReserveBucketSize", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CFReserveBucketSize indicates an expected call of CFReserveBucketSize.
+func (mr *MockCmdableMockRecorder) CFReserveBucketSize(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFReserveBucketSize", reflect.TypeOf((*MockCmdable)(nil).CFReserveBucketSize), arg0, arg1, arg2, arg3)
+}
+
+// CFReserveExpansion mocks base method.
+func (m *MockCmdable) CFReserveExpansion(arg0 context.Context, arg1 string, arg2, arg3 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFReserveExpansion", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CFReserveExpansion indicates an expected call of CFReserveExpansion.
+func (mr *MockCmdableMockRecorder) CFReserveExpansion(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFReserveExpansion", reflect.TypeOf((*MockCmdable)(nil).CFReserveExpansion), arg0, arg1, arg2, arg3)
+}
+
+// CFReserveMaxIterations mocks base method.
+func (m *MockCmdable) CFReserveMaxIterations(arg0 context.Context, arg1 string, arg2, arg3 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFReserveMaxIterations", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CFReserveMaxIterations indicates an expected call of CFReserveMaxIterations.
+func (mr *MockCmdableMockRecorder) CFReserveMaxIterations(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFReserveMaxIterations", reflect.TypeOf((*MockCmdable)(nil).CFReserveMaxIterations), arg0, arg1, arg2, arg3)
+}
+
+// CFScanDump mocks base method.
+func (m *MockCmdable) CFScanDump(arg0 context.Context, arg1 string, arg2 int64) *redis.ScanDumpCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CFScanDump", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.ScanDumpCmd)
+	return ret0
+}
+
+// CFScanDump indicates an expected call of CFScanDump.
+func (mr *MockCmdableMockRecorder) CFScanDump(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CFScanDump", reflect.TypeOf((*MockCmdable)(nil).CFScanDump), arg0, arg1, arg2)
+}
+
+// CMSIncrBy mocks base method.
+func (m *MockCmdable) CMSIncrBy(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.IntSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CMSIncrBy", varargs...)
+	ret0, _ := ret[0].(*redis.IntSliceCmd)
+	return ret0
+}
+
+// CMSIncrBy indicates an expected call of CMSIncrBy.
+func (mr *MockCmdableMockRecorder) CMSIncrBy(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSIncrBy", reflect.TypeOf((*MockCmdable)(nil).CMSIncrBy), varargs...)
+}
+
+// CMSInfo mocks base method.
+func (m *MockCmdable) CMSInfo(arg0 context.Context, arg1 string) *redis.CMSInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CMSInfo", arg0, arg1)
+	ret0, _ := ret[0].(*redis.CMSInfoCmd)
+	return ret0
+}
+
+// CMSInfo indicates an expected call of CMSInfo.
+func (mr *MockCmdableMockRecorder) CMSInfo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSInfo", reflect.TypeOf((*MockCmdable)(nil).CMSInfo), arg0, arg1)
+}
+
+// CMSInitByDim mocks base method.
+func (m *MockCmdable) CMSInitByDim(arg0 context.Context, arg1 string, arg2, arg3 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CMSInitByDim", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CMSInitByDim indicates an expected call of CMSInitByDim.
+func (mr *MockCmdableMockRecorder) CMSInitByDim(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSInitByDim", reflect.TypeOf((*MockCmdable)(nil).CMSInitByDim), arg0, arg1, arg2, arg3)
+}
+
+// CMSInitByProb mocks base method.
+func (m *MockCmdable) CMSInitByProb(arg0 context.Context, arg1 string, arg2, arg3 float64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CMSInitByProb", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CMSInitByProb indicates an expected call of CMSInitByProb.
+func (mr *MockCmdableMockRecorder) CMSInitByProb(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSInitByProb", reflect.TypeOf((*MockCmdable)(nil).CMSInitByProb), arg0, arg1, arg2, arg3)
+}
+
+// CMSMerge mocks base method.
+func (m *MockCmdable) CMSMerge(arg0 context.Context, arg1 string, arg2 ...string) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CMSMerge", varargs...)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CMSMerge indicates an expected call of CMSMerge.
+func (mr *MockCmdableMockRecorder) CMSMerge(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSMerge", reflect.TypeOf((*MockCmdable)(nil).CMSMerge), varargs...)
+}
+
+// CMSMergeWithWeight mocks base method.
+func (m *MockCmdable) CMSMergeWithWeight(arg0 context.Context, arg1 string, arg2 map[string]int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CMSMergeWithWeight", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// CMSMergeWithWeight indicates an expected call of CMSMergeWithWeight.
+func (mr *MockCmdableMockRecorder) CMSMergeWithWeight(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSMergeWithWeight", reflect.TypeOf((*MockCmdable)(nil).CMSMergeWithWeight), arg0, arg1, arg2)
+}
+
+// CMSQuery mocks base method.
+func (m *MockCmdable) CMSQuery(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.IntSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CMSQuery", varargs...)
+	ret0, _ := ret[0].(*redis.IntSliceCmd)
+	return ret0
+}
+
+// CMSQuery indicates an expected call of CMSQuery.
+func (mr *MockCmdableMockRecorder) CMSQuery(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CMSQuery", reflect.TypeOf((*MockCmdable)(nil).CMSQuery), varargs...)
 }
 
 // ClientGetName mocks base method.
@@ -3513,7 +4436,7 @@ func (mr *MockCmdableMockRecorder) SetBit(arg0, arg1, arg2, arg3 interface{}) *g
 // SetEx mocks base method.
 func (m *MockCmdable) SetEx(arg0 context.Context, arg1 string, arg2 interface{}, arg3 time.Duration) *redis.StatusCmd {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetEx", arg0, arg1, arg2, arg3)
+	ret := m.ctrl.Call(m, "SetEX", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].(*redis.StatusCmd)
 	return ret0
 }
@@ -3521,7 +4444,7 @@ func (m *MockCmdable) SetEx(arg0 context.Context, arg1 string, arg2 interface{},
 // SetEx indicates an expected call of SetEx.
 func (mr *MockCmdableMockRecorder) SetEx(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEx", reflect.TypeOf((*MockCmdable)(nil).SetEx), arg0, arg1, arg2, arg3)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEX", reflect.TypeOf((*MockCmdable)(nil).SetEx), arg0, arg1, arg2, arg3)
 }
 
 // SetNX mocks base method.
@@ -3706,6 +4629,382 @@ func (mr *MockCmdableMockRecorder) StrLen(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StrLen", reflect.TypeOf((*MockCmdable)(nil).StrLen), arg0, arg1)
 }
 
+// TDigestAdd mocks base method.
+func (m *MockCmdable) TDigestAdd(arg0 context.Context, arg1 string, arg2 ...float64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestAdd", varargs...)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TDigestAdd indicates an expected call of TDigestAdd.
+func (mr *MockCmdableMockRecorder) TDigestAdd(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestAdd", reflect.TypeOf((*MockCmdable)(nil).TDigestAdd), varargs...)
+}
+
+// TDigestByRank mocks base method.
+func (m *MockCmdable) TDigestByRank(arg0 context.Context, arg1 string, arg2 ...uint64) *redis.FloatSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestByRank", varargs...)
+	ret0, _ := ret[0].(*redis.FloatSliceCmd)
+	return ret0
+}
+
+// TDigestByRank indicates an expected call of TDigestByRank.
+func (mr *MockCmdableMockRecorder) TDigestByRank(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestByRank", reflect.TypeOf((*MockCmdable)(nil).TDigestByRank), varargs...)
+}
+
+// TDigestByRevRank mocks base method.
+func (m *MockCmdable) TDigestByRevRank(arg0 context.Context, arg1 string, arg2 ...uint64) *redis.FloatSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestByRevRank", varargs...)
+	ret0, _ := ret[0].(*redis.FloatSliceCmd)
+	return ret0
+}
+
+// TDigestByRevRank indicates an expected call of TDigestByRevRank.
+func (mr *MockCmdableMockRecorder) TDigestByRevRank(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestByRevRank", reflect.TypeOf((*MockCmdable)(nil).TDigestByRevRank), varargs...)
+}
+
+// TDigestCDF mocks base method.
+func (m *MockCmdable) TDigestCDF(arg0 context.Context, arg1 string, arg2 ...float64) *redis.FloatSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestCDF", varargs...)
+	ret0, _ := ret[0].(*redis.FloatSliceCmd)
+	return ret0
+}
+
+// TDigestCDF indicates an expected call of TDigestCDF.
+func (mr *MockCmdableMockRecorder) TDigestCDF(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestCDF", reflect.TypeOf((*MockCmdable)(nil).TDigestCDF), varargs...)
+}
+
+// TDigestCreate mocks base method.
+func (m *MockCmdable) TDigestCreate(arg0 context.Context, arg1 string) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestCreate", arg0, arg1)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TDigestCreate indicates an expected call of TDigestCreate.
+func (mr *MockCmdableMockRecorder) TDigestCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestCreate", reflect.TypeOf((*MockCmdable)(nil).TDigestCreate), arg0, arg1)
+}
+
+// TDigestCreateWithCompression mocks base method.
+func (m *MockCmdable) TDigestCreateWithCompression(arg0 context.Context, arg1 string, arg2 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestCreateWithCompression", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TDigestCreateWithCompression indicates an expected call of TDigestCreateWithCompression.
+func (mr *MockCmdableMockRecorder) TDigestCreateWithCompression(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestCreateWithCompression", reflect.TypeOf((*MockCmdable)(nil).TDigestCreateWithCompression), arg0, arg1, arg2)
+}
+
+// TDigestInfo mocks base method.
+func (m *MockCmdable) TDigestInfo(arg0 context.Context, arg1 string) *redis.TDigestInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestInfo", arg0, arg1)
+	ret0, _ := ret[0].(*redis.TDigestInfoCmd)
+	return ret0
+}
+
+// TDigestInfo indicates an expected call of TDigestInfo.
+func (mr *MockCmdableMockRecorder) TDigestInfo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestInfo", reflect.TypeOf((*MockCmdable)(nil).TDigestInfo), arg0, arg1)
+}
+
+// TDigestMax mocks base method.
+func (m *MockCmdable) TDigestMax(arg0 context.Context, arg1 string) *redis.FloatCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestMax", arg0, arg1)
+	ret0, _ := ret[0].(*redis.FloatCmd)
+	return ret0
+}
+
+// TDigestMax indicates an expected call of TDigestMax.
+func (mr *MockCmdableMockRecorder) TDigestMax(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestMax", reflect.TypeOf((*MockCmdable)(nil).TDigestMax), arg0, arg1)
+}
+
+// TDigestMerge mocks base method.
+func (m *MockCmdable) TDigestMerge(arg0 context.Context, arg1 string, arg2 *redis.TDigestMergeOptions, arg3 ...string) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1, arg2}
+	for _, a := range arg3 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestMerge", varargs...)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TDigestMerge indicates an expected call of TDigestMerge.
+func (mr *MockCmdableMockRecorder) TDigestMerge(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestMerge", reflect.TypeOf((*MockCmdable)(nil).TDigestMerge), varargs...)
+}
+
+// TDigestMin mocks base method.
+func (m *MockCmdable) TDigestMin(arg0 context.Context, arg1 string) *redis.FloatCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestMin", arg0, arg1)
+	ret0, _ := ret[0].(*redis.FloatCmd)
+	return ret0
+}
+
+// TDigestMin indicates an expected call of TDigestMin.
+func (mr *MockCmdableMockRecorder) TDigestMin(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestMin", reflect.TypeOf((*MockCmdable)(nil).TDigestMin), arg0, arg1)
+}
+
+// TDigestQuantile mocks base method.
+func (m *MockCmdable) TDigestQuantile(arg0 context.Context, arg1 string, arg2 ...float64) *redis.FloatSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestQuantile", varargs...)
+	ret0, _ := ret[0].(*redis.FloatSliceCmd)
+	return ret0
+}
+
+// TDigestQuantile indicates an expected call of TDigestQuantile.
+func (mr *MockCmdableMockRecorder) TDigestQuantile(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestQuantile", reflect.TypeOf((*MockCmdable)(nil).TDigestQuantile), varargs...)
+}
+
+// TDigestRank mocks base method.
+func (m *MockCmdable) TDigestRank(arg0 context.Context, arg1 string, arg2 ...float64) *redis.IntSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestRank", varargs...)
+	ret0, _ := ret[0].(*redis.IntSliceCmd)
+	return ret0
+}
+
+// TDigestRank indicates an expected call of TDigestRank.
+func (mr *MockCmdableMockRecorder) TDigestRank(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestRank", reflect.TypeOf((*MockCmdable)(nil).TDigestRank), varargs...)
+}
+
+// TDigestReset mocks base method.
+func (m *MockCmdable) TDigestReset(arg0 context.Context, arg1 string) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestReset", arg0, arg1)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TDigestReset indicates an expected call of TDigestReset.
+func (mr *MockCmdableMockRecorder) TDigestReset(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestReset", reflect.TypeOf((*MockCmdable)(nil).TDigestReset), arg0, arg1)
+}
+
+// TDigestRevRank mocks base method.
+func (m *MockCmdable) TDigestRevRank(arg0 context.Context, arg1 string, arg2 ...float64) *redis.IntSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TDigestRevRank", varargs...)
+	ret0, _ := ret[0].(*redis.IntSliceCmd)
+	return ret0
+}
+
+// TDigestRevRank indicates an expected call of TDigestRevRank.
+func (mr *MockCmdableMockRecorder) TDigestRevRank(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestRevRank", reflect.TypeOf((*MockCmdable)(nil).TDigestRevRank), varargs...)
+}
+
+// TDigestTrimmedMean mocks base method.
+func (m *MockCmdable) TDigestTrimmedMean(arg0 context.Context, arg1 string, arg2, arg3 float64) *redis.FloatCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TDigestTrimmedMean", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.FloatCmd)
+	return ret0
+}
+
+// TDigestTrimmedMean indicates an expected call of TDigestTrimmedMean.
+func (mr *MockCmdableMockRecorder) TDigestTrimmedMean(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TDigestTrimmedMean", reflect.TypeOf((*MockCmdable)(nil).TDigestTrimmedMean), arg0, arg1, arg2, arg3)
+}
+
+// TFCall mocks base method.
+func (m *MockCmdable) TFCall(arg0 context.Context, arg1, arg2 string, arg3 int) *redis.Cmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFCall", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.Cmd)
+	return ret0
+}
+
+// TFCall indicates an expected call of TFCall.
+func (mr *MockCmdableMockRecorder) TFCall(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFCall", reflect.TypeOf((*MockCmdable)(nil).TFCall), arg0, arg1, arg2, arg3)
+}
+
+// TFCallASYNC mocks base method.
+func (m *MockCmdable) TFCallASYNC(arg0 context.Context, arg1, arg2 string, arg3 int) *redis.Cmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFCallASYNC", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*redis.Cmd)
+	return ret0
+}
+
+// TFCallASYNC indicates an expected call of TFCallASYNC.
+func (mr *MockCmdableMockRecorder) TFCallASYNC(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFCallASYNC", reflect.TypeOf((*MockCmdable)(nil).TFCallASYNC), arg0, arg1, arg2, arg3)
+}
+
+// TFCallASYNCArgs mocks base method.
+func (m *MockCmdable) TFCallASYNCArgs(arg0 context.Context, arg1, arg2 string, arg3 int, arg4 *redis.TFCallOptions) *redis.Cmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFCallASYNCArgs", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*redis.Cmd)
+	return ret0
+}
+
+// TFCallASYNCArgs indicates an expected call of TFCallASYNCArgs.
+func (mr *MockCmdableMockRecorder) TFCallASYNCArgs(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFCallASYNCArgs", reflect.TypeOf((*MockCmdable)(nil).TFCallASYNCArgs), arg0, arg1, arg2, arg3, arg4)
+}
+
+// TFCallArgs mocks base method.
+func (m *MockCmdable) TFCallArgs(arg0 context.Context, arg1, arg2 string, arg3 int, arg4 *redis.TFCallOptions) *redis.Cmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFCallArgs", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(*redis.Cmd)
+	return ret0
+}
+
+// TFCallArgs indicates an expected call of TFCallArgs.
+func (mr *MockCmdableMockRecorder) TFCallArgs(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFCallArgs", reflect.TypeOf((*MockCmdable)(nil).TFCallArgs), arg0, arg1, arg2, arg3, arg4)
+}
+
+// TFunctionDelete mocks base method.
+func (m *MockCmdable) TFunctionDelete(arg0 context.Context, arg1 string) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFunctionDelete", arg0, arg1)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TFunctionDelete indicates an expected call of TFunctionDelete.
+func (mr *MockCmdableMockRecorder) TFunctionDelete(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFunctionDelete", reflect.TypeOf((*MockCmdable)(nil).TFunctionDelete), arg0, arg1)
+}
+
+// TFunctionList mocks base method.
+func (m *MockCmdable) TFunctionList(arg0 context.Context) *redis.MapStringInterfaceSliceCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFunctionList", arg0)
+	ret0, _ := ret[0].(*redis.MapStringInterfaceSliceCmd)
+	return ret0
+}
+
+// TFunctionList indicates an expected call of TFunctionList.
+func (mr *MockCmdableMockRecorder) TFunctionList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFunctionList", reflect.TypeOf((*MockCmdable)(nil).TFunctionList), arg0)
+}
+
+// TFunctionListArgs mocks base method.
+func (m *MockCmdable) TFunctionListArgs(arg0 context.Context, arg1 *redis.TFunctionListOptions) *redis.MapStringInterfaceSliceCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFunctionListArgs", arg0, arg1)
+	ret0, _ := ret[0].(*redis.MapStringInterfaceSliceCmd)
+	return ret0
+}
+
+// TFunctionListArgs indicates an expected call of TFunctionListArgs.
+func (mr *MockCmdableMockRecorder) TFunctionListArgs(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFunctionListArgs", reflect.TypeOf((*MockCmdable)(nil).TFunctionListArgs), arg0, arg1)
+}
+
+// TFunctionLoad mocks base method.
+func (m *MockCmdable) TFunctionLoad(arg0 context.Context, arg1 string) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFunctionLoad", arg0, arg1)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TFunctionLoad indicates an expected call of TFunctionLoad.
+func (mr *MockCmdableMockRecorder) TFunctionLoad(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFunctionLoad", reflect.TypeOf((*MockCmdable)(nil).TFunctionLoad), arg0, arg1)
+}
+
+// TFunctionLoadArgs mocks base method.
+func (m *MockCmdable) TFunctionLoadArgs(arg0 context.Context, arg1 string, arg2 *redis.TFunctionLoadOptions) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TFunctionLoadArgs", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TFunctionLoadArgs indicates an expected call of TFunctionLoadArgs.
+func (mr *MockCmdableMockRecorder) TFunctionLoadArgs(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TFunctionLoadArgs", reflect.TypeOf((*MockCmdable)(nil).TFunctionLoadArgs), arg0, arg1, arg2)
+}
+
 // TTL mocks base method.
 func (m *MockCmdable) TTL(arg0 context.Context, arg1 string) *redis.DurationCmd {
 	m.ctrl.T.Helper()
@@ -3732,6 +5031,152 @@ func (m *MockCmdable) Time(arg0 context.Context) *redis.TimeCmd {
 func (mr *MockCmdableMockRecorder) Time(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Time", reflect.TypeOf((*MockCmdable)(nil).Time), arg0)
+}
+
+// TopKAdd mocks base method.
+func (m *MockCmdable) TopKAdd(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.StringSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TopKAdd", varargs...)
+	ret0, _ := ret[0].(*redis.StringSliceCmd)
+	return ret0
+}
+
+// TopKAdd indicates an expected call of TopKAdd.
+func (mr *MockCmdableMockRecorder) TopKAdd(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKAdd", reflect.TypeOf((*MockCmdable)(nil).TopKAdd), varargs...)
+}
+
+// TopKCount mocks base method.
+func (m *MockCmdable) TopKCount(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.IntSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TopKCount", varargs...)
+	ret0, _ := ret[0].(*redis.IntSliceCmd)
+	return ret0
+}
+
+// TopKCount indicates an expected call of TopKCount.
+func (mr *MockCmdableMockRecorder) TopKCount(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKCount", reflect.TypeOf((*MockCmdable)(nil).TopKCount), varargs...)
+}
+
+// TopKIncrBy mocks base method.
+func (m *MockCmdable) TopKIncrBy(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.StringSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TopKIncrBy", varargs...)
+	ret0, _ := ret[0].(*redis.StringSliceCmd)
+	return ret0
+}
+
+// TopKIncrBy indicates an expected call of TopKIncrBy.
+func (mr *MockCmdableMockRecorder) TopKIncrBy(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKIncrBy", reflect.TypeOf((*MockCmdable)(nil).TopKIncrBy), varargs...)
+}
+
+// TopKInfo mocks base method.
+func (m *MockCmdable) TopKInfo(arg0 context.Context, arg1 string) *redis.TopKInfoCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TopKInfo", arg0, arg1)
+	ret0, _ := ret[0].(*redis.TopKInfoCmd)
+	return ret0
+}
+
+// TopKInfo indicates an expected call of TopKInfo.
+func (mr *MockCmdableMockRecorder) TopKInfo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKInfo", reflect.TypeOf((*MockCmdable)(nil).TopKInfo), arg0, arg1)
+}
+
+// TopKList mocks base method.
+func (m *MockCmdable) TopKList(arg0 context.Context, arg1 string) *redis.StringSliceCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TopKList", arg0, arg1)
+	ret0, _ := ret[0].(*redis.StringSliceCmd)
+	return ret0
+}
+
+// TopKList indicates an expected call of TopKList.
+func (mr *MockCmdableMockRecorder) TopKList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKList", reflect.TypeOf((*MockCmdable)(nil).TopKList), arg0, arg1)
+}
+
+// TopKListWithCount mocks base method.
+func (m *MockCmdable) TopKListWithCount(arg0 context.Context, arg1 string) *redis.MapStringIntCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TopKListWithCount", arg0, arg1)
+	ret0, _ := ret[0].(*redis.MapStringIntCmd)
+	return ret0
+}
+
+// TopKListWithCount indicates an expected call of TopKListWithCount.
+func (mr *MockCmdableMockRecorder) TopKListWithCount(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKListWithCount", reflect.TypeOf((*MockCmdable)(nil).TopKListWithCount), arg0, arg1)
+}
+
+// TopKQuery mocks base method.
+func (m *MockCmdable) TopKQuery(arg0 context.Context, arg1 string, arg2 ...interface{}) *redis.BoolSliceCmd {
+	m.ctrl.T.Helper()
+	varargs := []interface{}{arg0, arg1}
+	for _, a := range arg2 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "TopKQuery", varargs...)
+	ret0, _ := ret[0].(*redis.BoolSliceCmd)
+	return ret0
+}
+
+// TopKQuery indicates an expected call of TopKQuery.
+func (mr *MockCmdableMockRecorder) TopKQuery(arg0, arg1 interface{}, arg2 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	varargs := append([]interface{}{arg0, arg1}, arg2...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKQuery", reflect.TypeOf((*MockCmdable)(nil).TopKQuery), varargs...)
+}
+
+// TopKReserve mocks base method.
+func (m *MockCmdable) TopKReserve(arg0 context.Context, arg1 string, arg2 int64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TopKReserve", arg0, arg1, arg2)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TopKReserve indicates an expected call of TopKReserve.
+func (mr *MockCmdableMockRecorder) TopKReserve(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKReserve", reflect.TypeOf((*MockCmdable)(nil).TopKReserve), arg0, arg1, arg2)
+}
+
+// TopKReserveWithOptions mocks base method.
+func (m *MockCmdable) TopKReserveWithOptions(arg0 context.Context, arg1 string, arg2, arg3, arg4 int64, arg5 float64) *redis.StatusCmd {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TopKReserveWithOptions", arg0, arg1, arg2, arg3, arg4, arg5)
+	ret0, _ := ret[0].(*redis.StatusCmd)
+	return ret0
+}
+
+// TopKReserveWithOptions indicates an expected call of TopKReserveWithOptions.
+func (mr *MockCmdableMockRecorder) TopKReserveWithOptions(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopKReserveWithOptions", reflect.TypeOf((*MockCmdable)(nil).TopKReserveWithOptions), arg0, arg1, arg2, arg3, arg4, arg5)
 }
 
 // Touch mocks base method.

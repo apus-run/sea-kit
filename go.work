@@ -35,5 +35,8 @@ use (
     ./codegen
     ./slice
     ./mongo
+    ./simple_cache
+    ./set
 	.
+	list
 )

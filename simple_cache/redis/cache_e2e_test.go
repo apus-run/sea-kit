@@ -1,18 +1,4 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-//go:build e2e
+// go:build e2e
 
 package redis
 
@@ -21,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ecodeclub/ecache"
-	"github.com/ecodeclub/ecache/internal/errs"
+	"github.com/apus-run/sea-kit/simple_cache"
+	"github.com/apus-run/sea-kit/simple_cache/internal/errs"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -47,13 +33,13 @@ func TestCache_e2e_Set(t *testing.T) {
 			after: func(ctx context.Context, t *testing.T) {
 				result, err := rdb.Get(ctx, "name").Result()
 				require.NoError(t, err)
-				assert.Equal(t, "大明", result)
+				assert.Equal(t, "moocss", result)
 
 				_, err = rdb.Del(ctx, "name").Result()
 				require.NoError(t, err)
 			},
 			key:        "name",
-			val:        "大明",
+			val:        "moocss",
 			expiration: time.Minute,
 		},
 	}
@@ -64,7 +50,7 @@ func TestCache_e2e_Set(t *testing.T) {
 			defer cancelFunc()
 			c := NewCache(rdb)
 
-			err := c.Set(ctx, "name", "大明", time.Minute)
+			err := c.Set(ctx, "name", "moocss", time.Minute)
 			assert.NoError(t, err)
 			tc.after(ctx, t)
 		})
@@ -88,14 +74,14 @@ func TestCache_e2e_Get(t *testing.T) {
 		{
 			name: "get e2e value",
 			before: func(ctx context.Context, t *testing.T) {
-				require.NoError(t, rdb.Set(ctx, "name", "大明", time.Minute).Err())
+				require.NoError(t, rdb.Set(ctx, "name", "moocss", time.Minute).Err())
 			},
 			after: func(ctx context.Context, t *testing.T) {
 				require.NoError(t, rdb.Del(ctx, "name").Err())
 			},
 			key: "name",
 
-			wantVal: "大明",
+			wantVal: "moocss",
 		},
 		{
 			name:    "get e2e error",
@@ -114,11 +100,11 @@ func TestCache_e2e_Get(t *testing.T) {
 
 			tc.before(ctx, t)
 			val := c.Get(ctx, tc.key)
-			assert.Equal(t, tc.wantErr, val.Err)
-			if val.Err != nil {
+			assert.Equal(t, tc.wantErr, val.Error)
+			if val.Error != nil {
 				return
 			}
-			assert.Equal(t, tc.wantVal, val.Val.(string))
+			assert.Equal(t, tc.wantVal, val.Value.(string))
 			tc.after(ctx, t)
 		})
 	}
@@ -130,7 +116,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 
 	testCases := []struct {
 		name   string
-		before func(ctx context.Context, t *testing.T, cache ecache.Cache)
+		before func(ctx context.Context, t *testing.T, cache simple_cache.Cache)
 
 		ctxFunc func() context.Context
 		key     []string
@@ -140,7 +126,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 	}{
 		{
 			name: "delete single existed key",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {
+			before: func(ctx context.Context, t *testing.T, cache simple_cache.Cache) {
 				require.NoError(t, cache.Set(ctx, "name", "Alex", 0))
 			},
 			ctxFunc: func() context.Context {
@@ -151,7 +137,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 		},
 		{
 			name:   "delete single does not existed key",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {},
+			before: func(ctx context.Context, t *testing.T, cache simple_cache.Cache) {},
 			ctxFunc: func() context.Context {
 				return context.Background()
 			},
@@ -159,7 +145,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 		},
 		{
 			name: "delete multiple existed keys",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {
+			before: func(ctx context.Context, t *testing.T, cache simple_cache.Cache) {
 				require.NoError(t, cache.Set(ctx, "name", "Alex", 0))
 				require.NoError(t, cache.Set(ctx, "age", 18, 0))
 			},
@@ -171,7 +157,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 		},
 		{
 			name:   "delete multiple do not existed keys",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {},
+			before: func(ctx context.Context, t *testing.T, cache simple_cache.Cache) {},
 			ctxFunc: func() context.Context {
 				return context.Background()
 			},
@@ -179,7 +165,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 		},
 		{
 			name: "delete multiple keys, some do not existed keys",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {
+			before: func(ctx context.Context, t *testing.T, cache simple_cache.Cache) {
 				require.NoError(t, cache.Set(ctx, "name", "Alex", 0))
 				require.NoError(t, cache.Set(ctx, "age", 18, 0))
 				require.NoError(t, cache.Set(ctx, "gender", "male", 0))
@@ -192,7 +178,7 @@ func TestCache_e2e_Delete(t *testing.T) {
 		},
 		{
 			name:   "timeout",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {},
+			before: func(ctx context.Context, t *testing.T, cache simple_cache.Cache) {},
 			ctxFunc: func() context.Context {
 				timeout := time.Millisecond * 100
 				ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -321,8 +307,8 @@ func TestCache_e2e_GetSet(t *testing.T) {
 			c := NewCache(rdb)
 			tc.before(ctx, t)
 			val := c.GetSet(ctx, tc.key, tc.val)
-			assert.Equal(t, val.Val, tc.wantVal)
-			assert.Equal(t, val.Err, tc.wantErr)
+			assert.Equal(t, val.Value, tc.wantVal)
+			assert.Equal(t, val.Error, tc.wantErr)
 			tc.after(ctx, t)
 		})
 	}
@@ -434,8 +420,8 @@ func TestCache_e2e_LPop(t *testing.T) {
 			c := NewCache(rdb)
 			tc.before(ctx, t)
 			val := c.LPop(ctx, tc.key)
-			assert.Equal(t, val.Val, tc.wantVal)
-			assert.Equal(t, val.Err, tc.wantErr)
+			assert.Equal(t, val.Value, tc.wantVal)
+			assert.Equal(t, val.Error, tc.wantErr)
 			tc.after(ctx, t)
 		})
 	}
@@ -800,7 +786,7 @@ func TestCache_e2e_IncrByFloat(t *testing.T) {
 
 }
 
-func newCache() (ecache.Cache, error) {
+func newCache() (simple_cache.Cache, error) {
 	rdb := newRedisClient()
 	if err := rdb.Ping(context.Background()).Err(); err != nil {
 		return nil, err
@@ -810,6 +796,6 @@ func newCache() (ecache.Cache, error) {
 
 func newRedisClient() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: "localhost:16379",
 	})
 }

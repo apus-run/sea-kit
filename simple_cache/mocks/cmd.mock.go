@@ -19,6 +19,141 @@ type MockCmdable struct {
 	recorder *MockCmdableMockRecorder
 }
 
+func (m *MockCmdable) JSONArrAppend(ctx context.Context, key, path string, values ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrIndex(ctx context.Context, key, path string, value ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrIndexWithArgs(ctx context.Context, key, path string, options *redis.JSONArrIndexArgs, value ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrInsert(ctx context.Context, key, path string, index int64, values ...interface{}) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrLen(ctx context.Context, key, path string) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrPop(ctx context.Context, key, path string, index int) *redis.StringSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrTrim(ctx context.Context, key, path string) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONArrTrimWithArgs(ctx context.Context, key, path string, options *redis.JSONArrTrimArgs) *redis.IntSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONClear(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONDebugMemory(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONDel(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONForget(ctx context.Context, key, path string) *redis.IntCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONGet(ctx context.Context, key string, paths ...string) *redis.JSONCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONGetWithArgs(ctx context.Context, key string, options *redis.JSONGetArgs, paths ...string) *redis.JSONCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMerge(ctx context.Context, key, path string, value string) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMSetArgs(ctx context.Context, docs []redis.JSONSetArgs) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMSet(ctx context.Context, params ...interface{}) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONMGet(ctx context.Context, path string, keys ...string) *redis.JSONSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONNumIncrBy(ctx context.Context, key, path string, value float64) *redis.JSONCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONObjKeys(ctx context.Context, key, path string) *redis.SliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONObjLen(ctx context.Context, key, path string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONSet(ctx context.Context, key, path string, value interface{}) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONSetMode(ctx context.Context, key, path string, value interface{}, mode string) *redis.StatusCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONStrAppend(ctx context.Context, key, path, value string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONStrLen(ctx context.Context, key, path string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONToggle(ctx context.Context, key, path string) *redis.IntPointerSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (m *MockCmdable) JSONType(ctx context.Context, key, path string) *redis.JSONSliceCmd {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (m *MockCmdable) BFReserveWithArgs(ctx context.Context, key string, options *redis.BFReserveOptions) *redis.StatusCmd {
 	//TODO implement me
 	panic("implement me")

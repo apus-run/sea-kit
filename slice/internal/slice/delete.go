@@ -14,7 +14,7 @@
 
 package slice
 
-import "github.com/ecodeclub/ekit/internal/errs"
+import "github.com/apus-run/sea-kit/slice/internal/errs"
 
 func Delete[T any](src []T, index int) ([]T, T, error) {
 	length := len(src)

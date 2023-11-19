@@ -1,35 +1,22 @@
-// Copyright 2021 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package list
 
 import (
 	"testing"
 
-	"github.com/ecodeclub/ekit"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/apus-run/sea-kit/list/internal"
 )
 
 func TestNewSkipList(t *testing.T) {
 	testCases := []struct {
 		name      string
-		compare   ekit.Comparator[int]
+		compare   internal.Comparator[int]
 		wantSlice []int
 	}{
 		{
 			name:      "new skip list",
-			compare:   ekit.ComparatorRealNumber[int],
+			compare:   internal.ComparatorRealNumber[int],
 			wantSlice: []int{},
 		},
 	}
@@ -45,12 +32,12 @@ func TestNewSkipList(t *testing.T) {
 func TestSkipList_AsSlice(t *testing.T) {
 	testCases := []struct {
 		name      string
-		compare   ekit.Comparator[int]
+		compare   internal.Comparator[int]
 		wantSlice []int
 	}{
 		{
 			name:      "no err is ok",
-			compare:   ekit.ComparatorRealNumber[int],
+			compare:   internal.ComparatorRealNumber[int],
 			wantSlice: []int{},
 		},
 	}
@@ -65,12 +52,12 @@ func TestSkipList_AsSlice(t *testing.T) {
 func TestSkipList_Cap(t *testing.T) {
 	testCases := []struct {
 		name     string
-		compare  ekit.Comparator[int]
+		compare  internal.Comparator[int]
 		wantSize int
 	}{
 		{
 			name:     "no err is ok",
-			compare:  ekit.ComparatorRealNumber[int],
+			compare:  internal.ComparatorRealNumber[int],
 			wantSize: 0,
 		},
 	}
@@ -85,13 +72,13 @@ func TestSkipList_Cap(t *testing.T) {
 func TestSkipList_DeleteElement(t *testing.T) {
 	testCases := []struct {
 		name     string
-		compare  ekit.Comparator[int]
+		compare  internal.Comparator[int]
 		value    int
 		wantBool bool
 	}{
 		{
 			name:     "no err is ok",
-			compare:  ekit.ComparatorRealNumber[int],
+			compare:  internal.ComparatorRealNumber[int],
 			value:    1,
 			wantBool: true,
 		},
@@ -108,13 +95,13 @@ func TestSkipList_DeleteElement(t *testing.T) {
 func TestSkipList_Insert(t *testing.T) {
 	testCases := []struct {
 		name      string
-		compare   ekit.Comparator[int]
+		compare   internal.Comparator[int]
 		key       int
 		wantSlice []int
 	}{
 		{
 			name:      "no err is ok",
-			compare:   ekit.ComparatorRealNumber[int],
+			compare:   internal.ComparatorRealNumber[int],
 			key:       1,
 			wantSlice: []int{1},
 		},
@@ -131,12 +118,12 @@ func TestSkipList_Insert(t *testing.T) {
 func TestSkipList_Len(t *testing.T) {
 	testCases := []struct {
 		name     string
-		compare  ekit.Comparator[int]
+		compare  internal.Comparator[int]
 		wantSize int
 	}{
 		{
 			name:     "no err is ok",
-			compare:  ekit.ComparatorRealNumber[int],
+			compare:  internal.ComparatorRealNumber[int],
 			wantSize: 0,
 		},
 	}
@@ -151,13 +138,13 @@ func TestSkipList_Len(t *testing.T) {
 func TestSkipList_Search(t *testing.T) {
 	testCases := []struct {
 		name     string
-		compare  ekit.Comparator[int]
+		compare  internal.Comparator[int]
 		value    int
 		wantBool bool
 	}{
 		{
 			name:     "no err is ok",
-			compare:  ekit.ComparatorRealNumber[int],
+			compare:  internal.ComparatorRealNumber[int],
 			value:    1,
 			wantBool: false,
 		},

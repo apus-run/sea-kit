@@ -1,4 +1,4 @@
-package list
+package internal
 
 // Comparator 用于比较两个对象的大小 src < dst, 返回-1，src = dst, 返回0，src > dst, 返回1
 // 不要返回任何其它值！

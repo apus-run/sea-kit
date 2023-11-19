@@ -1,24 +1,11 @@
-// Copyright 2021 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package list
 
 import (
 	"errors"
+	"github.com/apus-run/sea-kit/list/internal"
 
-	"github.com/ecodeclub/ekit"
-	"github.com/ecodeclub/ekit/internal/errs"
+	"github.com/apus-run/sea-kit/list/internal/errs"
+
 	"golang.org/x/exp/rand"
 )
 
@@ -39,7 +26,7 @@ type skipListNode[T any] struct {
 type SkipList[T any] struct {
 	header  *skipListNode[T]
 	level   int // SkipList为空时, level为1
-	compare ekit.Comparator[T]
+	compare internal.Comparator[T]
 	size    int
 }
 
@@ -57,7 +44,7 @@ func (sl *SkipList[T]) AsSlice() []T {
 	return slice
 }
 
-func NewSkipListFromSlice[T any](slice []T, compare ekit.Comparator[T]) *SkipList[T] {
+func NewSkipListFromSlice[T any](slice []T, compare internal.Comparator[T]) *SkipList[T] {
 	sl := NewSkipList[T](compare)
 	for _, n := range slice {
 		sl.Insert(n)
@@ -65,7 +52,7 @@ func NewSkipListFromSlice[T any](slice []T, compare ekit.Comparator[T]) *SkipLis
 	return sl
 }
 
-func NewSkipList[T any](compare ekit.Comparator[T]) *SkipList[T] {
+func NewSkipList[T any](compare internal.Comparator[T]) *SkipList[T] {
 	return &SkipList[T]{
 		header: &skipListNode[T]{
 			Forward: make([]*skipListNode[T], MaxLevel),

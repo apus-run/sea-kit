@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package redis
 
 import (
@@ -19,12 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/ecodeclub/ecache/internal/errs"
-	"github.com/ecodeclub/ecache/mocks"
+	"github.com/apus-run/sea-kit/simple_cache/internal/errs"
+	"github.com/apus-run/sea-kit/simple_cache/mocks"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
@@ -47,12 +32,12 @@ func TestCache_Set(t *testing.T) {
 				status := redis.NewStatusCmd(context.Background())
 				status.SetVal("OK")
 				cmd.EXPECT().
-					Set(context.Background(), "name", "大明", time.Minute).
+					Set(context.Background(), "name", "moocss", time.Minute).
 					Return(status)
 				return cmd
 			},
 			key:        "name",
-			value:      "大明",
+			value:      "moocss",
 			expiration: time.Minute,
 		},
 		{
@@ -62,12 +47,12 @@ func TestCache_Set(t *testing.T) {
 				status := redis.NewStatusCmd(context.Background())
 				status.SetErr(context.DeadlineExceeded)
 				cmd.EXPECT().
-					Set(context.Background(), "name", "大明", time.Minute).
+					Set(context.Background(), "name", "moocss", time.Minute).
 					Return(status)
 				return cmd
 			},
 			key:        "name",
-			value:      "大明",
+			value:      "moocss",
 			expiration: time.Minute,
 
 			wantErr: context.DeadlineExceeded,
@@ -100,7 +85,7 @@ func TestCache_Get(t *testing.T) {
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				status := redis.NewStringCmd(context.Background())
-				status.SetVal("大明")
+				status.SetVal("moocss")
 				cmd.EXPECT().
 					Get(context.Background(), "name").
 					Return(status)
@@ -108,7 +93,7 @@ func TestCache_Get(t *testing.T) {
 			},
 			key: "name",
 
-			wantVal: "大明",
+			wantVal: "moocss",
 		},
 		{
 			name: "get error",
@@ -132,11 +117,11 @@ func TestCache_Get(t *testing.T) {
 			defer ctrl.Finish()
 			c := NewCache(tc.mock(ctrl))
 			val := c.Get(context.Background(), tc.key)
-			assert.Equal(t, tc.wantErr, val.Err)
-			if val.Err != nil {
+			assert.Equal(t, tc.wantErr, val.Error)
+			if val.Error != nil {
 				return
 			}
-			assert.Equal(t, tc.wantVal, val.Val.(string))
+			assert.Equal(t, tc.wantVal, val.Value.(string))
 		})
 	}
 }
@@ -243,7 +228,7 @@ func TestCache_GetSet(t *testing.T) {
 
 		c := NewCache(tc.mock(ctrl))
 		val := c.GetSet(context.Background(), tc.key, tc.val)
-		assert.Equal(t, tc.wantErr, val.Err)
+		assert.Equal(t, tc.wantErr, val.Error)
 	}
 }
 
@@ -444,8 +429,8 @@ func TestCache_LPop(t *testing.T) {
 
 			c := NewCache(tc.mock(ctrl))
 			val := c.LPop(context.Background(), tc.key)
-			assert.Equal(t, tc.wantVal, val.Val)
-			assert.Equal(t, tc.wantErr, val.Err)
+			assert.Equal(t, tc.wantVal, val.Value)
+			assert.Equal(t, tc.wantErr, val.Error)
 		})
 	}
 }
