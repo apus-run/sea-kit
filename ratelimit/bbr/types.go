@@ -1,8 +1,6 @@
-package ratelimit_bbr
+package bbr
 
-import (
-	"errors"
-)
+import "errors"
 
 var (
 	// ErrLimitExceed is returned when the rate limiter is

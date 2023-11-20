@@ -13,8 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
-
-	limit "github.com/apus-run/sea-kit/ratelimit_redis"
 )
 
 func TestBuilder_e2e_RateLimit(t *testing.T) {
@@ -92,7 +90,7 @@ func initRedis() redis.Cmdable {
 
 func initWebServer(cmd redis.Cmdable) *gin.Engine {
 	server := gin.Default()
-	limiter := limit.NewRedisSlidingWindowLimiter(cmd, 500*time.Millisecond, 1)
-	server.Use(limit.NewBuilder(limiter).Build())
+	limiter := NewRedisSlidingWindowLimiter(cmd, 500*time.Millisecond, 1)
+	server.Use(NewBuilder(limiter).Build())
 	return server
 }
