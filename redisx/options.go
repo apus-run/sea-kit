@@ -15,7 +15,7 @@ func (config *RedisConfig) UniqKey() string {
 	return fmt.Sprintf("%v_%v_%v_%v", config.Addr, config.DB, config.Username, config.Network)
 }
 
-type RedisOption func(*RedisConfig) error
+type RedisOption func(*RedisConfig)
 
 // DefaultOptions .
 func DefaultOptions() *RedisConfig {
@@ -31,18 +31,14 @@ func DefaultOptions() *RedisConfig {
 func Apply(opts ...RedisOption) *RedisConfig {
 	options := DefaultOptions()
 	for _, opt := range opts {
-		err := opt(options)
-		if err != nil {
-			return nil
-		}
+		opt(options)
 	}
 	return options
 }
 
 // WithRedisConfig 表示自行配置Gorm的配置信息
 func WithRedisConfig(f func(options *RedisConfig)) RedisOption {
-	return func(config *RedisConfig) error {
+	return func(config *RedisConfig) {
 		f(config)
-		return nil
 	}
 }
