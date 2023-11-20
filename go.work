@@ -20,8 +20,7 @@ use (
     ./casbinx
     ./trace
     ./redisx
-    ./ratelimit_bbr
-    ./ratelimit_redis
+    ./ratelimit
     ./zlog
     ./stringx
     ./slogx
@@ -37,6 +36,5 @@ use (
     ./mongo
     ./simple_cache
     ./set
-	.
-	list
+    ./list
 )

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	ratelimit "github.com/apus-run/sea-kit/ratelimit_redis"
+	ratelimit "github.com/apus-run/sea-kit/ratelimit/redis"
 	"github.com/gin-gonic/gin"
 )
 

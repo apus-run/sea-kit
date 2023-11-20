@@ -99,5 +99,6 @@ require (
 
 replace (
 	github.com/apus-run/sea-kit/utils => ../utils
+	github.com/apus-run/sea-kit/ratelimit => ../ratelimit
 	github.com/ugorji/go => github.com/ugorji/go v1.2.11
 )

@@ -3,9 +3,10 @@ package simple_cache
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/apus-run/sea-kit/simple_cache/internal/errs"
 	"github.com/apus-run/sea-kit/utils"
-	"time"
 )
 
 type Cache interface {

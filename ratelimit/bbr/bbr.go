@@ -6,16 +6,15 @@ import (
 	"sync/atomic"
 	"time"
 
-	ratelimit "github.com/apus-run/sea-kit/ratelimit_bbr"
-	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr/cpu"
-	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr/window"
+	"github.com/apus-run/sea-kit/ratelimit/bbr/cpu"
+	"github.com/apus-run/sea-kit/ratelimit/bbr/window"
 )
 
 var (
 	gCPU  int64
 	decay = 0.95
 
-	_ ratelimit.Limiter = (*BBR)(nil)
+	_ Limiter = (*BBR)(nil)
 )
 
 type (
@@ -239,14 +238,14 @@ func (l *BBR) Stat() Stat {
 
 // Allow checks all inbound traffic.
 // Once overload is detected, it raises limit.ErrLimitExceed error.
-func (l *BBR) Allow() (ratelimit.DoneFunc, error) {
+func (l *BBR) Allow() (DoneFunc, error) {
 	if l.shouldDrop() {
-		return nil, ratelimit.ErrLimitExceed
+		return nil, ErrLimitExceed
 	}
 	atomic.AddInt64(&l.inFlight, 1)
 	start := time.Now().UnixNano()
 	ms := float64(time.Millisecond)
-	return func(ratelimit.DoneInfo) {
+	return func(DoneInfo) {
 		//nolint
 		if rt := int64(math.Ceil(float64(time.Now().UnixNano()-start)) / ms); rt > 0 {
 			l.rtStat.Add(rt)

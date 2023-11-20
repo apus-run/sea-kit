@@ -1,18 +1,17 @@
 package bbr
 
 import (
+	ratelimit "github.com/apus-run/sea-kit/ratelimit/bbr"
 	"github.com/gin-gonic/gin"
-	ratelimit "github.com/apus-run/sea-kit/ratelimit_bbr"
-	"github.com/apus-run/sea-kit/ratelimit_bbr/bbr"
 )
 
 type Builder struct {
 	limiter ratelimit.Limiter
 }
 
-func NewBuilder(opts ...bbr.Option) *Builder {
+func NewBuilder(opts ...ratelimit.Option) *Builder {
 	return &Builder{
-		limiter: bbr.NewLimiter(opts...),
+		limiter: ratelimit.NewLimiter(opts...),
 	}
 }
 

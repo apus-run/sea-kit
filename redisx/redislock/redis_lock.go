@@ -1,39 +1,29 @@
-// Copyright 2021 gotomicro
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// 源码来自: https://www.github.com/gotomicro/redis-lock
 
-package rlock
+//go:generate mockgen -copyright_file=.license.go.header -package=mocks -destination=mocks/redis_cmdable.mock.go github.com/redis/go-redis/v9 Cmdable
+
+package redislock
 
 import (
 	"context"
 	_ "embed"
 	"errors"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"sync"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/redis/go-redis/v9"
 	"golang.org/x/sync/singleflight"
 )
 
 var (
-	//go:embed script/lua/unlock.lua
+	//go:embed lua/unlock.lua
 	luaUnlock string
-	//go:embed script/lua/refresh.lua
+	//go:embed lua/refresh.lua
 	luaRefresh string
 
-	//go:embed script/lua/lock.lua
+	//go:embed lua/lock.lua
 	luaLock string
 
 	ErrFailedToPreemptLock = errors.New("rlock: 抢锁失败")

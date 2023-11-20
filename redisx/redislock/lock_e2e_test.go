@@ -1,20 +1,6 @@
-// Copyright 2021 gotomicro
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 //go:build e2e
 
-package rlock
+package redislock
 
 import (
 	"context"
@@ -22,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -34,9 +21,9 @@ type ClientE2ESuite struct {
 
 func (s *ClientE2ESuite) SetupSuite() {
 	s.rdb = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     "localhost:16379",
+		Password: "123456", // no password set
+		DB:       0,        // use default DB
 	})
 	// 确保测试的目标 Redis 已经启动成功了
 	for s.rdb.Ping(context.Background()).Err() != nil {

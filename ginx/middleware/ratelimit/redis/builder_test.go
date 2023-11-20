@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 
-	ratelimit "github.com/apus-run/sea-kit/ratelimit_redis"
-	"github.com/apus-run/sea-kit/ratelimit_redis/mocks"
+	ratelimit "github.com/apus-run/sea-kit/ratelimit/redis"
+	limitmocks "github.com/apus-run/sea-kit/ratelimit/redis/mocks"
 )
 
 func TestBuilder_SetKeyGenFunc(t *testing.T) {

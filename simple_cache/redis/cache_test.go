@@ -142,12 +142,12 @@ func TestCache_SetNX(t *testing.T) {
 				boolCmd := redis.NewBoolCmd(context.Background())
 				boolCmd.SetVal(true)
 				cmd.EXPECT().
-					SetNX(context.Background(), "setnx_key", "hello ecache", time.Second*10).
+					SetNX(context.Background(), "setnx_key", "hello cache", time.Second*10).
 					Return(boolCmd)
 				return cmd
 			},
 			key:        "setnx_key",
-			val:        "hello ecache",
+			val:        "hello cache",
 			expiration: time.Second * 10,
 			result:     true,
 		},
@@ -158,13 +158,13 @@ func TestCache_SetNX(t *testing.T) {
 				boolCmd := redis.NewBoolCmd(context.Background())
 				boolCmd.SetVal(false)
 				cmd.EXPECT().
-					SetNX(context.Background(), "setnx-key", "hello ecache", time.Second*10).
+					SetNX(context.Background(), "setnx-key", "hello cache", time.Second*10).
 					Return(boolCmd)
 
 				return cmd
 			},
 			key:        "setnx-key",
-			val:        "hello ecache",
+			val:        "hello cache",
 			expiration: time.Second * 10,
 			result:     false,
 		},
@@ -196,7 +196,7 @@ func TestCache_GetSet(t *testing.T) {
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				str := redis.NewStringCmd(context.Background())
-				str.SetVal("hello ecache")
+				str.SetVal("hello cache")
 				cmd.EXPECT().
 					GetSet(context.Background(), "test_get_set", "hello go").
 					Return(str)
@@ -212,12 +212,12 @@ func TestCache_GetSet(t *testing.T) {
 				str := redis.NewStringCmd(context.Background())
 				str.SetErr(redis.Nil)
 				cmd.EXPECT().
-					GetSet(context.Background(), "test_get_set_err", "hello ecache").
+					GetSet(context.Background(), "test_get_set_err", "hello cache").
 					Return(str)
 				return cmd
 			},
 			key:     "test_get_set_err",
-			val:     "hello ecache",
+			val:     "hello cache",
 			wantErr: errs.ErrKeyNotExist,
 		},
 	}
@@ -451,12 +451,12 @@ func TestCache_SAdd(t *testing.T) {
 				result := redis.NewIntCmd(context.Background())
 				result.SetVal(2)
 				cmd.EXPECT().
-					SAdd(context.Background(), "test_sadd", "hello ecache", "hello go").
+					SAdd(context.Background(), "test_sadd", "hello cache", "hello go").
 					Return(result)
 				return cmd
 			},
 			key:     "test_sadd",
-			val:     []any{"hello ecache", "hello go"},
+			val:     []any{"hello cache", "hello go"},
 			wantVal: 2,
 		},
 		{
@@ -726,7 +726,7 @@ func TestCache_IncrByFloat(t *testing.T) {
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewFloatCmd(context.Background())
-				result.SetVal(float64(-2.0))
+				result.SetVal(-2.0)
 				cmd.EXPECT().
 					IncrByFloat(context.Background(), "test_cache_incrbyfloat", -1.0).
 					Return(result)

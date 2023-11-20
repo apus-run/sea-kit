@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	ratelimit "github.com/apus-run/sea-kit/ratelimit_bbr"
+	ratelimit "github.com/apus-run/sea-kit/ratelimit/bbr"
 )
 
 type ratelimitMock struct {
