@@ -80,7 +80,7 @@ func TestClient_Lock(t *testing.T) {
 			expiration: time.Minute,
 			retry:      &FixIntervalRetry{Interval: time.Millisecond, Max: 2},
 			timeout:    time.Second,
-			wantErr:    "rlock: 重试机会耗尽，最后一次重试错误: context deadline exceeded",
+			wantErr:    "redis lock: 重试机会耗尽，最后一次重试错误: context deadline exceeded",
 		},
 		{
 			name: "retry over times-lock holded",
@@ -96,7 +96,7 @@ func TestClient_Lock(t *testing.T) {
 			expiration: time.Minute,
 			retry:      &FixIntervalRetry{Interval: time.Millisecond, Max: 2},
 			timeout:    time.Second,
-			wantErr:    "rlock: 重试机会耗尽，锁被人持有: rlock: 抢锁失败",
+			wantErr:    "redis lock: 重试机会耗尽，锁被人持有: redis lock: 抢锁失败",
 		},
 		{
 			name: "retry and success",
@@ -145,7 +145,7 @@ func TestClient_Lock(t *testing.T) {
 			client := NewClient(mockRedisCmd)
 			ctx, cancel := context.WithTimeout(context.Background(), tc.timeout)
 			defer cancel()
-			l, err := client.Lock(ctx, tc.key, tc.expiration, tc.retry, time.Second)
+			l, err := client.Lock(ctx, WithKey(tc.key), WithExpiration(tc.expiration), WithRetry(tc.retry))
 			if tc.wantErr != "" {
 				assert.EqualError(t, err, tc.wantErr)
 				return
@@ -339,13 +339,16 @@ func TestClient_SingleflightLock(t *testing.T) {
 		Return(cmd)
 	client := NewClient(rdb)
 	// TODO 并发测试
-	_, err := client.SingleflightLock(context.Background(),
-		"key1",
-		time.Minute,
-		&FixIntervalRetry{
+	_, err := client.SingleflightLock(
+		context.Background(),
+		WithKey("key1"),
+		WithExpiration(time.Minute),
+		WithRetry(&FixIntervalRetry{
 			Interval: time.Millisecond,
 			Max:      3,
-		}, time.Second)
+		}),
+		WithTimeout(time.Second),
+	)
 	require.NoError(t, err)
 }
 

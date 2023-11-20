@@ -26,11 +26,11 @@ var (
 	//go:embed lua/lock.lua
 	luaLock string
 
-	ErrFailedToPreemptLock = errors.New("rlock: 抢锁失败")
+	ErrFailedToPreemptLock = errors.New("redis lock: 抢锁失败")
 	// ErrLockNotHold 一般是出现在你预期你本来持有锁，结果却没有持有锁的地方
 	// 比如说当你尝试释放锁的时候，可能得到这个错误
-	// 这一般意味着有人绕开了 rlock 的控制，直接操作了 Redis
-	ErrLockNotHold = errors.New("rlock: 未持有锁")
+	// 这一般意味着有人绕开了 redis lock 的控制，直接操作了 Redis
+	ErrLockNotHold = errors.New("redis lock: 未持有锁")
 )
 
 type Client struct {
@@ -49,17 +49,18 @@ func NewClient(client redis.Cmdable) *Client {
 	}
 }
 
-func (c *Client) SingleflightLock(ctx context.Context, key string, expiration time.Duration, retry RetryStrategy, timeout time.Duration) (*Lock, error) {
+func (c *Client) SingleflightLock(ctx context.Context, lockOpts ...LockOption) (*Lock, error) {
+	opts := Apply(lockOpts...)
 	for {
 		flag := false
-		result := c.g.DoChan(key, func() (interface{}, error) {
+		result := c.g.DoChan(opts.key, func() (interface{}, error) {
 			flag = true
-			return c.Lock(ctx, key, expiration, retry, timeout)
+			return c.Lock(ctx, lockOpts...)
 		})
 		select {
 		case res := <-result:
 			if flag {
-				c.g.Forget(key)
+				c.g.Forget(opts.key)
 				if res.Err != nil {
 					return nil, res.Err
 				}
@@ -81,7 +82,8 @@ func (c *Client) SingleflightLock(ctx context.Context, key string, expiration ti
 // - 如果 errors.Is(err, context.DeadlineExceeded) 那么最终有没有加锁成功，谁也不知道
 // - 如果 errors.Is(err, ErrFailedToPreemptLock) 说明肯定没成功，而且超过了重试次数
 // - 否则，和 Redis 通信出了问题
-func (c *Client) Lock(ctx context.Context, key string, expiration time.Duration, retry RetryStrategy, timeout time.Duration) (*Lock, error) {
+func (c *Client) Lock(ctx context.Context, lockOpts ...LockOption) (*Lock, error) {
+	opts := Apply(lockOpts...)
 	val := c.valuer()
 	var timer *time.Timer
 	defer func() {
@@ -90,8 +92,8 @@ func (c *Client) Lock(ctx context.Context, key string, expiration time.Duration,
 		}
 	}()
 	for {
-		lctx, cancel := context.WithTimeout(ctx, timeout)
-		res, err := c.client.Eval(lctx, luaLock, []string{key}, val, expiration.Seconds()).Result()
+		lctx, cancel := context.WithTimeout(ctx, opts.timeout)
+		res, err := c.client.Eval(lctx, luaLock, []string{opts.key}, val, opts.expiration.Seconds()).Result()
 		cancel()
 		if err != nil && !errors.Is(err, context.DeadlineExceeded) {
 			// 非超时错误，那么基本上代表遇到了一些不可挽回的场景，所以没太大必要继续尝试了
@@ -99,16 +101,16 @@ func (c *Client) Lock(ctx context.Context, key string, expiration time.Duration,
 			return nil, err
 		}
 		if res == "OK" {
-			return newLock(c.client, key, val, expiration), nil
+			return newLock(c.client, opts.key, val, opts.expiration), nil
 		}
-		interval, ok := retry.Next()
+		interval, ok := opts.retry.Next()
 		if !ok {
 			if err != nil {
 				err = fmt.Errorf("最后一次重试错误: %w", err)
 			} else {
 				err = fmt.Errorf("锁被人持有: %w", ErrFailedToPreemptLock)
 			}
-			return nil, fmt.Errorf("rlock: 重试机会耗尽，%w", err)
+			return nil, fmt.Errorf("redis lock: 重试机会耗尽，%w", err)
 		}
 		if timer == nil {
 			timer = time.NewTimer(interval)
@@ -123,8 +125,7 @@ func (c *Client) Lock(ctx context.Context, key string, expiration time.Duration,
 	}
 }
 
-func (c *Client) TryLock(ctx context.Context,
-	key string, expiration time.Duration) (*Lock, error) {
+func (c *Client) TryLock(ctx context.Context, key string, expiration time.Duration) (*Lock, error) {
 	val := c.valuer()
 	ok, err := c.client.SetNX(ctx, key, val, expiration).Result()
 	if err != nil {

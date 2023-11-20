@@ -1,4 +1,4 @@
-//go:build e2e
+// go:build e2e
 
 package redislock
 
@@ -125,7 +125,7 @@ func (s *ClientE2ESuite) TestLock() {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.before()
-			l, err := tc.client.Lock(context.Background(), tc.key, tc.expiration, tc.retry, tc.timeout)
+			l, err := tc.client.Lock(context.Background(), WithKey(tc.key), WithExpiration(tc.expiration), WithRetry(tc.retry), WithTimeout(tc.timeout))
 			assert.True(t, errors.Is(err, tc.wantErr))
 			if err != nil {
 				return
