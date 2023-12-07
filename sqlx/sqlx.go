@@ -1,5 +1,5 @@
-// 参考来源:
-// https://github.com/go-kiss/sqlx
+// 参考来源:  https://github.com/go-kiss/sqlx
+
 package sqlx
 
 import (
@@ -241,4 +241,24 @@ func bindArgs(names []string, arg interface{}, m *reflectx.Mapper) ([]interface{
 	})
 
 	return arglist, err
+}
+
+func (db *DB) Transaction(ctx context.Context, fn func(ctx context.Context, tx *Tx) error) error {
+	tx, err := db.BeginTxx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if v := recover(); v != nil {
+			tx.Rollback()
+			panic(v)
+		}
+	}()
+
+	if err = fn(ctx, tx); err != nil {
+		return tx.Rollback()
+	}
+
+	return tx.Commit()
 }

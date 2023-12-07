@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/oklog/run"
+	"github.com/apus-run/sea-kit/concurrency/run"
 )
 
 func ExampleGroup_Add_basic() {
@@ -93,3 +93,45 @@ func runUntilCanceled(ctx context.Context) error {
 	<-ctx.Done()
 	return ctx.Err()
 }
+
+//// Server 启动微服务所需要的所有依赖
+//type Server struct {
+//	runGroup   *run.Group
+//	grpcServer *grpc.Server
+//}
+//
+//// NewServer 实例化 Server
+//func NewServer(
+//	runGroup *run.Group,
+//	grpcServer *grpc.Server,
+//) *Server {
+//	return &Server{
+//		runGroup:   runGroup,
+//		grpcServer: grpcServer,
+//	}
+//}
+//
+//// RunServer 启动 http 以及 grpc 服务
+//func (s *Server) RunServer() {
+//	// 启动 grpc 服务
+//	s.runGroup.Add(func() error {
+//		l, err := net.Listen("tcp", ":8080")
+//		if err != nil {
+//			return err
+//		}
+//		log.Printf("starting gRPC server: %v", l.Addr().String())
+//
+//		return s.grpcServer.Serve(l)
+//	}, func(err error) {
+//		s.grpcServer.GracefulStop()
+//		s.grpcServer.Stop()
+//	})
+//
+//	// 监听退出信号
+//	s.runGroup.Add(run.SignalHandler(context.Background(), syscall.SIGINT, syscall.SIGTERM))
+//
+//	// 顺序启动服务
+//	if err := s.runGroup.Run(); err != nil {
+//		os.Exit(1)
+//	}
+//}

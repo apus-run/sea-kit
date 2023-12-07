@@ -37,4 +37,5 @@ use (
     ./simple_cache
     ./set
     ./list
+    ./ws
 )

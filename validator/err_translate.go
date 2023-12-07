@@ -1,9 +1,14 @@
 package validator
 
 import (
+	"context"
+	"errors"
+	"net/http"
+	"reflect"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/text/language"
-	"net/http"
 )
 
 const I18nKey = "SpectatorNan/validate/i18n"
@@ -26,27 +31,42 @@ func GetLanguageTag(r *http.Request) language.Tag {
 	return tag
 }
 
-func (v Validator) valid(s interface{}) (string, bool) {
-
-	e := v.validate.Struct(s)
-	if e != nil {
-		err := e.(validator.ValidationErrors)
-		result := removeStructName(err.Translate(v.trans))
-		if len(result) > 0 {
-			return result[0], false
-		}
-		return "Parameters valid failed", false
+func (v Validator) valid(obj any) error {
+	if reflect.Indirect(reflect.ValueOf(obj)).Kind() != reflect.Struct {
+		return nil
 	}
-	return "", true
+
+	e := v.validator.Struct(obj)
+	if e != nil {
+		err, ok := e.(validator.ValidationErrors)
+		if !ok {
+			return e
+		}
+		return removeStructName(err.Translate(v.translator))
+	}
+	return nil
 }
 
-func removeStructName(fields map[string]string) []string {
-	//result := map[string]string{}
-	errs := make([]string, 0)
-	for _, err := range fields {
-		//result[field[strings.Index(field, ".")+1:]] = err
-		errs = append(errs, err)
+func (v Validator) validCtx(ctx context.Context, obj any) error {
+	if reflect.Indirect(reflect.ValueOf(obj)).Kind() != reflect.Struct {
+		return nil
 	}
 
-	return errs //strings.Join(errs, ", ")
+	e := v.validator.StructCtx(ctx, obj)
+	if e != nil {
+		err, ok := e.(validator.ValidationErrors)
+		if !ok {
+			return e
+		}
+		return removeStructName(err.Translate(v.translator))
+	}
+	return nil
+}
+
+func removeStructName(fields map[string]string) error {
+	errs := make([]string, 0, len(fields))
+	for _, err := range fields {
+		errs = append(errs, err)
+	}
+	return errors.New(strings.Join(errs, ";"))
 }

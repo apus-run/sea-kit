@@ -8,6 +8,8 @@ import (
 	"runtime"
 	"sync"
 
+	"go.uber.org/zap"
+
 	"github.com/go-sql-driver/mysql"
 	"github.com/iancoleman/strcase"
 	"github.com/jackc/pgx/v4/stdlib"
@@ -187,4 +189,25 @@ func (data *database) isConnect() bool {
 
 func (data *database) GetClient() *DB {
 	return data.db
+}
+
+// Close 关闭数据库连接，如果未指定名称，则关闭全部
+func (data *database) Close(ctx context.Context, name ...string) {
+	if len(name) == 0 {
+		for key, db := range dbs {
+			if err := db.Close(); err != nil {
+				log.Error(fmt.Sprintf("db.%s close error", key), zap.Error(err))
+			}
+		}
+
+		return
+	}
+
+	for _, key := range name {
+		if db, ok := dbs[key]; ok {
+			if err := db.Close(); err != nil {
+				log.Error(fmt.Sprintf("db.%s close error", key), zap.Error(err))
+			}
+		}
+	}
 }

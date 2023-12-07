@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/oklog/run"
+	"github.com/apus-run/sea-kit/concurrency/run"
 )
 
 func TestZero(t *testing.T) {
