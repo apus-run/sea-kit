@@ -2,7 +2,6 @@ package client
 
 import (
 	"crypto/tls"
-	"time"
 
 	"google.golang.org/grpc"
 )
@@ -18,23 +17,21 @@ type Options struct {
 	tlsConf *tls.Config
 
 	// 拦截器
-	timeout    time.Duration
 	unaryInts  []grpc.UnaryClientInterceptor
 	streamInts []grpc.StreamClientInterceptor
 
 	dialOpts []grpc.DialOption
 }
 
-// DefaultOptions .
-func DefaultOptions() *Options {
+// defaultOptions .
+func defaultOptions() *Options {
 	return &Options{
-		timeout: 2000 * time.Millisecond,
-		secure:  false,
+		secure: false,
 	}
 }
 
 func Apply(opts ...Option) *Options {
-	options := DefaultOptions()
+	options := defaultOptions()
 	for _, o := range opts {
 		o(options)
 	}
@@ -73,13 +70,6 @@ func WithUnaryInterceptor(in ...grpc.UnaryClientInterceptor) Option {
 func WithStreamInterceptor(in ...grpc.StreamClientInterceptor) Option {
 	return func(o *Options) {
 		o.streamInts = in
-	}
-}
-
-// WithTimeout with client timeout.
-func WithTimeout(timeout time.Duration) Option {
-	return func(o *Options) {
-		o.timeout = timeout
 	}
 }
 
