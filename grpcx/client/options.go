@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"crypto/tls"
 
 	"google.golang.org/grpc"
@@ -21,11 +22,16 @@ type Options struct {
 	streamInts []grpc.StreamClientInterceptor
 
 	dialOpts []grpc.DialOption
+
+	// other options for implementations of the interface
+	// can be stored in a context
+	ctx context.Context
 }
 
 // defaultOptions .
 func defaultOptions() *Options {
 	return &Options{
+		ctx:    context.Background(),
 		secure: false,
 	}
 }

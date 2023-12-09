@@ -1,10 +1,12 @@
 package server
 
 import (
+	"context"
 	"crypto/tls"
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
 )
 
 // Option is config option.
@@ -12,8 +14,9 @@ type Option func(*Options)
 
 type Options struct {
 	*grpc.Server
-	err     error
-	addr    string
+	err  error
+	addr string
+	// server listen network tcp/udp
 	network string
 	lis     net.Listener
 
@@ -25,11 +28,20 @@ type Options struct {
 	streamInts []grpc.StreamServerInterceptor
 
 	grpcOpts []grpc.ServerOption
+
+	// other options for implementations of the interface
+	// can be stored in a context
+	ctx context.Context
+
+	// 心跳检测
+	healthServer *health.Server
+	isHealth     bool
 }
 
 // defaultOptions .
 func defaultOptions() *Options {
 	return &Options{
+		ctx:     context.Background(),
 		network: "tcp",
 		addr:    ":0",
 	}
@@ -68,6 +80,13 @@ func WithListener(lis net.Listener) Option {
 func WithTLSConfig(conf *tls.Config) Option {
 	return func(o *Options) {
 		o.tlsConf = conf
+	}
+}
+
+// WithIsHealth Checks server.
+func WithIsHealth() Option {
+	return func(s *Options) {
+		s.isHealth = true
 	}
 }
 

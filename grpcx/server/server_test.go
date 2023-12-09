@@ -5,12 +5,17 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"runtime/debug"
 	"testing"
 	"time"
 
+	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
 	"github.com/apus-run/sea-kit/grpcx/client"
 	pb "github.com/apus-run/sea-kit/grpcx/testdata/helloworld"
-	"google.golang.org/grpc"
 )
 
 // service is used to implement helloworld.GreeterServer.
@@ -62,6 +67,11 @@ func TestServer(t *testing.T) {
 	//defer cancel()
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, testKey{}, "test")
+
+	grpcPanicRecoveryHandler := func(p any) (err error) {
+		t.Log("msg", "recovered from panic", "panic", p, "stack", debug.Stack())
+		return status.Errorf(codes.Internal, "%s", p)
+	}
 	srv := NewServer(
 		WithAddr(":8090"),
 		WithUnaryInterceptor(
@@ -70,6 +80,10 @@ func TestServer(t *testing.T) {
 				handler grpc.UnaryHandler) (resp interface{}, err error) {
 				return handler(ctx, req)
 			},
+			recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
+		),
+		WithStreamInterceptor(
+			recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
 		),
 		WithGrpcOptions(grpc.InitialConnWindowSize(0)),
 	)
@@ -87,6 +101,12 @@ func TestServer(t *testing.T) {
 }
 
 func testClient(t *testing.T, ctx context.Context, srv *Options) {
+	u, err := srv.Endpoint()
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(u)
+
 	// new a gRPC client
 	conn, err := client.NewClient(
 		ctx,

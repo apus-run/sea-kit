@@ -2,15 +2,15 @@ package client
 
 import (
 	"context"
-	"time"
+	"fmt"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/keepalive"
 )
 
 func NewClient(ctx context.Context, opts ...Option) (*grpc.ClientConn, error) {
+	var grpcServiceConfig = fmt.Sprintf(`{"loadBalancingConfig": [{"%s":{}}],"healthCheckConfig":{"serviceName":""}}`, "round_robin")
 	var uints []grpc.UnaryClientInterceptor
 	var sints []grpc.StreamClientInterceptor
 
@@ -22,13 +22,9 @@ func NewClient(ctx context.Context, opts ...Option) (*grpc.ClientConn, error) {
 	if len(options.streamInts) > 0 {
 		sints = append(sints, options.streamInts...)
 	}
+
 	dialOpts := []grpc.DialOption{
-		grpc.WithBlock(),
-		grpc.WithKeepaliveParams(keepalive.ClientParameters{
-			Time:                10 * time.Second,
-			Timeout:             time.Second,
-			PermitWithoutStream: true,
-		}),
+		grpc.WithDefaultServiceConfig(grpcServiceConfig),
 
 		grpc.WithChainUnaryInterceptor(uints...),
 		grpc.WithChainStreamInterceptor(sints...),

@@ -1,12 +1,14 @@
 package server
 
 import (
+	"fmt"
+	"net"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/keepalive"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
-	"net"
-	"time"
 )
 
 // NewServer returns new unsecured grpc server
@@ -23,27 +25,24 @@ func NewServer(opts ...Option) *Options {
 		streamInterceptor = append(streamInterceptor, options.streamInts...)
 	}
 	grpcOpts := []grpc.ServerOption{
-		grpc.KeepaliveParams(keepalive.ServerParameters{
-			Time:    time.Second * 30, // server initiated keep alive interval
-			Timeout: time.Second * 30, // server initiated keep alive timeout
-		}),
-		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
-			MinTime:             time.Minute, // server enforcement for client keep alive
-			PermitWithoutStream: true,        // allow connection without any active ongoing streams
-		}),
-
 		grpc.ChainUnaryInterceptor(unaryInterceptor...),
 		grpc.ChainStreamInterceptor(streamInterceptor...),
 	}
 	if options.tlsConf != nil {
 		grpcOpts = append(grpcOpts, grpc.Creds(credentials.NewTLS(options.tlsConf)))
 	}
+
+	// other server option or middleware
 	if len(options.grpcOpts) > 0 {
 		grpcOpts = append(grpcOpts, options.grpcOpts...)
 	}
 
+	// new grpc server
 	options.Server = grpc.NewServer(grpcOpts...)
-
+	if !options.isHealth {
+		options.healthServer = health.NewServer()
+		grpc_health_v1.RegisterHealthServer(options.Server, options.healthServer)
+	}
 	// register reflection and the interface can be debugged through the grpcurl tool
 	// https://github.com/grpc/grpc-go/blob/master/Documentation/server-reflection-tutorial.md#enable-server-reflection
 	// see https://github.com/fullstorydev/grpcurl
@@ -53,14 +52,34 @@ func NewServer(opts ...Option) *Options {
 }
 
 func (s *Options) Start() error {
-	l, err := net.Listen(s.network, s.addr)
+	lis, err := net.Listen(s.network, s.addr)
 	if err != nil {
 		return err
 	}
-	return s.Server.Serve(l)
+	s.healthServer.Resume()
+	return s.Server.Serve(lis)
 }
 
 // Stop stop the gRPC server.
 func (s *Options) Stop() {
 	s.Server.Stop()
+	s.healthServer.Shutdown()
+}
+
+// GracefulStop graceful stop the gRPC server.
+func (s *Options) GracefulStop() {
+	s.Server.GracefulStop()
+	s.healthServer.Shutdown()
+}
+
+// Endpoint return a real address to registry endpoint.
+// examples:
+//
+//	grpc://127.0.0.1:9000?isSecure=false
+func (s *Options) Endpoint() (string, error) {
+	addr, err := Extract(s.addr)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("grpc://%s", addr), nil
 }
