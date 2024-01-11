@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package redis
 
 import (
@@ -19,12 +5,12 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ecodeclub/ecache"
-	"github.com/ecodeclub/ecache/internal/errs"
 	"github.com/redis/go-redis/v9"
+
+	cache "github.com/apus-run/sea-kit/cache/v2"
 )
 
-var _ ecache.Cache = (*Cache)(nil)
+var _ cache.Cache = (*Cache)(nil)
 
 type Cache struct {
 	client redis.Cmdable
@@ -46,18 +32,18 @@ func (c *Cache) Delete(ctx context.Context, key ...string) (int64, error) {
 	return c.client.Del(ctx, key...).Result()
 }
 
-func (c *Cache) Get(ctx context.Context, key string) (val ecache.Value) {
-	val.Val, val.Err = c.client.Get(ctx, key).Result()
-	if val.Err != nil && errors.Is(val.Err, redis.Nil) {
-		val.Err = errs.ErrKeyNotExist
+func (c *Cache) Get(ctx context.Context, key string) (val cache.Value) {
+	val.Value, val.Error = c.client.Get(ctx, key).Result()
+	if val.Error != nil && errors.Is(val.Error, redis.Nil) {
+		val.Error = cache.ErrKeyNotExist
 	}
 	return
 }
 
-func (c *Cache) GetSet(ctx context.Context, key string, val string) (result ecache.Value) {
-	result.Val, result.Err = c.client.GetSet(ctx, key, val).Result()
-	if result.Err != nil && errors.Is(result.Err, redis.Nil) {
-		result.Err = errs.ErrKeyNotExist
+func (c *Cache) GetSet(ctx context.Context, key string, val string) (result cache.Value) {
+	result.Value, result.Error = c.client.GetSet(ctx, key, val).Result()
+	if result.Error != nil && errors.Is(result.Error, redis.Nil) {
+		result.Error = cache.ErrKeyNotExist
 	}
 	return
 }
@@ -66,10 +52,10 @@ func (c *Cache) LPush(ctx context.Context, key string, val ...any) (int64, error
 	return c.client.LPush(ctx, key, val...).Result()
 }
 
-func (c *Cache) LPop(ctx context.Context, key string) (result ecache.Value) {
-	result.Val, result.Err = c.client.LPop(ctx, key).Result()
-	if result.Err != nil && errors.Is(result.Err, redis.Nil) {
-		result.Err = errs.ErrKeyNotExist
+func (c *Cache) LPop(ctx context.Context, key string) (result cache.Value) {
+	result.Value, result.Error = c.client.LPop(ctx, key).Result()
+	if result.Error != nil && errors.Is(result.Error, redis.Nil) {
+		result.Error = cache.ErrKeyNotExist
 	}
 	return
 }

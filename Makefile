@@ -6,13 +6,6 @@ MAJOR=$(shell echo $(CURRENT_VERSION) | cut -d. -f1 | tr -d v)
 MINOR=$(shell echo $(CURRENT_VERSION) | cut -d. -f2)
 PATCH=$(shell echo $(CURRENT_VERSION) | cut -d. -f3)
 
-# Test
-test:
-	go test -v -failfast -count=1 -cover -covermode=count -coverprofile=coverage.out ./...
-	go tool cover -func coverage.out
-
-.phony: test
-
 current-version:
 	@echo $(CURRENT_VERSION)
 

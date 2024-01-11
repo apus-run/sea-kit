@@ -1,26 +1,24 @@
 package utils
 
 import (
+	"crypto/rand"
+
 	"github.com/google/uuid"
+	"github.com/lithammer/shortuuid/v4"
+	"github.com/oklog/ulid"
 )
 
-type IUuidGen interface {
-	New() string
-}
-type uuidgen struct{}
-
-func New() IUuidGen {
-	return &uuidgen{}
-}
-
-func (u *uuidgen) New() string {
+// NewUUID returns a new UUID Version 4.
+func NewUUID() string {
 	return uuid.New().String()
 }
 
-func Parse(value string) (string, error) {
-	v, err := uuid.Parse(value)
-	if err != nil {
-		return "", err
-	}
-	return v.String(), nil
+// NewShortUUID returns a new short UUID.
+func NewShortUUID() string {
+	return shortuuid.New()
+}
+
+// NewULID returns a new ULID.
+func NewULID() string {
+	return ulid.MustNew(ulid.Now(), rand.Reader).String()
 }

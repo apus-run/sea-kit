@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package lru
 
 import (
@@ -20,14 +6,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ecodeclub/ekit/set"
-
-	"github.com/ecodeclub/ecache"
-	"github.com/ecodeclub/ecache/internal/errs"
-	"github.com/ecodeclub/ekit/list"
+	"github.com/apus-run/sea-kit/list"
+	"github.com/apus-run/sea-kit/set"
 	"github.com/hashicorp/golang-lru/v2/simplelru"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	cache "github.com/apus-run/sea-kit/cache/v2"
 )
 
 func TestCache_Set(t *testing.T) {
@@ -53,11 +38,11 @@ func TestCache_Set(t *testing.T) {
 			after: func(t *testing.T) {
 				result, ok := lru.Get("test")
 				assert.Equal(t, true, ok)
-				assert.Equal(t, "hello ecache", result.(string))
+				assert.Equal(t, "hello cache", result.(string))
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:        "test",
-			val:        "hello ecache",
+			val:        "hello cache",
 			expiration: time.Minute,
 		},
 	}
@@ -96,20 +81,20 @@ func TestCache_Get(t *testing.T) {
 		{
 			name: "get value",
 			before: func(t *testing.T) {
-				assert.Equal(t, false, lru.Add("test", "hello ecache"))
+				assert.Equal(t, false, lru.Add("test", "hello cache"))
 			},
 			after: func(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			wantVal: "hello ecache",
+			wantVal: "hello cache",
 		},
 		{
 			name:    "get value err",
 			before:  func(t *testing.T) {},
 			after:   func(t *testing.T) {},
 			key:     "test",
-			wantErr: errs.ErrKeyNotExist,
+			wantErr: cache.ErrKeyNotExist,
 		},
 	}
 
@@ -154,14 +139,14 @@ func TestCache_SetNX(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     "hello ecache",
+			val:     "hello cache",
 			expire:  time.Minute,
 			wantVal: true,
 		},
 		{
 			name: "setnx value exist",
 			before: func(t *testing.T) {
-				assert.Equal(t, false, lru.Add("test", "hello ecache"))
+				assert.Equal(t, false, lru.Add("test", "hello cache"))
 			},
 			after: func(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
@@ -209,7 +194,7 @@ func TestCache_GetSet(t *testing.T) {
 		{
 			name: "getset value",
 			before: func(t *testing.T) {
-				assert.Equal(t, false, lru.Add("test", "hello ecache"))
+				assert.Equal(t, false, lru.Add("test", "hello cache"))
 			},
 			after: func(t *testing.T) {
 				result, ok := lru.Get("test")
@@ -219,7 +204,7 @@ func TestCache_GetSet(t *testing.T) {
 			},
 			key:     "test",
 			val:     "hello world",
-			wantVal: "hello ecache",
+			wantVal: "hello cache",
 		},
 		{
 			name:   "getset value not key error",
@@ -232,7 +217,7 @@ func TestCache_GetSet(t *testing.T) {
 			},
 			key:     "test",
 			val:     "hello world",
-			wantErr: errs.ErrKeyNotExist,
+			wantErr: cache.ErrKeyNotExist,
 		},
 	}
 
@@ -253,12 +238,12 @@ func TestCache_GetSet(t *testing.T) {
 }
 
 func TestCache_Delete(t *testing.T) {
-	cache, err := newCache()
+	c, err := newCache()
 	require.NoError(t, err)
 
 	testCases := []struct {
 		name   string
-		before func(ctx context.Context, t *testing.T, cache ecache.Cache)
+		before func(ctx context.Context, t *testing.T, cache cache.Cache)
 
 		ctxFunc func() context.Context
 		key     []string
@@ -268,7 +253,7 @@ func TestCache_Delete(t *testing.T) {
 	}{
 		{
 			name: "delete single existed key",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {
+			before: func(ctx context.Context, t *testing.T, cache cache.Cache) {
 				require.NoError(t, cache.Set(ctx, "name", "Alex", 0))
 			},
 			ctxFunc: func() context.Context {
@@ -279,7 +264,7 @@ func TestCache_Delete(t *testing.T) {
 		},
 		{
 			name:   "delete single does not existed key",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {},
+			before: func(ctx context.Context, t *testing.T, cache cache.Cache) {},
 			ctxFunc: func() context.Context {
 				return context.Background()
 			},
@@ -287,7 +272,7 @@ func TestCache_Delete(t *testing.T) {
 		},
 		{
 			name: "delete multiple existed keys",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {
+			before: func(ctx context.Context, t *testing.T, cache cache.Cache) {
 				require.NoError(t, cache.Set(ctx, "name", "Alex", 0))
 				require.NoError(t, cache.Set(ctx, "age", 18, 0))
 			},
@@ -299,7 +284,7 @@ func TestCache_Delete(t *testing.T) {
 		},
 		{
 			name:   "delete multiple do not existed keys",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {},
+			before: func(ctx context.Context, t *testing.T, cache cache.Cache) {},
 			ctxFunc: func() context.Context {
 				return context.Background()
 			},
@@ -307,7 +292,7 @@ func TestCache_Delete(t *testing.T) {
 		},
 		{
 			name: "delete multiple keys, some do not existed keys",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {
+			before: func(ctx context.Context, t *testing.T, cache cache.Cache) {
 				require.NoError(t, cache.Set(ctx, "name", "Alex", 0))
 				require.NoError(t, cache.Set(ctx, "age", 18, 0))
 				require.NoError(t, cache.Set(ctx, "gender", "male", 0))
@@ -320,7 +305,7 @@ func TestCache_Delete(t *testing.T) {
 		},
 		{
 			name:   "timeout",
-			before: func(ctx context.Context, t *testing.T, cache ecache.Cache) {},
+			before: func(ctx context.Context, t *testing.T, cache cache.Cache) {},
 			ctxFunc: func() context.Context {
 				timeout := time.Millisecond * 100
 				ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -336,8 +321,8 @@ func TestCache_Delete(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 			ctx := tc.ctxFunc()
-			tc.before(ctx, t, cache)
-			n, err := cache.Delete(ctx, tc.key...)
+			tc.before(ctx, t, c)
+			n, err := c.Delete(ctx, tc.key...)
 			if err != nil {
 				assert.ErrorIs(t, err, tc.wantErr)
 				return
@@ -372,7 +357,7 @@ func TestCache_LPush(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello ecache"},
+			val:     []any{"hello cache"},
 			wantVal: 1,
 		},
 		{
@@ -382,16 +367,16 @@ func TestCache_LPush(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello ecache", "hello world"},
+			val:     []any{"hello cache", "hello world"},
 			wantVal: 2,
 		},
 		{
 			name: "lpush value exists",
 			before: func(t *testing.T) {
-				val := ecache.Value{}
-				val.Val = "hello ecache"
-				l := &list.ConcurrentList[ecache.Value]{
-					List: list.NewLinkedListOf[ecache.Value]([]ecache.Value{val}),
+				val := cache.Value{}
+				val.Value = "hello cache"
+				l := &list.ConcurrentList[cache.Value]{
+					List: list.NewLinkedListOf[cache.Value]([]cache.Value{val}),
 				}
 				assert.Equal(t, false, lru.Add("test", l))
 			},
@@ -411,7 +396,7 @@ func TestCache_LPush(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello ecache"},
+			val:     []any{"hello cache"},
 			wantErr: errors.New("当前key不是list类型"),
 		},
 	}
@@ -451,10 +436,10 @@ func TestCache_LPop(t *testing.T) {
 		{
 			name: "lpop value",
 			before: func(t *testing.T) {
-				val := ecache.Value{}
-				val.Val = "hello ecache"
-				l := &list.ConcurrentList[ecache.Value]{
-					List: list.NewLinkedListOf[ecache.Value]([]ecache.Value{val}),
+				val := cache.Value{}
+				val.Value = "hello cache"
+				l := &list.ConcurrentList[cache.Value]{
+					List: list.NewLinkedListOf[cache.Value]([]cache.Value{val}),
 				}
 				assert.Equal(t, false, lru.Add("test", l))
 			},
@@ -462,35 +447,35 @@ func TestCache_LPop(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			wantVal: "hello ecache",
+			wantVal: "hello cache",
 		},
 		{
 			name: "lpop value not nil",
 			before: func(t *testing.T) {
-				val := ecache.Value{}
-				val.Val = "hello ecache"
-				val2 := ecache.Value{}
-				val2.Val = "hello world"
-				l := &list.ConcurrentList[ecache.Value]{
-					List: list.NewLinkedListOf[ecache.Value]([]ecache.Value{val, val2}),
+				val := cache.Value{}
+				val.Value = "hello cache"
+				val2 := cache.Value{}
+				val2.Value = "hello world"
+				l := &list.ConcurrentList[cache.Value]{
+					List: list.NewLinkedListOf[cache.Value]([]cache.Value{val, val2}),
 				}
 				assert.Equal(t, false, lru.Add("test", l))
 			},
 			after: func(t *testing.T) {
 				val, ok := lru.Get("test")
 				assert.Equal(t, true, ok)
-				result, ok := val.(list.List[ecache.Value])
+				result, ok := val.(list.List[cache.Value])
 				assert.Equal(t, true, ok)
 				assert.Equal(t, 1, result.Len())
 				value, err := result.Delete(0)
 				assert.NoError(t, err)
-				assert.Equal(t, "hello world", value.Val)
-				assert.NoError(t, value.Err)
+				assert.Equal(t, "hello world", value.Value)
+				assert.NoError(t, value.Error)
 
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			wantVal: "hello ecache",
+			wantVal: "hello cache",
 		},
 		{
 			name: "lpop value type error",
@@ -508,7 +493,7 @@ func TestCache_LPop(t *testing.T) {
 			before:  func(t *testing.T) {},
 			after:   func(t *testing.T) {},
 			key:     "test",
-			wantErr: errs.ErrKeyNotExist,
+			wantErr: cache.ErrKeyNotExist,
 		},
 	}
 
@@ -553,7 +538,7 @@ func TestCache_SAdd(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello ecache", "hello world"},
+			val:     []any{"hello cache", "hello world"},
 			wantVal: 2,
 		},
 		{
@@ -568,7 +553,7 @@ func TestCache_SAdd(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello ecache"},
+			val:     []any{"hello cache"},
 			wantVal: 2,
 		},
 		{
@@ -625,7 +610,7 @@ func TestCache_SRem(t *testing.T) {
 				s := set.NewMapSet[any](8)
 
 				s.Add("hello world")
-				s.Add("hello ecache")
+				s.Add("hello cache")
 
 				assert.Equal(t, false, lru.Add("test", s))
 			},
@@ -648,7 +633,7 @@ func TestCache_SRem(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello ecache"},
+			val:     []any{"hello cache"},
 			wantVal: 0,
 		},
 		{
@@ -657,7 +642,7 @@ func TestCache_SRem(t *testing.T) {
 			after:   func(t *testing.T) {},
 			key:     "test",
 			val:     []any{"hello world"},
-			wantErr: errs.ErrKeyNotExist,
+			wantErr: cache.ErrKeyNotExist,
 		},
 		{
 			name: "srem value type error",
@@ -895,7 +880,7 @@ func TestCache_IncrByFloat(t *testing.T) {
 	}
 }
 
-func newCache() (ecache.Cache, error) {
+func newCache() (cache.Cache, error) {
 	client, err := newSimpleLRUClient(10)
 	if err != nil {
 		return nil, err

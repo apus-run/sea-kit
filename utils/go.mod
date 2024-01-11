@@ -4,6 +4,8 @@ go 1.19
 
 require (
 	github.com/google/uuid v1.3.1
+	github.com/lithammer/shortuuid/v4 v4.0.0
+	github.com/oklog/ulid v1.3.1
 	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v3 v3.0.1
 )

@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm/utils"
 )
 
-// Filter is the filter struct for query.
+// Filter is the bloom_filter struct for query.
 const (
 	FilterOpEqual          = "="
 	FilterOpNotEqual       = "<>"
@@ -29,7 +29,7 @@ type Filter struct {
 	Value any    `json:"value"`
 }
 
-// GetQuery return the combined filter SQL statement.
+// GetQuery return the combined bloom_filter SQL statement.
 // such as "age >= ?", "name IN ?".
 func (f *Filter) GetQuery() string {
 	var op string

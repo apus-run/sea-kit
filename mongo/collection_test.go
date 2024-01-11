@@ -219,7 +219,7 @@ func TestCollection_Update(t *testing.T) {
 	}
 	ast.NoError(err)
 
-	// filter is nil or wrong BSON Document format
+	// bloom_filter is nil or wrong BSON Document format
 	update3 := bson.M{
 		"$set": bson.M{
 			"name": "Geek",
@@ -366,7 +366,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 	ast.NotNil(res)
 	ast.Equal(int64(0), res.MatchedCount)
 
-	// filter is nil or wrong BSON Document format
+	// bloom_filter is nil or wrong BSON Document format
 	update3 := bson.M{
 		"name": "Geek",
 		"age":  21,
@@ -439,7 +439,7 @@ func TestCollection_Remove(t *testing.T) {
 	err = cli.Remove(context.Background(), filter2)
 	ast.Equal(err, mongo.ErrNoDocuments)
 
-	// filter is bson.M{}，delete one document
+	// bloom_filter is bson.M{}，delete one document
 	filter3 := bson.M{}
 	err = cli.Find(context.Background(), filter3).Err()
 	ast.NoError(err)
@@ -450,7 +450,7 @@ func TestCollection_Remove(t *testing.T) {
 	err = cli.Find(context.Background(), filter3).Err()
 	ast.NoError(err)
 
-	// filter is nil or wrong BSON Document format
+	// bloom_filter is nil or wrong BSON Document format
 	err = cli.Remove(context.Background(), nil)
 	ast.Error(err)
 
@@ -490,7 +490,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	err = cli.Find(context.Background(), filter1).Err()
 	ast.NoError(err)
 
-	// delete with not match filter， DeletedCount in res is 0
+	// delete with not match bloom_filter， DeletedCount in res is 0
 	filter2 := bson.M{
 		"name": "Lily",
 	}
@@ -499,7 +499,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	ast.NotNil(res)
 	ast.Equal(0, res.Removed)
 
-	// filter is bson.M{}，delete all docs
+	// bloom_filter is bson.M{}，delete all docs
 	filter3 := bson.M{}
 	err = cli.Find(context.Background(), filter3).Err()
 	ast.NoError(err)
@@ -511,7 +511,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	err = cli.Find(context.Background(), filter3).Err()
 	ast.NoError(err)
 
-	// filter is nil or wrong BSON Document format
+	// bloom_filter is nil or wrong BSON Document format
 	res, err = cli.RemoveAll(context.Background(), nil)
 	ast.Error(err)
 	ast.Nil(res)

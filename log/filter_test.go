@@ -122,7 +122,7 @@ func TestFilterFuncWitchLoggerPrefix(t *testing.T) {
 		}
 		got := buf.String()
 		if got != tt.want {
-			t.Fatalf("filter should catch prefix, want %s, got %s.", tt.want, got)
+			t.Fatalf("bloom_filter should catch prefix, want %s, got %s.", tt.want, got)
 		}
 		buf.Reset()
 	}
@@ -145,7 +145,7 @@ func testFilterFuncWithLoggerPrefix(level Level, keyvals ...interface{}) bool {
 
 func TestFilterWithContext(t *testing.T) {
 	ctxKey := struct{}{}
-	ctxValue := "filter test value"
+	ctxValue := "bloom_filter test value"
 
 	v1 := func() Valuer {
 		return func(ctx context.Context) interface{} {
@@ -163,7 +163,7 @@ func TestFilterWithContext(t *testing.T) {
 	_ = WithContext(ctx, filter).Log(LevelInfo, "kind", "test")
 
 	if info.String() != "" {
-		t.Error("filter is not woring")
+		t.Error("bloom_filter is not woring")
 		return
 	}
 

@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package lru
 
 import (
@@ -21,17 +7,16 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ecodeclub/ekit/set"
-
-	"github.com/ecodeclub/ekit/list"
-
-	"github.com/ecodeclub/ecache"
-	"github.com/ecodeclub/ecache/internal/errs"
 	"github.com/hashicorp/golang-lru/v2/simplelru"
+
+	cache "github.com/apus-run/sea-kit/cache/v2"
+
+	"github.com/apus-run/sea-kit/list"
+	"github.com/apus-run/sea-kit/set"
 )
 
 var (
-	_ ecache.Cache = (*Cache)(nil)
+	_ cache.Cache = (*Cache)(nil)
 )
 
 type Cache struct {
@@ -51,7 +36,10 @@ func (c *Cache) Set(ctx context.Context, key string, val any, expiration time.Du
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
-	c.client.Add(key, val)
+	if ok := c.client.Add(key, val); !ok {
+		return errors.New("添加失败")
+	}
+
 	return nil
 }
 
@@ -64,31 +52,34 @@ func (c *Cache) SetNX(ctx context.Context, key string, val any, expiration time.
 		return false, nil
 	}
 
-	c.client.Add(key, val)
+	ok := c.client.Add(key, val)
+	if !ok {
+		return false, errors.New("添加失败")
+	}
 
 	return true, nil
 }
 
-func (c *Cache) Get(ctx context.Context, key string) (val ecache.Value) {
+func (c *Cache) Get(ctx context.Context, key string) (val cache.Value) {
 	c.lock.RLock()
 	defer c.lock.RUnlock()
 	var ok bool
-	val.Val, ok = c.client.Get(key)
+	val.Value, ok = c.client.Get(key)
 	if !ok {
-		val.Err = errs.ErrKeyNotExist
+		val.Error = cache.ErrKeyNotExist
 	}
 
 	return
 }
 
-func (c *Cache) GetSet(ctx context.Context, key string, val string) (result ecache.Value) {
+func (c *Cache) GetSet(ctx context.Context, key string, val string) (result cache.Value) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
 	var ok bool
-	result.Val, ok = c.client.Get(key)
+	result.Value, ok = c.client.Get(key)
 	if !ok {
-		result.Err = errs.ErrKeyNotExist
+		result.Error = cache.ErrKeyNotExist
 	}
 
 	c.client.Add(key, val)
@@ -112,18 +103,18 @@ func (c *Cache) Delete(ctx context.Context, key ...string) (int64, error) {
 		if c.client.Remove(k) {
 			n++
 		} else {
-			return n, fmt.Errorf("%w: key = %s", errs.ErrDeleteKeyFailed, k)
+			return n, fmt.Errorf("%w: key = %s", cache.ErrDeleteKeyFailed, k)
 		}
 	}
 	return n, nil
 }
 
 // anySliceToValueSlice 公共转换
-func (c *Cache) anySliceToValueSlice(data ...any) []ecache.Value {
-	newVal := make([]ecache.Value, len(data), cap(data))
+func (c *Cache) anySliceToValueSlice(data ...any) []cache.Value {
+	newVal := make([]cache.Value, len(data), cap(data))
 	for key, value := range data {
-		anyVal := ecache.Value{}
-		anyVal.Val = value
+		anyVal := cache.Value{}
+		anyVal.Value = value
 		newVal[key] = anyVal
 	}
 	return newVal
@@ -135,18 +126,18 @@ func (c *Cache) LPush(ctx context.Context, key string, val ...any) (int64, error
 
 	var (
 		ok     bool
-		result = ecache.Value{}
+		result = cache.Value{}
 	)
-	result.Val, ok = c.client.Get(key)
+	result.Value, ok = c.client.Get(key)
 	if !ok {
-		l := &list.ConcurrentList[ecache.Value]{
-			List: list.NewLinkedListOf[ecache.Value](c.anySliceToValueSlice(val...)),
+		l := &list.ConcurrentList[cache.Value]{
+			List: list.NewLinkedListOf[cache.Value](c.anySliceToValueSlice(val...)),
 		}
 		c.client.Add(key, l)
 		return int64(l.Len()), nil
 	}
 
-	data, ok := result.Val.(list.List[ecache.Value])
+	data, ok := result.Value.(list.List[cache.Value])
 	if !ok {
 		return 0, errors.New("当前key不是list类型")
 	}
@@ -160,28 +151,28 @@ func (c *Cache) LPush(ctx context.Context, key string, val ...any) (int64, error
 	return int64(data.Len()), nil
 }
 
-func (c *Cache) LPop(ctx context.Context, key string) (val ecache.Value) {
+func (c *Cache) LPop(ctx context.Context, key string) (val cache.Value) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 
 	var (
 		ok bool
 	)
-	val.Val, ok = c.client.Get(key)
+	val.Value, ok = c.client.Get(key)
 	if !ok {
-		val.Err = errs.ErrKeyNotExist
+		val.Error = cache.ErrKeyNotExist
 		return
 	}
 
-	data, ok := val.Val.(list.List[ecache.Value])
+	data, ok := val.Value.(list.List[cache.Value])
 	if !ok {
-		val.Err = errors.New("当前key不是list类型")
+		val.Error = errors.New("当前key不是list类型")
 		return
 	}
 
 	value, err := data.Delete(0)
 	if err != nil {
-		val.Err = err
+		val.Error = err
 		return
 	}
 
@@ -195,14 +186,14 @@ func (c *Cache) SAdd(ctx context.Context, key string, members ...any) (int64, er
 
 	var (
 		ok     bool
-		result = ecache.Value{}
+		result = cache.Value{}
 	)
-	result.Val, ok = c.client.Get(key)
+	result.Value, ok = c.client.Get(key)
 	if !ok {
-		result.Val = set.NewMapSet[any](8)
+		result.Value = set.NewMapSet[any](8)
 	}
 
-	s, ok := result.Val.(set.Set[any])
+	s, ok := result.Value.(set.Set[any])
 	if !ok {
 		return 0, errors.New("当前key已存在不是set类型")
 	}
@@ -221,7 +212,7 @@ func (c *Cache) SRem(ctx context.Context, key string, members ...any) (int64, er
 
 	result, ok := c.client.Get(key)
 	if !ok {
-		return 0, errs.ErrKeyNotExist
+		return 0, cache.ErrKeyNotExist
 	}
 
 	s, ok := result.(set.Set[any])
@@ -245,9 +236,9 @@ func (c *Cache) IncrBy(ctx context.Context, key string, value int64) (int64, err
 
 	var (
 		ok     bool
-		result = ecache.Value{}
+		result = cache.Value{}
 	)
-	result.Val, ok = c.client.Get(key)
+	result.Value, ok = c.client.Get(key)
 	if !ok {
 		c.client.Add(key, value)
 		return value, nil
@@ -270,9 +261,9 @@ func (c *Cache) DecrBy(ctx context.Context, key string, value int64) (int64, err
 
 	var (
 		ok     bool
-		result = ecache.Value{}
+		result = cache.Value{}
 	)
-	result.Val, ok = c.client.Get(key)
+	result.Value, ok = c.client.Get(key)
 	if !ok {
 		c.client.Add(key, -value)
 		return -value, nil
@@ -295,9 +286,9 @@ func (c *Cache) IncrByFloat(ctx context.Context, key string, value float64) (flo
 
 	var (
 		ok     bool
-		result = ecache.Value{}
+		result = cache.Value{}
 	)
-	result.Val, ok = c.client.Get(key)
+	result.Value, ok = c.client.Get(key)
 	if !ok {
 		c.client.Add(key, value)
 		return value, nil

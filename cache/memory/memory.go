@@ -84,7 +84,7 @@ func (m *Cache) Set(ctx context.Context, key string, val string, timeout time.Du
 	return m.SetObj(ctx, key, val, timeout)
 }
 
-func (m *Cache) SetObj(ctx context.Context, key string, val interface{}, timeout time.Duration) error {
+func (m *Cache) SetObj(_ context.Context, key string, val interface{}, timeout time.Duration) error {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
@@ -119,7 +119,7 @@ func (m *Cache) SetForeverObj(ctx context.Context, key string, val interface{}) 
 	return m.SetObj(ctx, key, val, cache.NoneDuration)
 }
 
-func (m *Cache) SetTTL(ctx context.Context, key string, timeout time.Duration) error {
+func (m *Cache) SetTTL(_ context.Context, key string, timeout time.Duration) error {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 
@@ -130,7 +130,7 @@ func (m *Cache) SetTTL(ctx context.Context, key string, timeout time.Duration) e
 	return cache.ErrKeyNotFound
 }
 
-func (m *Cache) GetTTL(ctx context.Context, key string) (time.Duration, error) {
+func (m *Cache) GetTTL(_ context.Context, key string) (time.Duration, error) {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
 
@@ -180,7 +180,7 @@ func (m *Cache) Del(ctx context.Context, key string) error {
 	return nil
 }
 
-func (m *Cache) DelMany(ctx context.Context, keys []string) error {
+func (m *Cache) DelMany(_ context.Context, keys []string) error {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	for _, key := range keys {

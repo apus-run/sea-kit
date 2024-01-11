@@ -85,6 +85,10 @@ func (r *Cache) Set(ctx context.Context, key string, val string, timeout time.Du
 	return r.client.Set(ctx, key, val, timeout).Err()
 }
 
+func (r *Cache) SetNX(ctx context.Context, key string, val string, timeout time.Duration) (bool, error) {
+	return r.client.SetNX(ctx, key, val, timeout).Result()
+}
+
 // SetObj 设置某个key和对象到缓存, 对象必须实现 https://pkg.go.dev/encoding#BinaryMarshaler
 func (r *Cache) SetObj(ctx context.Context, key string, val interface{}, timeout time.Duration) error {
 	return r.client.Set(ctx, key, val, timeout).Err()

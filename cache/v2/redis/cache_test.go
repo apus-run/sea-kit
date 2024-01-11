@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package redis
 
 import (
@@ -19,13 +5,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
-
-	"github.com/ecodeclub/ecache/internal/errs"
-	"github.com/ecodeclub/ecache/mocks"
+	"github.com/apus-run/sea-kit/cache/v2/mocks"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
+
+	cache "github.com/apus-run/sea-kit/cache/v2"
 )
 
 func TestCache_Set(t *testing.T) {
@@ -123,7 +109,7 @@ func TestCache_Get(t *testing.T) {
 			},
 			key: "name",
 
-			wantErr: errs.ErrKeyNotExist,
+			wantErr: cache.ErrKeyNotExist,
 		},
 	}
 	for _, tc := range testCases {
@@ -132,11 +118,11 @@ func TestCache_Get(t *testing.T) {
 			defer ctrl.Finish()
 			c := NewCache(tc.mock(ctrl))
 			val := c.Get(context.Background(), tc.key)
-			assert.Equal(t, tc.wantErr, val.Err)
-			if val.Err != nil {
+			assert.Equal(t, tc.wantErr, val.Error)
+			if val.Error != nil {
 				return
 			}
-			assert.Equal(t, tc.wantVal, val.Val.(string))
+			assert.Equal(t, tc.wantVal, val.Value.(string))
 		})
 	}
 }
@@ -157,12 +143,12 @@ func TestCache_SetNX(t *testing.T) {
 				boolCmd := redis.NewBoolCmd(context.Background())
 				boolCmd.SetVal(true)
 				cmd.EXPECT().
-					SetNX(context.Background(), "setnx_key", "hello ecache", time.Second*10).
+					SetNX(context.Background(), "setnx_key", "hello cache", time.Second*10).
 					Return(boolCmd)
 				return cmd
 			},
 			key:        "setnx_key",
-			val:        "hello ecache",
+			val:        "hello cache",
 			expiration: time.Second * 10,
 			result:     true,
 		},
@@ -173,13 +159,13 @@ func TestCache_SetNX(t *testing.T) {
 				boolCmd := redis.NewBoolCmd(context.Background())
 				boolCmd.SetVal(false)
 				cmd.EXPECT().
-					SetNX(context.Background(), "setnx-key", "hello ecache", time.Second*10).
+					SetNX(context.Background(), "setnx-key", "hello cache", time.Second*10).
 					Return(boolCmd)
 
 				return cmd
 			},
 			key:        "setnx-key",
-			val:        "hello ecache",
+			val:        "hello cache",
 			expiration: time.Second * 10,
 			result:     false,
 		},
@@ -211,7 +197,7 @@ func TestCache_GetSet(t *testing.T) {
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				str := redis.NewStringCmd(context.Background())
-				str.SetVal("hello ecache")
+				str.SetVal("hello cache")
 				cmd.EXPECT().
 					GetSet(context.Background(), "test_get_set", "hello go").
 					Return(str)
@@ -227,13 +213,13 @@ func TestCache_GetSet(t *testing.T) {
 				str := redis.NewStringCmd(context.Background())
 				str.SetErr(redis.Nil)
 				cmd.EXPECT().
-					GetSet(context.Background(), "test_get_set_err", "hello ecache").
+					GetSet(context.Background(), "test_get_set_err", "hello cache").
 					Return(str)
 				return cmd
 			},
 			key:     "test_get_set_err",
-			val:     "hello ecache",
-			wantErr: errs.ErrKeyNotExist,
+			val:     "hello cache",
+			wantErr: cache.ErrKeyNotExist,
 		},
 	}
 
@@ -243,7 +229,7 @@ func TestCache_GetSet(t *testing.T) {
 
 		c := NewCache(tc.mock(ctrl))
 		val := c.GetSet(context.Background(), tc.key, tc.val)
-		assert.Equal(t, tc.wantErr, val.Err)
+		assert.Equal(t, tc.wantErr, val.Error)
 	}
 }
 
@@ -433,7 +419,7 @@ func TestCache_LPop(t *testing.T) {
 			},
 			key:     "test_cache_lpop",
 			wantVal: "",
-			wantErr: errs.ErrKeyNotExist,
+			wantErr: cache.ErrKeyNotExist,
 		},
 	}
 
@@ -444,8 +430,8 @@ func TestCache_LPop(t *testing.T) {
 
 			c := NewCache(tc.mock(ctrl))
 			val := c.LPop(context.Background(), tc.key)
-			assert.Equal(t, tc.wantVal, val.Val)
-			assert.Equal(t, tc.wantErr, val.Err)
+			assert.Equal(t, tc.wantVal, val.Value)
+			assert.Equal(t, tc.wantErr, val.Error)
 		})
 	}
 }
@@ -466,12 +452,12 @@ func TestCache_SAdd(t *testing.T) {
 				result := redis.NewIntCmd(context.Background())
 				result.SetVal(2)
 				cmd.EXPECT().
-					SAdd(context.Background(), "test_sadd", "hello ecache", "hello go").
+					SAdd(context.Background(), "test_sadd", "hello ", "hello go").
 					Return(result)
 				return cmd
 			},
 			key:     "test_sadd",
-			val:     []any{"hello ecache", "hello go"},
+			val:     []any{"hello", "hello go"},
 			wantVal: 2,
 		},
 		{

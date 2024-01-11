@@ -1,4 +1,4 @@
-package filter
+package bloom_filter
 
 import (
 	"testing"

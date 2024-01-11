@@ -25,7 +25,7 @@ func Contains(list []string, str string) bool {
 	return false
 }
 
-// Filter filters chars from s with given filter function.
+// Filter filters chars from s with given bloom_filter function.
 func Filter(s string, filter func(r rune) bool) string {
 	var n int
 	chars := []rune(s)

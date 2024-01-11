@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/davesavic/clink"
 	"net/http"
+
+	"github.com/apus-run/sea-kit/http_client"
 )
 
 func main() {
 	// Create a new client with retries enabled.
-	client := clink.NewClient(
+	client := http_client.NewClient(
 		// Retry the request if the status code is 429 (Too Many Requests).
-		clink.WithRetries(3, func(req *http.Request, resp *http.Response, err error) bool {
+		http_client.WithRetries(3, func(req *http.Request, resp *http.Response, err error) bool {
 			fmt.Println("Retrying request")
 
 			return resp.StatusCode == http.StatusTooManyRequests

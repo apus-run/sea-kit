@@ -2,19 +2,19 @@ package log
 
 import "context"
 
-// FilterOption is filter option.
+// FilterOption is bloom_filter option.
 type FilterOption func(*Filter)
 
 const fuzzyStr = "***"
 
-// FilterLevel with filter level.
+// FilterLevel with bloom_filter level.
 func FilterLevel(level Level) FilterOption {
 	return func(opts *Filter) {
 		opts.level = level
 	}
 }
 
-// FilterKey with filter key.
+// FilterKey with bloom_filter key.
 func FilterKey(key ...string) FilterOption {
 	return func(o *Filter) {
 		for _, v := range key {
@@ -23,7 +23,7 @@ func FilterKey(key ...string) FilterOption {
 	}
 }
 
-// FilterValue with filter value.
+// FilterValue with bloom_filter value.
 func FilterValue(value ...string) FilterOption {
 	return func(o *Filter) {
 		for _, v := range value {
@@ -32,14 +32,14 @@ func FilterValue(value ...string) FilterOption {
 	}
 }
 
-// FilterFunc with filter func.
+// FilterFunc with bloom_filter func.
 func FilterFunc(f func(level Level, keyvals ...interface{}) bool) FilterOption {
 	return func(o *Filter) {
 		o.filter = f
 	}
 }
 
-// Filter is a logger filter.
+// Filter is a logger bloom_filter.
 type Filter struct {
 	ctx    context.Context
 	logger Logger
@@ -49,7 +49,7 @@ type Filter struct {
 	filter func(level Level, keyvals ...interface{}) bool
 }
 
-// NewFilter new a logger filter.
+// NewFilter new a logger bloom_filter.
 func NewFilter(logger Logger, opts ...FilterOption) *Filter {
 	options := Filter{
 		logger: logger,

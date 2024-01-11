@@ -141,6 +141,18 @@ func (l *ZapLogger) Panic(msg string, tags ...Field) {
 	l.logger.Panic(msg, l.toZapFields(tags)...)
 }
 
+func (l *ZapLogger) Slow(msg string, tags ...Field) {
+	l.logger.Warn(msg, l.toZapFields(tags)...)
+}
+
+func (l *ZapLogger) Stack(msg string) {
+	l.logger.Error(fmt.Sprint(msg), zap.Stack("stack"))
+}
+
+func (l *ZapLogger) Stat(msg string, tags ...Field) {
+	l.logger.Info(msg, l.toZapFields(tags)...)
+}
+
 func (l *ZapLogger) Debugf(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
 	l.logger.Debug(msg, zap.Any("args", args))
@@ -171,18 +183,18 @@ func (l *ZapLogger) Panicf(format string, args ...any) {
 	l.logger.Panic(msg, zap.Any("args", args))
 }
 
-func (l *ZapLogger) Close() {
-	_ = l.logger.Sync()
+func (l *ZapLogger) Close() error {
+	return l.logger.Sync()
 }
 
-func (l *ZapLogger) Sync() {
-	_ = l.logger.Sync()
+func (l *ZapLogger) Sync() error {
+	return l.logger.Sync()
 }
 
-func (l *ZapLogger) toZapFields(args []Field) []zap.Field {
-	res := make([]zap.Field, 0, len(args))
-	for _, arg := range args {
-		res = append(res, zap.Any(arg.Key, arg.Value))
+func (l *ZapLogger) toZapFields(fields []Field) []zap.Field {
+	zapFields := make([]zap.Field, 0, len(fields))
+	for _, arg := range fields {
+		zapFields = append(zapFields, zap.Any(arg.Key, arg.Value))
 	}
-	return res
+	return zapFields
 }

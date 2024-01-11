@@ -21,6 +21,14 @@ func TestMemory_All(t *testing.T) {
 			val, err := mc.Get(ctx, "foo")
 			So(err, ShouldBeNil)
 			So(val, ShouldEqual, "bar")
+
+			ok, err := mc.SetNX(ctx, "foo1", "bar1", 1*time.Hour)
+			So(err, ShouldBeNil)
+			So(ok, ShouldEqual, true)
+			//val2, err2 := mc.Get(ctx, "foo1")
+			//So(err2, ShouldBeNil)
+			//So(val2, ShouldEqual, "bar1")
+
 			err = mc.SetTTL(ctx, "foo", 1*time.Minute)
 			So(err, ShouldBeNil)
 			du, err := mc.GetTTL(ctx, "foo")

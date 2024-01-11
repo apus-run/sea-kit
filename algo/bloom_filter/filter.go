@@ -1,4 +1,4 @@
-package filter
+package bloom_filter
 
 type Filter interface {
 	Add(key []byte)                // 添加 key 到过滤器

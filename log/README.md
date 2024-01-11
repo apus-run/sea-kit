@@ -22,7 +22,7 @@ helper.Info("info message")
 helper.Infof("info %s", "message")
 helper.Infow("key", "value")
 
-// filter
+// bloom_filter
 log := log.NewHelper(log.NewFilter(logger,
 	log.FilterLevel(log.LevelInfo),
 	log.FilterKey("foo"),

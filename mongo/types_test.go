@@ -54,7 +54,7 @@ func TestPrepIndex(t *testing.T) {
 func TestBind(t *testing.T) {
 	type request struct {
 		Fields     []string `json:"fields" bson:"fields"`
-		Filter     bson.M   `json:"filter" bson:"filter"`
+		Filter     bson.M   `json:"bloom_filter" bson:"bloom_filter"`
 		Psrc       string   `json:"psrc" bson:"psrc"`
 		SubTotals  bool     `json:"subtotals" bson:"subtotals"`
 		StatFilter bson.M   `json:"stat_filter" bson:"stat_filter"`
@@ -62,7 +62,7 @@ func TestBind(t *testing.T) {
 		Dry        bool     `json:"dry" bson:"dry"`
 		Encrypted  bool     `json:"-" bson:"-"`
 	}
-	body := bytes.NewBufferString(`{"fields":["cusip","acc"], "filter":{"trade_dt":{"$gte":{"$date":"2020-08-17T00:00:00-04:00"}, "$lt":{"$date":"2020-08-21T23:59:59-04:00"}}}, "psrc":"DEMO", "sort":{"day":1, "trade_id":1}, "stat_filter":{}, "subtotals":false}`)
+	body := bytes.NewBufferString(`{"fields":["cusip","acc"], "bloom_filter":{"trade_dt":{"$gte":{"$date":"2020-08-17T00:00:00-04:00"}, "$lt":{"$date":"2020-08-21T23:59:59-04:00"}}}, "psrc":"DEMO", "sort":{"day":1, "trade_id":1}, "stat_filter":{}, "subtotals":false}`)
 
 	res := request{}
 	err := Bind(body, &res)
@@ -75,7 +75,7 @@ func TestBind(t *testing.T) {
 
 	assert.Equal(t, "DEMO", res.Psrc)
 
-	body = bytes.NewBufferString(`{"fields":["cusip","acc"], "filter":{"trade_dt":{"$gte":{"$date":"2020-08-17T00:00:00-04:00"}, "$lt":{"$date":"2020-08-21T23:59:59-04:00"}}}, "page":{"num":0, "size":50}, "psrc":"DEMO", "sort":{"trade_id":1, "day":1}, "stat_filter":{}, "subtotals":false}`)
+	body = bytes.NewBufferString(`{"fields":["cusip","acc"], "bloom_filter":{"trade_dt":{"$gte":{"$date":"2020-08-17T00:00:00-04:00"}, "$lt":{"$date":"2020-08-21T23:59:59-04:00"}}}, "page":{"num":0, "size":50}, "psrc":"DEMO", "sort":{"trade_id":1, "day":1}, "stat_filter":{}, "subtotals":false}`)
 
 	res = request{}
 	err = Bind(body, &res)
@@ -88,7 +88,7 @@ func TestBind(t *testing.T) {
 
 	assert.Equal(t, "DEMO", res.Psrc)
 
-	body = bytes.NewBufferString(`{"fields":["cusip","acc"], "filter":{"trade_dt":{"$gte":{"$date":"2020-08-17T04:00:00Z"}, "$lt":{"$date":"2020-08-21T23:59:59-04:00"}}}, "page":{"num":0, "size":50}, "psrc":"DEMO", "sort":{"trade_id":1, "day":1}, "stat_filter":{}, "subtotals":false}`)
+	body = bytes.NewBufferString(`{"fields":["cusip","acc"], "bloom_filter":{"trade_dt":{"$gte":{"$date":"2020-08-17T04:00:00Z"}, "$lt":{"$date":"2020-08-21T23:59:59-04:00"}}}, "page":{"num":0, "size":50}, "psrc":"DEMO", "sort":{"trade_id":1, "day":1}, "stat_filter":{}, "subtotals":false}`)
 
 	res = request{}
 	err = Bind(body, &res)

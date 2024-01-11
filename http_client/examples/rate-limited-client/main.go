@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/davesavic/clink"
 	"net/http"
+
+	"github.com/apus-run/sea-kit/http_client"
 )
 
 func main() {
 	// Create a new client with a limit of 60 requests per minute (1 per second).
-	client := clink.NewClient(
-		clink.WithRateLimit(60),
+	client := http_client.NewClient(
+		http_client.WithRateLimit(60),
 	)
 
 	// Create a new request with default options.

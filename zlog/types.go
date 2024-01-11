@@ -15,8 +15,12 @@ type Logger interface {
 	Fatal(msg string, tags ...Field)
 	Panic(msg string, tags ...Field)
 
-	Close()
-	Sync()
+	Slow(msg string, fields ...Field)
+	Stack(msg string)
+	Stat(msg string, fields ...Field)
+
+	Close() error
+	Sync() error
 }
 
 type Field struct {

@@ -1,16 +1,5 @@
 # slog-gorm
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/orandin/slog-gorm.svg)](https://pkg.go.dev/github.com/orandin/slog-gorm)
-![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.21-%23007d9c)
-[![CI](https://github.com/orandin/slog-gorm/actions/workflows/ci.yaml/badge.svg)](https://github.com/orandin/slog-gorm/actions/workflows/ci.yaml)
-[![Go report](https://goreportcard.com/badge/github.com/orandin/slog-gorm)](https://goreportcard.com/report/github.com/orandin/slog-gorm)
-[![Coverage](https://img.shields.io/codecov/c/github/orandin/slog-gorm)](https://codecov.io/gh/orandin/slog-gorm)
-[![Renovate](https://img.shields.io/badge/dependabot-enabled-brightgreen.svg)](https://docs.github.com/en/code-security/dependabot/working-with-dependabot)
-[![License](https://img.shields.io/github/license/orandin/slog-gorm)](./LICENSE)
-
-`slog-gorm` provides a slog adapter, highly configurable, for [gorm logger](https://gorm.io/docs/logger.html)
-to have homogeneous logs between your application / script and gorm.
-
 ## Key features
 
 - compatible with any `slog.Handler`, which allows you to keep control on
@@ -26,6 +15,8 @@ to have homogeneous logs between your application / script and gorm.
 
 ## Usage
 
+
+
 ```golang
 import (
     "log/slog"
@@ -34,7 +25,7 @@ import (
     "gorm.io/driver/sqlite"
     "gorm.io/gorm"
 
-    slogGorm "github.com/orandin/slog-gorm"
+    slogGorm "github.com/apus-run/sea-kit/gormx/log"
 )
 
 // Create an slog-gorm instance
@@ -50,6 +41,32 @@ db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{
 tx := db.Session(&Session{Logger: gormLogger})
 tx.First(&user)
 tx.Model(&user).Update("Age", 18)
+```
+
+```golang
+   import (
+      "gorm.io/gorm"
+      "gorm.io/gorm/clause"
+      "gorm.io/gorm/logger"
+
+       slogGorm "github.com/apus-run/sea-kit/gormx/log"
+    )
+	    
+   var gormLogger logger.Interface
+	if gormTraceAll {
+		gormLogger = slogGorm.New(slogGorm.WithLogger(slog.Default()), slogGorm.WithTraceAll())
+	} else {
+		gormLogger = slogGorm.New(slogGorm.WithLogger(slog.Default()))
+	}
+
+	gormDB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger:                                   gormLogger,
+		DisableForeignKeyConstraintWhenMigrating: false,
+		SkipDefaultTransaction:                   true,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to open database")
+	}
 ```
 
 ### With your `slog.Logger`

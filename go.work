@@ -28,7 +28,7 @@ use (
     ./config
     ./mediator
     ./lru_cache
-    ./httpclient
+    ./http_client
     ./bash
     ./prof
     ./codegen
@@ -39,4 +39,5 @@ use (
     ./list
     ./ws
     ./grpcx
+    ./algo
 )
