@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/exp/rand"
 
-	"github.com/apus-run/sea-kit/ratelimit/bbr/window"
+	"github.com/apus-run/sea-kit/algo/window"
 )
 
 var (

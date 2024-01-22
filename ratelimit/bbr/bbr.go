@@ -6,8 +6,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/apus-run/sea-kit/ratelimit/bbr/cpu"
-	"github.com/apus-run/sea-kit/ratelimit/bbr/window"
+	"github.com/apus-run/sea-kit/algo/cpu"
+	"github.com/apus-run/sea-kit/algo/window"
 )
 
 var (

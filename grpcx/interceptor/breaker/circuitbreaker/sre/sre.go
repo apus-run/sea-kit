@@ -9,7 +9,7 @@ import (
 	"github.com/apus-run/sea-kit/algo/window"
 	"golang.org/x/exp/rand"
 
-	"github.com/apus-run/sea-kit/grpcx/interceptors/breaker/circuitbreaker"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker"
 )
 
 // Option is sre breaker option function.

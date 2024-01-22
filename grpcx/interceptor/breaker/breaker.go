@@ -7,8 +7,8 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/apus-run/sea-kit/grpcx/interceptors/breaker/circuitbreaker"
-	"github.com/apus-run/sea-kit/grpcx/interceptors/breaker/circuitbreaker/sre"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker/sre"
 )
 
 // Kind is the type of Interceptor

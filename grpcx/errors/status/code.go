@@ -1,8 +1,8 @@
-package errors
+package status
 
 import (
 	"net/http"
-	
+
 	"google.golang.org/grpc/codes"
 )
 

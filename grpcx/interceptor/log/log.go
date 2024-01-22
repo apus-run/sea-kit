@@ -6,7 +6,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/apus-run/sea-kit/grpcx/interceptors"
+	"github.com/apus-run/sea-kit/grpcx/interceptor"
 	"github.com/apus-run/sea-kit/zlog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -18,7 +18,7 @@ const Kind string = "Log"
 
 type InterceptorBuilder struct {
 	log zlog.Logger
-	interceptors.Builder
+	interceptor.Builder
 
 	// 忽略指定路由的日志打印
 	ignoreMethods map[string]struct{}

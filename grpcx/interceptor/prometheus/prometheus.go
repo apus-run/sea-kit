@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 
-	"github.com/apus-run/sea-kit/grpcx/interceptors"
+	"github.com/apus-run/sea-kit/grpcx/interceptor"
 )
 
 // Kind is the type of Interceptor
@@ -18,7 +18,7 @@ const Kind string = "Prometheus"
 type InterceptorBuilder struct {
 	Namespace string
 	Subsystem string
-	interceptors.Builder
+	interceptor.Builder
 }
 
 func NewPrometheusInterceptorBuilder() *InterceptorBuilder {

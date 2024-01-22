@@ -5,17 +5,13 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-	"runtime/debug"
 	"testing"
 	"time"
 
-	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
 	"github.com/apus-run/sea-kit/grpcx/client"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/recovery"
 	pb "github.com/apus-run/sea-kit/grpcx/testdata/helloworld"
+	"google.golang.org/grpc"
 )
 
 // service is used to implement helloworld.GreeterServer.
@@ -68,10 +64,7 @@ func TestServer(t *testing.T) {
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, testKey{}, "test")
 
-	grpcPanicRecoveryHandler := func(p any) (err error) {
-		t.Log("msg", "recovered from panic", "panic", p, "stack", debug.Stack())
-		return status.Errorf(codes.Internal, "%s", p)
-	}
+	interceptor := recovery.NewRecoveryInterceptorBuilder()
 	srv := NewServer(
 		WithAddr(":8090"),
 		WithUnaryInterceptor(
@@ -80,10 +73,10 @@ func TestServer(t *testing.T) {
 				handler grpc.UnaryHandler) (resp interface{}, err error) {
 				return handler(ctx, req)
 			},
-			recovery.UnaryServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
+			interceptor.BuildUnaryServerInterceptor(),
 		),
 		WithStreamInterceptor(
-			recovery.StreamServerInterceptor(recovery.WithRecoveryHandler(grpcPanicRecoveryHandler)),
+			interceptor.BuildStreamServerInterceptor(),
 		),
 		WithGrpcOptions(grpc.InitialConnWindowSize(0)),
 	)

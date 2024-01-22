@@ -36,7 +36,7 @@ func TestGroupReset(t *testing.T) {
 	})
 
 	length := 0
-	for range g.objs {
+	for range g.data {
 		length++
 	}
 
@@ -52,14 +52,14 @@ func TestGroupClear(t *testing.T) {
 	})
 	g.Get("/x/internal/dummy/user")
 	length := 0
-	for range g.objs {
+	for range g.data {
 		length++
 	}
 	assert.Equal(t, 1, length)
 
 	g.Clear()
 	length = 0
-	for range g.objs {
+	for range g.data {
 		length++
 	}
 	assert.Equal(t, 0, length)

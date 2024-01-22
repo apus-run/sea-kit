@@ -18,3 +18,9 @@ require (
 	google.golang.org/genproto v0.0.0-20231030173426-d783a09b4405 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231030173426-d783a09b4405 // indirect
 )
+
+replace (
+	github.com/apus-run/sea-kit/zlog => ../zlog
+	github.com/apus-run/sea-kit/algo => ../algo
+	github.com/apus-run/sea-kit/ratelimit => ../ratelimit
+)

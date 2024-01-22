@@ -13,14 +13,14 @@ import (
 	"google.golang.org/grpc/metadata"
 
 	"github.com/apus-run/sea-kit/grpcx/errors"
-	"github.com/apus-run/sea-kit/grpcx/interceptors"
+	"github.com/apus-run/sea-kit/grpcx/interceptor"
 )
 
 // Kind is the type of Interceptor
 const Kind string = "otel"
 
 type InterceptorBuilder struct {
-	interceptors.Builder
+	interceptor.Builder
 
 	tracer     trace.Tracer
 	propagator propagation.TextMapPropagator
