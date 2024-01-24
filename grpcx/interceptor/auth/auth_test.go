@@ -1,7 +1,4 @@
-// Copyright (c) The go-grpc-middleware Authors.
-// Licensed under the Apache License 2.0.
-
-package grpc_auth
+package auth
 
 import (
 	"context"
@@ -68,12 +65,14 @@ func ctxWithToken(ctx context.Context, scheme string, token string) context.Cont
 
 func TestAuthTestSuite(t *testing.T) {
 	authFunc := buildDummyAuthFunction("bearer", commonAuthToken)
+	interceptor := NewAuthInterceptorBuilder(authFunc)
+
 	s := &AuthTestSuite{
 		InterceptorTestSuite: &testpb.InterceptorTestSuite{
 			TestService: &assertingPingService{&testpb.TestPingService{}, t},
 			ServerOpts: []grpc.ServerOption{
-				grpc.StreamInterceptor(StreamServerInterceptor(authFunc)),
-				grpc.UnaryInterceptor(UnaryServerInterceptor(authFunc)),
+				grpc.StreamInterceptor(interceptor.BuildStreamServerInterceptor()),
+				grpc.UnaryInterceptor(interceptor.BuildUnaryServerInterceptor()),
 			},
 		},
 	}
@@ -154,12 +153,13 @@ func (s *authOverrideTestService) AuthFuncOverride(ctx context.Context, fullMeth
 
 func TestAuthOverrideTestSuite(t *testing.T) {
 	authFunc := buildDummyAuthFunction("bearer", commonAuthToken)
+	interceptor := NewAuthInterceptorBuilder(authFunc)
 	s := &AuthOverrideTestSuite{
 		InterceptorTestSuite: &testpb.InterceptorTestSuite{
 			TestService: &authOverrideTestService{&assertingPingService{&testpb.TestPingService{}, t}, t},
 			ServerOpts: []grpc.ServerOption{
-				grpc.StreamInterceptor(StreamServerInterceptor(authFunc)),
-				grpc.UnaryInterceptor(UnaryServerInterceptor(authFunc)),
+				grpc.StreamInterceptor(interceptor.BuildStreamServerInterceptor()),
+				grpc.UnaryInterceptor(interceptor.BuildUnaryServerInterceptor()),
 			},
 		},
 	}

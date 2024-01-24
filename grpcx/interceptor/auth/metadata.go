@@ -1,7 +1,4 @@
-// Copyright (c) The go-grpc-middleware Authors.
-// Licensed under the Apache License 2.0.
-
-package grpc_auth
+package auth
 
 import (
 	"context"

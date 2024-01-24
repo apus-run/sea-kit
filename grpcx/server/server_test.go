@@ -153,8 +153,14 @@ func testClient(t *testing.T, ctx context.Context, srv *Options) {
 
 func TestNewServer(t *testing.T) {
 	ctx := context.Background()
+
+	recovery := recovery.NewRecoveryInterceptorBuilder()
+
 	srv := NewServer(
 		WithAddr(":8090"),
+		WithUnaryInterceptor(
+			recovery.BuildUnaryServerInterceptor(),
+		),
 	)
 
 	// Attach the Greeter service to the server
@@ -174,15 +180,18 @@ func TestNewServer(t *testing.T) {
 	conn, err := client.NewClient(
 		ctx,
 		client.WithAddr(":8090"),
-		client.WithUnaryInterceptor(func(
-			ctx context.Context,
-			method string, req,
-			reply interface{},
-			cc *grpc.ClientConn,
-			invoker grpc.UnaryInvoker,
-			opts ...grpc.CallOption) error {
-			return invoker(ctx, method, req, reply, cc, opts...)
-		}),
+		client.WithUnaryInterceptor(
+			func(
+				ctx context.Context,
+				method string, req,
+				reply interface{},
+				cc *grpc.ClientConn,
+				invoker grpc.UnaryInvoker,
+				opts ...grpc.CallOption) error {
+				return invoker(ctx, method, req, reply, cc, opts...)
+			},
+			recovery.BuildUnaryClientInterceptor(),
+		),
 	)
 	defer conn.Close()
 

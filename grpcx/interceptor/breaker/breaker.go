@@ -2,20 +2,21 @@ package breaker
 
 import (
 	"context"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker"
 	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker/sre"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/group"
 )
 
 // Kind is the type of Interceptor
 const Kind string = "CircuitBreaker"
 
 type InterceptorBuilder struct {
-	breaker circuitbreaker.CircuitBreaker
+	group *group.Group
 
 	// rpc code for circuit breaker, default already includes codes.Internal and codes.Unavailable
 	validCodes map[codes.Code]struct{}
@@ -23,7 +24,9 @@ type InterceptorBuilder struct {
 
 func NewBreakerInterceptorBuilder() *InterceptorBuilder {
 	return &InterceptorBuilder{
-		breaker: sre.NewBreaker(),
+		group: group.NewGroup(func() any {
+			return sre.NewBreaker()
+		}),
 		validCodes: map[codes.Code]struct{}{
 			codes.Internal:    {},
 			codes.Unavailable: {},
@@ -44,8 +47,18 @@ func (b *InterceptorBuilder) ValidCode(codes ...codes.Code) *InterceptorBuilder 
 	return b
 }
 
-func (b *InterceptorBuilder) Breaker(cb circuitbreaker.CircuitBreaker) *InterceptorBuilder {
-	b.breaker = cb
+// Group with circuit breaker group.
+// NOTE: implements generics circuitbreaker.CircuitBreaker
+func (b *InterceptorBuilder) Group(g *group.Group) *InterceptorBuilder {
+	b.group = g
+	return b
+}
+
+// CircuitBreaker with circuit breaker genFunc.
+func (b *InterceptorBuilder) CircuitBreaker(genBreakerFunc func() circuitbreaker.CircuitBreaker) *InterceptorBuilder {
+	b.group = group.NewGroup(func() any {
+		return genBreakerFunc()
+	})
 	return b
 }
 
@@ -53,10 +66,10 @@ func (b *InterceptorBuilder) BuildUnaryServerInterceptor() grpc.UnaryServerInter
 	return func(ctx context.Context, req any,
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler) (resp any, err error) {
-
-		if err := b.breaker.Allow(); err != nil {
+		breaker := b.group.Get(info.FullMethod).(circuitbreaker.CircuitBreaker)
+		if err := breaker.Allow(); err != nil {
 			// NOTE: when client reject request locally, keep adding let the drop ratio higher.
-			b.breaker.MarkFailed()
+			breaker.MarkFailed()
 			return nil, err
 		}
 
@@ -67,9 +80,9 @@ func (b *InterceptorBuilder) BuildUnaryServerInterceptor() grpc.UnaryServerInter
 			s, ok := status.FromError(err)
 			_, isHit := b.validCodes[s.Code()]
 			if ok && isHit {
-				b.breaker.MarkFailed()
+				breaker.MarkFailed()
 			} else {
-				b.breaker.MarkSuccess()
+				breaker.MarkSuccess()
 			}
 		}
 
@@ -80,8 +93,9 @@ func (b *InterceptorBuilder) BuildUnaryServerInterceptor() grpc.UnaryServerInter
 
 func (b *InterceptorBuilder) BuildStreamServerInterceptor() grpc.StreamServerInterceptor {
 	return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
-		if err := b.breaker.Allow(); err != nil {
-			b.breaker.MarkFailed()
+		breaker := b.group.Get(info.FullMethod).(circuitbreaker.CircuitBreaker)
+		if err := breaker.Allow(); err != nil {
+			breaker.MarkFailed()
 			return err
 		}
 		err := handler(srv, ss)
@@ -90,9 +104,9 @@ func (b *InterceptorBuilder) BuildStreamServerInterceptor() grpc.StreamServerInt
 			s, ok := status.FromError(err)
 			_, isHit := b.validCodes[s.Code()]
 			if ok && isHit {
-				b.breaker.MarkFailed()
+				breaker.MarkFailed()
 			} else {
-				b.breaker.MarkSuccess()
+				breaker.MarkSuccess()
 			}
 		}
 
@@ -108,8 +122,9 @@ func (b *InterceptorBuilder) BuildUnaryClientInterceptor() grpc.UnaryClientInter
 		cc *grpc.ClientConn,
 		invoker grpc.UnaryInvoker,
 		opts ...grpc.CallOption) error {
-		if err := b.breaker.Allow(); err != nil {
-			b.breaker.MarkFailed()
+		breaker := b.group.Get(method).(circuitbreaker.CircuitBreaker)
+		if err := breaker.Allow(); err != nil {
+			breaker.MarkFailed()
 			return err
 		}
 		err := invoker(ctx, method, req, reply, cc, opts...)
@@ -118,9 +133,9 @@ func (b *InterceptorBuilder) BuildUnaryClientInterceptor() grpc.UnaryClientInter
 			s, ok := status.FromError(err)
 			_, isHit := b.validCodes[s.Code()]
 			if ok && isHit {
-				b.breaker.MarkFailed()
+				breaker.MarkFailed()
 			} else {
-				b.breaker.MarkSuccess()
+				breaker.MarkSuccess()
 			}
 		}
 		return err
@@ -135,9 +150,10 @@ func (b *InterceptorBuilder) BuildStreamClientInterceptor() grpc.StreamClientInt
 		method string,
 		streamer grpc.Streamer,
 		opts ...grpc.CallOption) (grpc.ClientStream, error) {
-		if err := b.breaker.Allow(); err != nil {
+		breaker := b.group.Get(method).(circuitbreaker.CircuitBreaker)
+		if err := breaker.Allow(); err != nil {
 			// NOTE: when client reject request locally, keep adding counter let the drop ratio higher.
-			b.breaker.MarkFailed()
+			breaker.MarkFailed()
 			return nil, err
 		}
 
@@ -147,9 +163,9 @@ func (b *InterceptorBuilder) BuildStreamClientInterceptor() grpc.StreamClientInt
 			s, ok := status.FromError(err)
 			_, isHit := b.validCodes[s.Code()]
 			if ok && isHit {
-				b.breaker.MarkFailed()
+				breaker.MarkFailed()
 			} else {
-				b.breaker.MarkSuccess()
+				breaker.MarkSuccess()
 			}
 		}
 

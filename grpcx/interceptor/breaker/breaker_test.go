@@ -2,6 +2,8 @@ package breaker
 
 import (
 	"context"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker"
+	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker/sre"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -23,6 +25,13 @@ func TestBuildUnaryServerInterceptor(t *testing.T) {
 	}
 
 	builder := NewBreakerInterceptorBuilder()
+	//builder.Group(group.NewGroup(func() interface{} {
+	//	return sre.NewBreaker()
+	//}))
+	builder.CircuitBreaker(func() circuitbreaker.CircuitBreaker {
+		return sre.NewBreaker()
+	})
+	builder.ValidCode(codes.PermissionDenied)
 
 	// 构建unary server拦截器
 	interceptor := builder.BuildUnaryServerInterceptor()

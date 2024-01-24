@@ -1,11 +1,11 @@
-package collection
+package concurrency
 
 import (
 	"sync/atomic"
 	"testing"
 
+	"github.com/apus-run/sea-kit/stringx"
 	"github.com/stretchr/testify/assert"
-	"github.com/zeromicro/go-zero/core/stringx"
 )
 
 func TestSafeMap(t *testing.T) {
