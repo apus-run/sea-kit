@@ -14,79 +14,43 @@ type SessionContext = mongo.SessionContext
 
 type session struct {
 	mongo.Session
-	processor processor
-	logMode   bool
 }
 
 var _ mongo.Session = (*session)(nil)
 
 func (ws *session) EndSession(ctx context.Context) {
-	_ = ws.processor(func(c *cmd) error {
-		ws.Session.EndSession(ctx)
-		logCmd(ws.logMode, c, "EndSession", nil)
-		return nil
-	})
+	ws.Session.EndSession(ctx)
 }
 
 func (ws *session) StartTransaction(topts ...*options.TransactionOptions) error {
-	return ws.processor(func(c *cmd) error {
-		logCmd(ws.logMode, c, "StartTransaction", nil)
-		return ws.Session.StartTransaction(topts...)
-	})
+	return ws.Session.StartTransaction(topts...)
 }
 
 func (ws *session) AbortTransaction(ctx context.Context) error {
-	return ws.processor(func(c *cmd) error {
-		logCmd(ws.logMode, c, "AbortTransaction", nil)
-		return ws.Session.AbortTransaction(ctx)
-	})
+	return ws.Session.AbortTransaction(ctx)
 }
 
 func (ws *session) CommitTransaction(ctx context.Context) error {
-	return ws.processor(func(c *cmd) error {
-		logCmd(ws.logMode, c, "CommitTransaction", nil)
-		return ws.Session.CommitTransaction(ctx)
-	})
+	return ws.Session.CommitTransaction(ctx)
 }
 
 func (ws *session) ClusterTime() (raw bson.Raw) {
-	_ = ws.processor(func(c *cmd) error {
-		raw = ws.Session.ClusterTime()
-		logCmd(ws.logMode, c, "ClusterTime", raw)
-		return nil
-	})
-	return
+	return ws.Session.ClusterTime()
 }
 
 func (ws *session) AdvanceClusterTime(br bson.Raw) error {
-	return ws.processor(func(c *cmd) error {
-		logCmd(ws.logMode, c, "AdvanceClusterTime", nil)
-		return ws.Session.AdvanceClusterTime(br)
-	})
+	return ws.Session.AdvanceClusterTime(br)
 }
 
 func (ws *session) OperationTime() (ts *primitive.Timestamp) {
-	_ = ws.processor(func(c *cmd) error {
-		ts = ws.Session.OperationTime()
-		logCmd(ws.logMode, c, "OperationTime", ts)
-		return nil
-	})
-	return
+	return ws.Session.OperationTime()
 }
 
 func (ws *session) AdvanceOperationTime(pt *primitive.Timestamp) error {
-	return ws.processor(func(c *cmd) error {
-		logCmd(ws.logMode, c, "AdvanceOperationTime", nil)
-		return ws.Session.AdvanceOperationTime(pt)
-	})
+	return ws.Session.AdvanceOperationTime(pt)
 }
 
 func (ws *session) WithTransaction(ctx context.Context, fn func(sessCtx SessionContext) (interface{}, error),
 	opts ...*options.TransactionOptions) (out interface{}, err error) {
-	err = ws.processor(func(c *cmd) error {
-		logCmd(ws.logMode, c, "WithTransaction", nil)
-		out, err = ws.Session.WithTransaction(ctx, fn, opts...)
-		return err
-	})
-	return
+	return ws.Session.WithTransaction(ctx, fn, opts...)
 }

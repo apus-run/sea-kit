@@ -39,4 +39,5 @@ use (
     ./ws
     ./grpcx
     ./algo
+    ./wechat
 )

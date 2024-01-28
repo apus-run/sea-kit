@@ -1,13 +1,11 @@
 package mongo
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
 	"time"
-)
 
-const (
-	metricType = "mongo"
+	"github.com/apus-run/sea-kit/zlog"
 )
 
 type Interceptor func(oldProcessFn processFn) (newProcessFn processFn)
@@ -26,26 +24,51 @@ func InterceptorChain(interceptors ...Interceptor) func(oldProcess processFn) pr
 	}
 }
 
-func debugInterceptor(compName string, c *config) func(processFn) processFn {
+type Builder struct {
+	log zlog.Logger
+}
+
+func NewBuilder(log zlog.Logger) *Builder {
+	return &Builder{
+		log,
+	}
+}
+
+func (b *Builder) BuildDebugInterceptor() func(processFn) processFn {
 	return func(oldProcess processFn) processFn {
 		return func(cmd *cmd) error {
-			if !eapp.IsDevelopmentMode() {
-				return oldProcess(cmd)
-			}
-
 			beg := time.Now()
 			err := oldProcess(cmd)
 			cost := time.Since(beg)
+			var fields = make([]zlog.Field, 0)
 			if err != nil {
-				log.Println("emongo.response", xdebug.MakeReqAndResError(fileWithLineNum(), compName,
-					fmt.Sprintf("%v", c.keyName), cost, fmt.Sprintf("%s %v", cmd.name, mustJsonMarshal(cmd.req)), err.Error()),
+				fields = append(
+					fields,
+					zlog.String("type", "mongo.response"),
+					zlog.Duration("cost", cost),
+					zlog.String("data", fmt.Sprintf("%s %v", cmd.name, mustJsonMarshal(cmd.req))),
+					zlog.String("error", fmt.Sprintf("%v", err.Error())),
 				)
 			} else {
-				log.Println("emongo.response", xdebug.MakeReqAndResInfo(fileWithLineNum(), compName,
-					fmt.Sprintf("%v", c.keyName), cost, fmt.Sprintf("%s %v", cmd.name, mustJsonMarshal(cmd.req)), fmt.Sprintf("%v", cmd.res)),
+				fields = append(
+					fields,
+					zlog.String("type", "mongo.response"),
+					zlog.Duration("cost", cost),
+					zlog.String("data", fmt.Sprintf("%s %v", cmd.name, mustJsonMarshal(cmd.req))),
+					zlog.String("res", fmt.Sprintf("%v", cmd.res)),
+					zlog.String("dbName", cmd.dbName),
+					zlog.String("collName", cmd.collName),
+					zlog.String("cmdName", cmd.name),
 				)
 			}
+
+			b.log.Info("mongodb", fields...)
 			return err
 		}
 	}
+}
+
+func mustJsonMarshal(val interface{}) string {
+	res, _ := json.Marshal(val)
+	return string(res)
 }

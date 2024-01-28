@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 	"sync"
 	"time"
 
@@ -73,13 +72,7 @@ func (ctx *Context) GetAccessToken() (accessToken string, err error) {
 func (ctx *Context) GetAccessTokenFromServer() (resAccessToken ResAccessToken, err error) {
 	url := fmt.Sprintf("%s?grant_type=client_credential&appid=%s&secret=%s", AccessTokenURL, ctx.AppID, ctx.AppSecret)
 	var body []byte
-
-	req, err := http.NewRequest("GET", url, nil)
-
-	if err != nil {
-		return ResAccessToken{}, err
-	}
-
+	body, err = ctx.HTTPGet(url)
 	if err != nil {
 		return
 	}

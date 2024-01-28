@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"github.com/apus-run/sea-kit/zlog"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/event"
@@ -74,6 +75,7 @@ func TestNewClientOpen(t *testing.T) {
 			t.Log("执行失败")
 		},
 	}
+
 	cli, err := Open(
 		ctx,
 		WithURI("mongodb://root:example@localhost:27017/"),
@@ -82,6 +84,8 @@ func TestNewClientOpen(t *testing.T) {
 		WithClientOptions(&options.ClientOptions{
 			Monitor: monitor,
 		}),
+		WithDebug(true),
+		WithInterceptor(NewBuilder(zlog.L()).BuildDebugInterceptor()),
 	)
 
 	assert.NoError(t, err)

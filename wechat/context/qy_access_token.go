@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ego-component/ewechat/util"
+	cerror "github.com/apus-run/sea-kit/wechat/error"
 )
 
 const (
@@ -18,7 +18,7 @@ const (
 
 // ResQyAccessToken struct
 type ResQyAccessToken struct {
-	util.CommonError
+	cerror.CommonError
 
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int64  `json:"expires_in"`

@@ -15,6 +15,7 @@ type InsertOneResult = mongo.InsertOneResult
 type InsertManyResult = mongo.InsertManyResult
 type UpdateResult = mongo.UpdateResult
 type SingleResult = mongo.SingleResult
+type DeleteResult = mongo.DeleteResult
 
 type IndexModel struct {
 	Key []string // Index key fields; prefix name with dash (-) for descending order
@@ -24,18 +25,18 @@ type IndexModel struct {
 // ChangeInfo represents the data returned by Update and Upsert
 // documents. This type mirrors the mgo type.
 type ChangeInfo struct {
-	Updated    int         // Number of existing documents updated
-	Removed    int         // Number of documents removed
-	UpsertedId interface{} // Upserted _id field, when not explicitly provided
+	Updated    int // Number of existing documents updated
+	Removed    int // Number of documents removed
+	UpsertedId any // Upserted _id field, when not explicitly provided
 }
 
 // Change represents the options that you can pass to the
 // findAndModify operation.
 type Change struct {
-	Update    interface{} // The update document
-	Upsert    bool        // Whether to insert in case the document isn't found
-	Remove    bool        // Whether to remove the document found rather than updating
-	ReturnNew bool        // Should the modified document be returned rather than the old one
+	Update    any  // The update document
+	Upsert    bool // Whether to insert in case the document isn't found
+	Remove    bool // Whether to remove the document found rather than updating
+	ReturnNew bool // Should the modified document be returned rather than the old one
 }
 
 type KeyValue struct {

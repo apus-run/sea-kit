@@ -1,6 +1,7 @@
 package context
 
 import (
+	"gopkg.in/resty.v1"
 	"net/http"
 	"sync"
 
@@ -18,6 +19,8 @@ type Context struct {
 	PayKey         string
 
 	Cache cache.Cache
+
+	RestyClient *resty.Client
 
 	Writer  http.ResponseWriter
 	Request *http.Request

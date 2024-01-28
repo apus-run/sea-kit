@@ -17,6 +17,13 @@ type Client struct {
 	client *mongo.Client
 
 	registry *bsoncodec.Registry
+
+	processor processor
+	logMode   bool
+}
+
+func defaultProcessor(processFn processFn) error {
+	return processFn(&cmd{req: make([]interface{}, 0, 1)})
 }
 
 // NewClient creates MongoDB client
@@ -43,15 +50,28 @@ func client(ctx context.Context, cfg *Config) (*Client, error) {
 	}
 
 	return &Client{
-		client:   client,
-		registry: option.Registry,
+		client:    client,
+		registry:  option.Registry,
+		processor: defaultProcessor,
 	}, nil
+}
+
+func (c *Client) SetLogMode(logMode bool) {
+	c.logMode = logMode
+}
+
+func (c *Client) WrapProcessor(wrapFn func(processFn) processFn) {
+	c.processor = func(fn processFn) error {
+		return wrapFn(fn)(&cmd{req: make([]interface{}, 0, 1)})
+	}
 }
 
 // Disconnect closes sockets to the topology referenced by this Client.
 func (c *Client) Disconnect(ctx context.Context) error {
-	err := c.client.Disconnect(ctx)
-	return err
+	return c.processor(func(cmd *cmd) error {
+		logCmd(c.logMode, cmd, "Disconnect", nil)
+		return c.client.Disconnect(ctx)
+	})
 }
 
 // Close closes sockets to the topology referenced by this Client.
@@ -62,22 +82,33 @@ func (c *Client) Close(ctx context.Context) error {
 
 // Ping confirm connection is alive
 func (c *Client) Ping(timeout int64) error {
-	var err error
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
 	defer cancel()
 
-	if err = c.client.Ping(ctx, readpref.Primary()); err != nil {
-		return err
-	}
-	return nil
+	return c.processor(func(cmd *cmd) error {
+		logCmd(c.logMode, cmd, "Ping", nil)
+		return c.client.Ping(ctx, readpref.Primary())
+	})
 }
 
 // Database create connection to database
 func (c *Client) Database(name string, dbOpts ...*options.DatabaseOptions) *Database {
-	db := c.client.Database(name, dbOpts...)
+	var db *mongo.Database
+	c.processor(func(cmd *cmd) error {
+		db = c.client.Database(name, dbOpts...)
+		cmd.dbName = name
+		logCmd(c.logMode, cmd, "Database", db, name)
+		return nil
+	})
+	if db == nil {
+		return nil
+	}
 	return &Database{
 		database: db,
 		registry: c.registry,
+
+		processor: c.processor,
+		logMode:   c.logMode,
 	}
 }
 
@@ -98,4 +129,55 @@ func (c *Client) ServerVersion() string {
 		return ""
 	}
 	return v.StringValue()
+}
+
+func (c *Client) Client() *mongo.Client { return c.client }
+
+func (c *Client) StartSession(opts ...*options.SessionOptions) (ss Session, err error) {
+	err = c.processor(func(cmd *cmd) error {
+		ss, err = c.client.StartSession(opts...)
+		logCmd(c.logMode, cmd, "StartSession", ss)
+		return err
+	})
+	return &session{Session: ss, logMode: c.logMode, processor: c.processor}, nil
+}
+
+func (c *Client) UseSession(ctx context.Context, fn func(SessionContext) error) error {
+	return c.processor(func(cmd *cmd) error {
+		logCmd(c.logMode, cmd, "UseSession", nil)
+		return c.client.UseSession(ctx, fn)
+	})
+}
+
+func (c *Client) UseSessionWithOptions(ctx context.Context, opts *options.SessionOptions, fn func(SessionContext) error) error {
+	return c.processor(func(cmd *cmd) error {
+		logCmd(c.logMode, cmd, "UseSessionWithOptions", nil)
+		return c.client.UseSessionWithOptions(ctx, opts, fn)
+	})
+}
+
+func (c *Client) ListDatabaseNames(ctx context.Context, filter any, opts ...*options.ListDatabasesOptions) (
+	dbs []string, err error) {
+
+	err = c.processor(func(cmd *cmd) error {
+		dbs, err = c.client.ListDatabaseNames(ctx, filter, opts...)
+		logCmd(c.logMode, cmd, "ListDatabaseNames", dbs, filter)
+		return err
+	})
+	return
+}
+
+func (c *Client) ListDatabases(ctx context.Context, filter any, opts ...*options.ListDatabasesOptions) (
+	dbr mongo.ListDatabasesResult, err error) {
+
+	err = c.processor(func(cmd *cmd) error {
+		dbr, err = c.client.ListDatabases(ctx, filter, opts...)
+		logCmd(c.logMode, cmd, "ListDatabases", dbr, filter)
+		return err
+	})
+	return
+}
+
+func WithSession(ctx context.Context, sess Session, fn func(SessionContext) error) error {
+	return mongo.WithSession(ctx, sess, fn)
 }

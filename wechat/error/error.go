@@ -1,4 +1,4 @@
-package wechat
+package error
 
 import (
 	"encoding/json"
