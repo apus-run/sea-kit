@@ -38,7 +38,7 @@ func parseUint(s string) (uint64, error) {
 // ParseUintList parses and validates the specified string as the value
 // found in some cgroup file (e.g. cpuset.cpus, cpuset.mems), which could be
 // one of the formats below. Note that duplicates are actually allowed in the
-// input string. It returns a map[int]bool with available elements from val
+// input string. It returns a safemap[int]bool with available elements from val
 // set to true.
 // Supported formats:
 // 7

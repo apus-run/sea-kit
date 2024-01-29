@@ -5,7 +5,7 @@
 // Package consistent provides a consistent hashing function.
 //
 // Consistent hashing is often used to distribute requests to a changing set of servers.  For example,
-// say you have some cache servers cacheA, cacheB, and cacheC.  You want to decide which cache server
+// say you have some cool_cache servers cacheA, cacheB, and cacheC.  You want to decide which cool_cache server
 // to use to look up information on a user.
 //
 // You could use a typical hash table and hash the user id

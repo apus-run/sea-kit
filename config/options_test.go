@@ -18,7 +18,7 @@ func TestDefaultDecoder(t *testing.T) {
 		t.Fatal(err)
 	}
 	if !reflect.DeepEqual(target, map[string]interface{}{"service": []byte("config")}) {
-		t.Fatal(`target is not equal to map[string]interface{}{"service": "config"}`)
+		t.Fatal(`target is not equal to safemap[string]interface{}{"service": "config"}`)
 	}
 
 	src = &KeyValue{
@@ -38,7 +38,7 @@ func TestDefaultDecoder(t *testing.T) {
 			},
 		},
 	}, target) {
-		t.Fatal(`target is not equal to map[string]interface{}{"service": map[string]interface{}{"name": map[string]interface{}{"alias": []byte("2233")}}}`)
+		t.Fatal(`target is not equal to safemap[string]interface{}{"service": safemap[string]interface{}{"name": safemap[string]interface{}{"alias": []byte("2233")}}}`)
 	}
 }
 

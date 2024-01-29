@@ -20,10 +20,10 @@ func main() {
 		panic(err)
 	}
 
-	// Hydrate the response body into a map.
+	// Hydrate the response body into a safemap.
 	var target map[string]any
 	err = http_client.ResponseToJson(resp, &target)
 
-	// Print the target map.
+	// Print the target safemap.
 	fmt.Println(target)
 }

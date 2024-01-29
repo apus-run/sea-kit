@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/gormx
 
-go 1.19
+go 1.21
 
 require (
 	github.com/apus-run/sea-kit/log v0.0.0-20230908142142-a6b719f02c24
@@ -50,6 +50,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace (
-	github.com/apus-run/sea-kit/pagination => ../pagination
-)
+replace github.com/apus-run/sea-kit/pagination => ../pagination

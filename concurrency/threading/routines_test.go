@@ -1,15 +1,13 @@
 package threading
 
 import (
-	"bytes"
 	"context"
 	"io"
 	"log"
 	"testing"
 
+	"github.com/apus-run/sea-kit/lang"
 	"github.com/stretchr/testify/assert"
-	"github.com/zeromicro/go-zero/core/lang"
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 func TestRoutineId(t *testing.T) {
@@ -39,8 +37,6 @@ func TestRunSafe(t *testing.T) {
 }
 
 func TestRunSafeCtx(t *testing.T) {
-	var buf bytes.Buffer
-	logx.SetWriter(logx.NewWriter(&buf))
 	ctx := context.Background()
 	ch := make(chan lang.PlaceholderType)
 
@@ -63,8 +59,6 @@ func TestRunSafeCtx(t *testing.T) {
 }
 
 func TestGoSafeCtx(t *testing.T) {
-	var buf bytes.Buffer
-	logx.SetWriter(logx.NewWriter(&buf))
 	ctx := context.Background()
 	ch := make(chan lang.PlaceholderType)
 

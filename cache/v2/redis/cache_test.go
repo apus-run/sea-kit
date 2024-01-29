@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	cache "github.com/apus-run/sea-kit/cache/v2"
+	"github.com/apus-run/sea-kit/cache/v2"
 )
 
 func TestCache_Set(t *testing.T) {
@@ -143,12 +143,12 @@ func TestCache_SetNX(t *testing.T) {
 				boolCmd := redis.NewBoolCmd(context.Background())
 				boolCmd.SetVal(true)
 				cmd.EXPECT().
-					SetNX(context.Background(), "setnx_key", "hello cache", time.Second*10).
+					SetNX(context.Background(), "setnx_key", "hello cool_cache", time.Second*10).
 					Return(boolCmd)
 				return cmd
 			},
 			key:        "setnx_key",
-			val:        "hello cache",
+			val:        "hello cool_cache",
 			expiration: time.Second * 10,
 			result:     true,
 		},
@@ -159,13 +159,13 @@ func TestCache_SetNX(t *testing.T) {
 				boolCmd := redis.NewBoolCmd(context.Background())
 				boolCmd.SetVal(false)
 				cmd.EXPECT().
-					SetNX(context.Background(), "setnx-key", "hello cache", time.Second*10).
+					SetNX(context.Background(), "setnx-key", "hello cool_cache", time.Second*10).
 					Return(boolCmd)
 
 				return cmd
 			},
 			key:        "setnx-key",
-			val:        "hello cache",
+			val:        "hello cool_cache",
 			expiration: time.Second * 10,
 			result:     false,
 		},
@@ -197,7 +197,7 @@ func TestCache_GetSet(t *testing.T) {
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				str := redis.NewStringCmd(context.Background())
-				str.SetVal("hello cache")
+				str.SetVal("hello cool_cache")
 				cmd.EXPECT().
 					GetSet(context.Background(), "test_get_set", "hello go").
 					Return(str)
@@ -213,12 +213,12 @@ func TestCache_GetSet(t *testing.T) {
 				str := redis.NewStringCmd(context.Background())
 				str.SetErr(redis.Nil)
 				cmd.EXPECT().
-					GetSet(context.Background(), "test_get_set_err", "hello cache").
+					GetSet(context.Background(), "test_get_set_err", "hello cool_cache").
 					Return(str)
 				return cmd
 			},
 			key:     "test_get_set_err",
-			val:     "hello cache",
+			val:     "hello cool_cache",
 			wantErr: cache.ErrKeyNotExist,
 		},
 	}
@@ -586,7 +586,7 @@ func TestCache_IncrBy(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "cache incr",
+			name: "cool_cache incr",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewIntCmd(context.Background())
@@ -601,7 +601,7 @@ func TestCache_IncrBy(t *testing.T) {
 			wantVal: 1,
 		},
 		{
-			name: "cache incr not zero",
+			name: "cool_cache incr not zero",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewIntCmd(context.Background())
@@ -640,7 +640,7 @@ func TestCache_DecrBy(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "cache decr",
+			name: "cool_cache decr",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewIntCmd(context.Background())
@@ -654,7 +654,7 @@ func TestCache_DecrBy(t *testing.T) {
 			val: 1,
 		},
 		{
-			name: "cache decr not zero",
+			name: "cool_cache decr not zero",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewIntCmd(context.Background())
@@ -669,7 +669,7 @@ func TestCache_DecrBy(t *testing.T) {
 			wantVal: 10,
 		},
 		{
-			name: "cache decr negative number",
+			name: "cool_cache decr negative number",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewIntCmd(context.Background())
@@ -707,7 +707,7 @@ func TestCache_IncrByFloat(t *testing.T) {
 		wantErr error
 	}{
 		{
-			name: "cache incrbyfloat",
+			name: "cool_cache incrbyfloat",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewFloatCmd(context.Background())
@@ -723,7 +723,7 @@ func TestCache_IncrByFloat(t *testing.T) {
 			wantVal: 1.2,
 		},
 		{
-			name: "cache incrbyfloat decr value",
+			name: "cool_cache incrbyfloat decr value",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewFloatCmd(context.Background())
@@ -739,7 +739,7 @@ func TestCache_IncrByFloat(t *testing.T) {
 			wantVal: -2,
 		},
 		{
-			name: "cache incrbyfloat zero value",
+			name: "cool_cache incrbyfloat zero value",
 			mock: func(ctrl *gomock.Controller) redis.Cmdable {
 				cmd := mocks.NewMockCmdable(ctrl)
 				result := redis.NewFloatCmd(context.Background())

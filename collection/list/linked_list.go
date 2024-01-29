@@ -1,6 +1,6 @@
 package list
 
-import "github.com/apus-run/sea-kit/list/internal/errs"
+import "github.com/apus-run/sea-kit/collection/list/internal/errs"
 
 var (
 	_ List[any] = &LinkedList[any]{}

@@ -2,14 +2,15 @@ package mongo
 
 import (
 	"context"
+	"log"
+	"testing"
+
 	"github.com/apus-run/sea-kit/zlog"
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/event"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
-	"testing"
 )
 
 func initClient() *Mongo {

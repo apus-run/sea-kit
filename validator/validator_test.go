@@ -111,8 +111,8 @@ func TestValidateErr(t *testing.T) {
 	}
 }
 
-//func removeStructName(fields map[string]string) map[string]string {
-//	result := map[string]string{}
+//func removeStructName(fields safemap[string]string) safemap[string]string {
+//	result := safemap[string]string{}
 //
 //	for field, err := range fields {
 //		result[field[strings.Index(field, ".")+1:]] = err

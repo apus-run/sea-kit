@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit
 
-go 1.19
+go 1.21
 
 require (
 	github.com/hashicorp/golang-lru v1.0.2

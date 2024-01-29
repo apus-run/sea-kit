@@ -3,11 +3,12 @@ package gormx
 import (
 	"context"
 	"fmt"
-	"gorm.io/gorm"
 	"log"
 	"strings"
 	"sync"
 	"testing"
+
+	"gorm.io/gorm"
 )
 
 type Database struct {

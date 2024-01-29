@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/redisx
 
-go 1.19
+go 1.21
 
 require (
 	github.com/google/uuid v1.4.0

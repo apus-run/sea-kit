@@ -2,9 +2,10 @@ package list
 
 import (
 	"errors"
-	"github.com/apus-run/sea-kit/list/internal"
 
-	"github.com/apus-run/sea-kit/list/internal/errs"
+	"github.com/apus-run/sea-kit/collection/list/internal"
+
+	"github.com/apus-run/sea-kit/collection/list/internal/errs"
 
 	"golang.org/x/exp/rand"
 )

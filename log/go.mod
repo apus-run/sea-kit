@@ -1,3 +1,3 @@
 module github.com/apus-run/sea-kit/log
 
-go 1.19
+go 1.21

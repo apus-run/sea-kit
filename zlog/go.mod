@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/zlog
 
-go 1.19
+go 1.21
 
 require (
 	github.com/natefinch/lumberjack v2.0.0+incompatible

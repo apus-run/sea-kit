@@ -1,4 +1,4 @@
-go 1.19
+go 1.21
 
 use (
 	./utils
@@ -17,7 +17,6 @@ use (
     ./cryptox
     ./pagination
     ./concurrency
-    ./casbinx
     ./trace
     ./redisx
     ./ratelimit
@@ -27,17 +26,18 @@ use (
     ./encoding
     ./config
     ./mediator
-    ./lru_cache
     ./http_client
     ./bash
     ./prof
     ./codegen
-    ./slice
     ./mongo
-    ./set
-    ./list
     ./ws
     ./grpcx
     ./algo
     ./wechat
+    ./collection
+	./timex
+	./lang
+	./syncx
+	./mathx
 )

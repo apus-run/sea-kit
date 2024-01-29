@@ -8,7 +8,7 @@ import (
 var xmlContentType = []string{"application/xml; charset=utf-8"}
 var plainContentType = []string{"text/plain; charset=utf-8"}
 
-//Render render from bytes
+// Render render from bytes
 func (ctx *Context) Render(bytes []byte) {
 	//debug
 	//fmt.Println("response msg = ", string(bytes))
@@ -19,13 +19,13 @@ func (ctx *Context) Render(bytes []byte) {
 	}
 }
 
-//String render from string
+// String render from string
 func (ctx *Context) String(str string) {
 	writeContextType(ctx.Writer, plainContentType)
 	ctx.Render([]byte(str))
 }
 
-//XML render to xml
+// XML render to xml
 func (ctx *Context) XML(obj interface{}) {
 	writeContextType(ctx.Writer, xmlContentType)
 	bytes, err := xml.Marshal(obj)

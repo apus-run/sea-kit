@@ -5,8 +5,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/apus-run/sea-kit/cache"
-
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -30,7 +28,7 @@ func TestMemory_All(t *testing.T) {
 			err = mc.Del(ctx, "foo")
 			So(err, ShouldBeNil)
 			val, err = mc.Get(ctx, "foo")
-			So(err, ShouldEqual, cache.ErrKeyNotFound)
+			So(err, ShouldEqual, v1.ErrKeyNotFound)
 
 		})
 

@@ -1,8 +1,9 @@
 package validators
 
 import (
-	"github.com/go-playground/validator/v10"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 // NotBlank returns whether the given content is not blank

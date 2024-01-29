@@ -7,11 +7,9 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
-
-	"github.com/apus-run/sea-kit/cache"
 )
 
-var _ cache.Cache = (*Cache)(nil)
+var _ v1.Cache = (*Cache)(nil)
 
 // Cache 代表Redis缓存
 type Cache struct {
@@ -33,7 +31,7 @@ func NewCache(client redis.Cmdable) *Cache {
 func (r *Cache) Get(ctx context.Context, key string) (string, error) {
 	cmd := r.client.Get(ctx, key)
 	if errors.Is(cmd.Err(), redis.Nil) {
-		return "", cache.ErrKeyNotFound
+		return "", v1.ErrKeyNotFound
 	}
 
 	return cmd.Result()
@@ -43,7 +41,7 @@ func (r *Cache) Get(ctx context.Context, key string) (string, error) {
 func (r *Cache) GetObj(ctx context.Context, key string, model interface{}) error {
 	cmd := r.client.Get(ctx, key)
 	if errors.Is(cmd.Err(), redis.Nil) {
-		return cache.ErrKeyNotFound
+		return v1.ErrKeyNotFound
 	}
 
 	err := cmd.Scan(model)
@@ -107,12 +105,12 @@ func (r *Cache) SetMany(ctx context.Context, data map[string]string, timeout tim
 
 // SetForever 设置某个key和值到缓存，不带超时时间
 func (r *Cache) SetForever(ctx context.Context, key string, val string) error {
-	return r.client.Set(ctx, key, val, cache.NoneDuration).Err()
+	return r.client.Set(ctx, key, val, v1.NoneDuration).Err()
 }
 
 // SetForeverObj 设置某个key和对象到缓存，不带超时时间，对象必须实现 https://pkg.go.dev/encoding#BinaryMarshaler
 func (r *Cache) SetForeverObj(ctx context.Context, key string, val interface{}) error {
-	return r.client.Set(ctx, key, val, cache.NoneDuration).Err()
+	return r.client.Set(ctx, key, val, v1.NoneDuration).Err()
 }
 
 // SetTTL 设置某个key的超时时间

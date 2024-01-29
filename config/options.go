@@ -33,9 +33,9 @@ func WithSource(s ...Source) Option {
 
 // WithDecoder with config decoder.
 // DefaultDecoder behavior:
-// If KeyValue.Format is non-empty, then KeyValue.Value will be deserialized into map[string]interface{}
-// and stored in the config cache(map[string]interface{})
-// if KeyValue.Format is empty,{KeyValue.Key : KeyValue.Value} will be stored in config cache(map[string]interface{})
+// If KeyValue.Format is non-empty, then KeyValue.Value will be deserialized into safemap[string]interface{}
+// and stored in the config cool_cache(safemap[string]interface{})
+// if KeyValue.Format is empty,{KeyValue.Key : KeyValue.Value} will be stored in config cool_cache(safemap[string]interface{})
 func WithDecoder(d Decoder) Option {
 	return func(o *options) {
 		o.decoder = d
@@ -56,10 +56,10 @@ func WithLogger(_ log.Logger) Option {
 }
 
 // defaultDecoder decode config from source KeyValue
-// to target map[string]interface{} using src.Format codec.
+// to target safemap[string]interface{} using src.Format codec.
 func defaultDecoder(src *KeyValue, target map[string]interface{}) error {
 	if src.Format == "" {
-		// expand key "aaa.bbb" into map[aaa]map[bbb]interface{}
+		// expand key "aaa.bbb" into safemap[aaa]safemap[bbb]interface{}
 		keys := strings.Split(src.Key, ".")
 		for i, k := range keys {
 			if i == len(keys)-1 {
@@ -78,7 +78,7 @@ func defaultDecoder(src *KeyValue, target map[string]interface{}) error {
 	return fmt.Errorf("unsupported key: %s format: %s", src.Key, src.Format)
 }
 
-// defaultResolver resolve placeholder in map value,
+// defaultResolver resolve placeholder in safemap value,
 // placeholder format in ${key:default}.
 func defaultResolver(input map[string]interface{}) error {
 	mapper := func(name string) string {

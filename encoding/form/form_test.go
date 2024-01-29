@@ -120,7 +120,7 @@ func TestProtoEncodeDecode(t *testing.T) {
 	}
 	if "a=19&age=18&b=true&bool=false&byte=MTIz&bytes=MTIz&count=3&d=22.22&double=12.33&duration="+
 		"2m0.000000022s&field=1%2C2&float=12.34&id=2233&int32=32&int64=64&"+
-		"map%5Bkratos%5D=https%3A%2F%2Fgo-kratos.dev%2F&map%5Bkratos_start%5D=https%3A%2F%2Fgo-kratos.dev%2Fen%2Fdocs%2Fgetting-started%2Fstart%2F&"+
+		"safemap%5Bkratos%5D=https%3A%2F%2Fgo-kratos.dev%2F&safemap%5Bkratos_start%5D=https%3A%2F%2Fgo-kratos.dev%2Fen%2Fdocs%2Fgetting-started%2Fstart%2F&"+
 		"numberOne=2233&price=11.23&sex=woman&simples=3344&simples=5566&string=go-kratos"+
 		"&timestamp=1970-01-01T00%3A00%3A20.000000002Z&uint32=32&uint64=64&very_simple.component=5566" != string(content) {
 		t.Errorf("rawpath is not equal to %s", content)
@@ -159,7 +159,7 @@ func TestProtoEncodeDecode(t *testing.T) {
 	}
 	for key, val := range in.GetMap() {
 		if in2Val := in2.GetMap()[key]; in2Val != val {
-			t.Errorf("%s want: %q, got: %q", "map["+key+"]", val, in2Val)
+			t.Errorf("%s want: %q, got: %q", "safemap["+key+"]", val, in2Val)
 		}
 	}
 }

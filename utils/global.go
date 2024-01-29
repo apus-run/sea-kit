@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// ReverseMap just reverse the map from [key, value] to [value, key]
+// ReverseMap just reverse the safemap from [key, value] to [value, key]
 func ReverseMap[K comparable, V comparable](m map[K]V) map[V]K {
 	n := make(map[V]K, len(m))
 	for k, v := range m {

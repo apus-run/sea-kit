@@ -2,10 +2,11 @@ package mongo
 
 import (
 	"context"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"testing"
 )
 
 func TestCursor(t *testing.T) {

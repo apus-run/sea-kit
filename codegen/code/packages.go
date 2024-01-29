@@ -21,7 +21,7 @@ var mode = packages.NeedName |
 	packages.NeedModule |
 	packages.NeedDeps
 
-// Packages is a wrapper around x/tools/go/packages that maintains a (hopefully prewarmed) cache of packages
+// Packages is a wrapper around x/tools/go/packages that maintains a (hopefully prewarmed) cool_cache of packages
 // that can be invalidated as writes are made and packages are known to change.
 type Packages struct {
 	packages     map[string]*packages.Package
@@ -32,7 +32,7 @@ type Packages struct {
 	numNameCalls int // stupid test steam. ignore.
 }
 
-// ReloadAll will call LoadAll after clearing the package cache, so we can reload
+// ReloadAll will call LoadAll after clearing the package cool_cache, so we can reload
 // packages in the case that the packages have changed
 func (p *Packages) ReloadAll(importPaths ...string) []*packages.Package {
 	p.packages = nil
@@ -101,7 +101,7 @@ func (p *Packages) addToCache(pkg *packages.Package) {
 
 // Load works the same as LoadAll, except a single package at a time.
 func (p *Packages) Load(importPath string) *packages.Package {
-	// Quick cache check first to avoid expensive allocations of LoadAll()
+	// Quick cool_cache check first to avoid expensive allocations of LoadAll()
 	if p.packages != nil {
 		if pkg, ok := p.packages[importPath]; ok {
 			return pkg
@@ -143,7 +143,7 @@ func (p *Packages) NameForPackage(importPath string) string {
 
 	importPath = NormalizeVendor(importPath)
 
-	// if its in the name cache use it
+	// if its in the name cool_cache use it
 	if name := p.importToName[importPath]; name != "" {
 		return name
 	}
@@ -152,7 +152,7 @@ func (p *Packages) NameForPackage(importPath string) string {
 	pkg := p.packages[importPath]
 
 	if pkg == nil {
-		// otherwise do a name only lookup for it but dont put it in the package cache.
+		// otherwise do a name only lookup for it but dont put it in the package cool_cache.
 		p.numNameCalls++
 		pkgs, err := packages.Load(&packages.Config{Mode: packages.NeedName}, importPath)
 		if err != nil {
@@ -171,7 +171,7 @@ func (p *Packages) NameForPackage(importPath string) string {
 	return pkg.Name
 }
 
-// Evict removes a given package import path from the cache, along with any packages that depend on it. Further calls
+// Evict removes a given package import path from the cool_cache, along with any packages that depend on it. Further calls
 // to Load will fetch it from disk.
 func (p *Packages) Evict(importPath string) {
 	delete(p.packages, importPath)

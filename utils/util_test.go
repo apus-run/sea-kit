@@ -2,9 +2,10 @@ package utils
 
 import (
 	"bytes"
-	"github.com/stretchr/testify/require"
 	"io"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"
 )

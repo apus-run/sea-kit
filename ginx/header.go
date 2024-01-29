@@ -10,7 +10,7 @@ import (
 // NoCache 控制客户端不要使用缓存
 func NoCache() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Cache-Control", "no-cache, max-age=0, must-revalidate")
+		c.Header("Cache-Control", "no-cool_cache, max-age=0, must-revalidate")
 		c.Header("Expires", "Thu, 01 Jan 1970 00:00:00 GMT")
 		c.Header("Last-Modified", time.Now().UTC().Format(http.TimeFormat))
 		c.Next()

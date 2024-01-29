@@ -174,7 +174,7 @@ func WithGzipDecompressFn(decompressFn func(c *gin.Context)) GzipOption {
 	}
 }
 
-// Using map for better lookup performance
+// Using safemap for better lookup performance
 type ExcludedExtensions map[string]bool
 
 func NewExcludedExtensions(extensions []string) ExcludedExtensions {

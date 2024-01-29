@@ -1,4 +1,4 @@
-package _map
+package safemap
 
 import "sync"
 
@@ -7,7 +7,7 @@ const (
 	maxDeletion   = 10000
 )
 
-// SafeMap provides a map alternative to avoid memory leak.
+// SafeMap provides a safemap alternative to avoid memory leak.
 // This implementation is not needed until issue below fixed.
 // https://github.com/golang/go/issues/20135
 type SafeMap struct {
@@ -69,7 +69,7 @@ func (m *SafeMap) Get(key any) (any, bool) {
 	return val, ok
 }
 
-// Range calls f sequentially for each key and value present in the map.
+// Range calls f sequentially for each key and value present in the safemap.
 // If f returns false, range stops the iteration.
 func (m *SafeMap) Range(f func(key, val any) bool) {
 	m.lock.RLock()

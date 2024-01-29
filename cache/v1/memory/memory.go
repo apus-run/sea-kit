@@ -7,11 +7,9 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/apus-run/sea-kit/cache"
 )
 
-var _ cache.Cache = (*Cache)(nil)
+var _ v1.Cache = (*Cache)(nil)
 
 type MemoryData struct {
 	val        interface{}
@@ -45,10 +43,10 @@ func (m *Cache) GetObj(ctx context.Context, key string, obj interface{}) error {
 	defer m.lock.Unlock()
 
 	if md, ok := m.data[key]; ok {
-		if md.ttl != cache.NoneDuration {
+		if md.ttl != v1.NoneDuration {
 			if time.Now().Sub(md.createTime) > md.ttl {
 				delete(m.data, key)
-				return cache.ErrKeyNotFound
+				return v1.ErrKeyNotFound
 			}
 		}
 
@@ -60,7 +58,7 @@ func (m *Cache) GetObj(ctx context.Context, key string, obj interface{}) error {
 		return nil
 	}
 
-	return cache.ErrKeyNotFound
+	return v1.ErrKeyNotFound
 }
 
 func (m *Cache) GetMany(ctx context.Context, keys []string) (map[string]string, error) {
@@ -112,11 +110,11 @@ func (m *Cache) SetMany(ctx context.Context, data map[string]string, timeout tim
 }
 
 func (m *Cache) SetForever(ctx context.Context, key string, val string) error {
-	return m.Set(ctx, key, val, cache.NoneDuration)
+	return m.Set(ctx, key, val, v1.NoneDuration)
 }
 
 func (m *Cache) SetForeverObj(ctx context.Context, key string, val interface{}) error {
-	return m.SetObj(ctx, key, val, cache.NoneDuration)
+	return m.SetObj(ctx, key, val, v1.NoneDuration)
 }
 
 func (m *Cache) SetTTL(_ context.Context, key string, timeout time.Duration) error {
@@ -127,7 +125,7 @@ func (m *Cache) SetTTL(_ context.Context, key string, timeout time.Duration) err
 		md.ttl = timeout
 		return nil
 	}
-	return cache.ErrKeyNotFound
+	return v1.ErrKeyNotFound
 }
 
 func (m *Cache) GetTTL(_ context.Context, key string) (time.Duration, error) {
@@ -137,7 +135,7 @@ func (m *Cache) GetTTL(_ context.Context, key string) (time.Duration, error) {
 	if md, ok := m.data[key]; ok {
 		return md.ttl, nil
 	}
-	return cache.NoneDuration, cache.ErrKeyNotFound
+	return v1.NoneDuration, v1.ErrKeyNotFound
 }
 
 func (m *Cache) Calc(ctx context.Context, key string, step int64) (int64, error) {
@@ -149,7 +147,7 @@ func (m *Cache) Calc(ctx context.Context, key string, step int64) (int64, error)
 		return val, nil
 	}
 
-	if !errors.Is(err, cache.ErrKeyNotFound) {
+	if !errors.Is(err, v1.ErrKeyNotFound) {
 		return 0, err
 	}
 
@@ -159,7 +157,7 @@ func (m *Cache) Calc(ctx context.Context, key string, step int64) (int64, error)
 	m.data[key] = &MemoryData{
 		val:        val,
 		createTime: time.Now(),
-		ttl:        cache.NoneDuration,
+		ttl:        v1.NoneDuration,
 	}
 
 	return val, nil

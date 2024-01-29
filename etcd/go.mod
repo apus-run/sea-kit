@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/etcd
 
-go 1.19
+go 1.21
 
 require go.etcd.io/etcd/client/pkg/v3 v3.5.9
 

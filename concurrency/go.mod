@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/concurrency
 
-go 1.19
+go 1.21
 
 require (
 	github.com/apus-run/sea-kit/utils v0.0.0-20231001150819-d763b9103c82
@@ -46,4 +46,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/apus-run/sea-kit/utils v0.0.0-20231001150819-d763b9103c82 => ../utils
+replace (
+  github.com/apus-run/sea-kit/utils  => ../utils
+  github.com/apus-run/sea-kit/lang  => ../lang
+)

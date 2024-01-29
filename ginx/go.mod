@@ -1,11 +1,10 @@
 module github.com/apus-run/sea-kit/ginx
 
-go 1.19
+go 1.21
 
 require (
 	github.com/apus-run/sea-kit/jwtx v0.0.0-20230908142142-a6b719f02c24
-	github.com/apus-run/sea-kit/ratelimit_bbr v0.0.0-20230920075144-d10228b97f01
-	github.com/apus-run/sea-kit/ratelimit_redis v0.0.0-20230929051753-6f988327bc8a
+	github.com/apus-run/sea-kit/ratelimit v0.0.0-00010101000000-000000000000
 	github.com/apus-run/sea-kit/utils v0.0.0-00010101000000-000000000000
 	github.com/gavv/httpexpect/v2 v2.16.0
 	github.com/gin-gonic/gin v1.9.1
@@ -30,6 +29,7 @@ require (
 	github.com/TylerBrock/colorjson v0.0.0-20200706003622-8a50f05110d2 // indirect
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
+	github.com/apus-run/sea-kit/algo v0.0.0-20240128090029-73c1b57ba004 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -54,6 +54,7 @@ require (
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
+	github.com/lithammer/shortuuid/v4 v4.0.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
@@ -61,6 +62,7 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/power-devops/perfstat v0.0.0-20210106213030-5aafc221ea8c // indirect
@@ -87,6 +89,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.19.0 // indirect
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
+	golang.org/x/exp v0.0.0-20230810033253-352e893a4cad // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
@@ -98,7 +101,7 @@ require (
 )
 
 replace (
-	github.com/apus-run/sea-kit/utils => ../utils
 	github.com/apus-run/sea-kit/ratelimit => ../ratelimit
+	github.com/apus-run/sea-kit/utils => ../utils
 	github.com/ugorji/go => github.com/ugorji/go v1.2.11
 )

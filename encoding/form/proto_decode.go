@@ -22,7 +22,7 @@ import (
 
 const fieldSeparater = "."
 
-var errInvalidFormatMapKey = errors.New("invalid formatting for map key")
+var errInvalidFormatMapKey = errors.New("invalid formatting for safemap key")
 
 // DecodeValues decode url value into proto message.
 func DecodeValues(msg proto.Message, values url.Values) error {
@@ -92,7 +92,7 @@ func getFieldDescriptor(v protoreflect.Message, fieldName string) protoreflect.F
 		case len(fieldName) > 2 && strings.HasSuffix(fieldName, "[]"):
 			fd = getDescriptorByFieldAndName(fields, strings.TrimSuffix(fieldName, "[]"))
 		default:
-			// If the type is map, you get the string "map[kratos]", where "map" is a field of proto and "kratos" is a key of map
+			// If the type is safemap, you get the string "safemap[kratos]", where "safemap" is a field of proto and "kratos" is a key of safemap
 			// Use symbol . for separating fields/structs. (eg. structfield.field)
 			// ref: https://github.com/go-playground/form
 			field, _, err := parseURLQueryMapKey(fieldName)
@@ -148,11 +148,11 @@ func populateMapField(fd protoreflect.FieldDescriptor, mp protoreflect.Map, fiel
 	}
 	key, err := parseField(fd.MapKey(), keyName)
 	if err != nil {
-		return fmt.Errorf("parsing map key %q: %w", fd.FullName().Name(), err)
+		return fmt.Errorf("parsing safemap key %q: %w", fd.FullName().Name(), err)
 	}
 	value, err := parseField(fd.MapValue(), values[vKey])
 	if err != nil {
-		return fmt.Errorf("parsing map value %q: %w", fd.FullName().Name(), err)
+		return fmt.Errorf("parsing safemap value %q: %w", fd.FullName().Name(), err)
 	}
 	mp.Set(key.MapKey(), value)
 	return nil
@@ -354,8 +354,8 @@ func isASCIIUpper(c byte) bool {
 	return 'A' <= c && c <= 'Z'
 }
 
-// parseURLQueryMapKey parse the url.Values the field name and key name of the value map type key
-// for example: convert "map[key]" to "map" and "key"
+// parseURLQueryMapKey parse the url.Values the field name and key name of the value safemap type key
+// for example: convert "safemap[key]" to "safemap" and "key"
 func parseURLQueryMapKey(key string) (string, string, error) {
 	var (
 		startIndex = strings.IndexByte(key, '[')

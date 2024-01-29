@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"log"
 	"net"
 	"net/http/httptest"
@@ -13,6 +12,8 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"gorm.io/gorm"
 
 	pkggrpc "google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

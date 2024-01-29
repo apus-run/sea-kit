@@ -2,11 +2,12 @@ package redis
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"testing"
-	"time"
 
 	ratelimit "github.com/apus-run/sea-kit/ratelimit/redis"
 	"github.com/apus-run/sea-kit/zlog"

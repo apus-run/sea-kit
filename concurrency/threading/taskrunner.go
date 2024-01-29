@@ -1,8 +1,7 @@
 package threading
 
 import (
-	"github.com/zeromicro/go-zero/core/lang"
-	"github.com/zeromicro/go-zero/core/rescue"
+	"github.com/apus-run/sea-kit/lang"
 )
 
 // A TaskRunner is used to control the concurrency of goroutines.
@@ -22,7 +21,7 @@ func (rp *TaskRunner) Schedule(task func()) {
 	rp.limitChan <- lang.Placeholder
 
 	go func() {
-		defer rescue.Recover(func() {
+		defer Recover(func() {
 			<-rp.limitChan
 		})
 

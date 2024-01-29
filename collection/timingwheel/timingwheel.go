@@ -1,4 +1,4 @@
-package collection
+package timingwheel
 
 import (
 	"container/list"
@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/zeromicro/go-zero/core/lang"
-	"github.com/zeromicro/go-zero/core/threading"
-	"github.com/zeromicro/go-zero/core/timex"
+	"github.com/apus-run/sea-kit/collection/safemap"
+	"github.com/apus-run/sea-kit/concurrency/threading"
+	"github.com/apus-run/sea-kit/lang"
+	"github.com/apus-run/sea-kit/timex"
 )
 
 const drainWorkers = 8
@@ -27,7 +28,7 @@ type (
 		interval      time.Duration
 		ticker        timex.Ticker
 		slots         []*list.List
-		timers        *SafeMap
+		timers        *safemap.SafeMap
 		tickedPos     int
 		numSlots      int
 		execute       Execute
@@ -79,7 +80,7 @@ func NewTimingWheelWithTicker(interval time.Duration, numSlots int, execute Exec
 		interval:      interval,
 		ticker:        ticker,
 		slots:         make([]*list.List, numSlots),
-		timers:        NewSafeMap(),
+		timers:        safemap.NewSafeMap(),
 		tickedPos:     numSlots - 1, // at previous virtual circle
 		execute:       execute,
 		numSlots:      numSlots,

@@ -3,8 +3,8 @@ package mathx
 import (
 	"testing"
 
+	"github.com/apus-run/sea-kit/stringx"
 	"github.com/stretchr/testify/assert"
-	"github.com/zeromicro/go-zero/core/stringx"
 )
 
 func TestMaxInt(t *testing.T) {

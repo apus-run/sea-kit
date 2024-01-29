@@ -3,7 +3,7 @@ package syncx
 import (
 	"errors"
 
-	"github.com/zeromicro/go-zero/core/lang"
+	"github.com/apus-run/sea-kit/lang"
 )
 
 // ErrLimitReturn indicates that the more than borrowed elements were returned.

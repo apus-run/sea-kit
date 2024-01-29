@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 
-	"github.com/apus-run/sea-kit/ginx/internal/mocks"
+	redismocks "github.com/apus-run/sea-kit/ginx/internal/mocks"
 )
 
 func TestRedisActiveLimit_Build(t *testing.T) {

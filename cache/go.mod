@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/cache
 
-go 1.20
+go 1.21
 
 require (
 	github.com/apus-run/sea-kit/utils v0.0.0-20231215063945-2c0bdf2b5759
@@ -28,7 +28,6 @@ require (
 )
 
 replace (
-	github.com/apus-run/sea-kit/utils latest => ../utils
-	github.com/apus-run/sea-kit/list latest => ../list
-    github.com/apus-run/sea-kit/set latest => ../set
+	github.com/apus-run/sea-kit/utils => ../utils
+	github.com/apus-run/sea-kit/collection  => ../collection
 )

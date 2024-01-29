@@ -23,7 +23,7 @@ func (b *Builder) Build() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				// log.Println("error: ", err)
-				// log.Println("exec panic error", map[string]interface{}{
+				// log.Println("exec panic error", safemap[string]interface{}{
 				// 	"trace_error": string(debug.Stack()),
 				// })
 

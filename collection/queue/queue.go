@@ -1,4 +1,4 @@
-package concurrency
+package queue
 
 /*
 DESCRIPTION
@@ -88,4 +88,3 @@ func (q *Queue) Len() int {
 
 	return len
 }
-

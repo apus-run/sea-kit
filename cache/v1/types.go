@@ -2,7 +2,6 @@ package cache
 
 import (
 	"context"
-	"errors"
 	"time"
 )
 
@@ -10,13 +9,7 @@ const (
 	NoneDuration = time.Duration(-1)
 )
 
-var (
-	ErrCacheExpired = errors.New("cache expired")
-	ErrKeyNotFound  = errors.New("key not found")
-	ErrTypeNotOk    = errors.New("val type not ok")
-)
-
-// Cache is the top-level cache interface
+// Cache is the top-level cool_cache interface
 type Cache interface {
 	// Get 获取某个key对应的值
 	Get(ctx context.Context, key string) (string, error)

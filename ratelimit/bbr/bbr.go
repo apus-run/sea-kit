@@ -62,7 +62,7 @@ type Stat struct {
 	MaxPass     int64
 }
 
-// counterCache is used to cache maxPASS and minRt result.
+// counterCache is used to cool_cache maxPASS and minRt result.
 // Value of current bucket is not counted in real time.
 // Cache time is equal to a bucket duration.
 type counterCache struct {

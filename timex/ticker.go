@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/zeromicro/go-zero/core/lang"
+	"github.com/apus-run/sea-kit/lang"
 )
 
 // errTimeout indicates a timeout.

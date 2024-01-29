@@ -1,10 +1,11 @@
 package mongo
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io"
 	"strings"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"

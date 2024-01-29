@@ -3,9 +3,10 @@ package log
 import (
 	"context"
 	"errors"
+	"testing"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"testing"
 
 	"github.com/apus-run/sea-kit/zlog"
 	"github.com/stretchr/testify/assert"

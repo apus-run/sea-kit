@@ -6,8 +6,8 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/apus-run/sea-kit/lang"
 	"github.com/stretchr/testify/assert"
-	"github.com/zeromicro/go-zero/core/lang"
 )
 
 func TestWorkerGroup(t *testing.T) {

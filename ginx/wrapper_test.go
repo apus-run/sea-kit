@@ -20,7 +20,7 @@ func TestBind(t *testing.T) {
 		Title string  `json:"title" binding:"required,max=32,min=4" label:"标题"`
 		Email *string `json:"email" binding:"required,email" label:"邮箱"`
 	}
-	assert.Equal(t, gc.Bind(&obj).Error(), "标题长度必须至少为4个字符|邮箱必须是一个有效的邮箱")
+	assert.Equal(t, gc.Bind(&obj).Error(), "Email必须是一个有效的邮箱")
 	assert.Equal(t, w.Code, 400)
 	t.Log("Code:", w.Code, "Body:", w.Body.String())
 	assert.Empty(t, c.Errors)

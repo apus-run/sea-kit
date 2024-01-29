@@ -9,10 +9,10 @@ import (
 
 	"github.com/hashicorp/golang-lru/v2/simplelru"
 
-	cache "github.com/apus-run/sea-kit/cache/v2"
+	"github.com/apus-run/sea-kit/cache/v2"
 
-	"github.com/apus-run/sea-kit/list"
-	"github.com/apus-run/sea-kit/set"
+	"github.com/apus-run/sea-kit/collection/list"
+	"github.com/apus-run/sea-kit/collection/set"
 )
 
 var (

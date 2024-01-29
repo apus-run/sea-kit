@@ -11,7 +11,7 @@
 //	cb := func(taskID,data any) {
 //	  // do something
 //	}
-//	data := map[string]int{"uid": 100, "age": 16},
+//	data := safemap[string]int{"uid": 100, "age": 16},
 //	tw.AddTask(data, time.Minute,cb)
 //	// key and value
 //	tw.AddTimer("key","value",time.Minute,cb)

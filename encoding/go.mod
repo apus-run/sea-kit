@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/encoding
 
-go 1.19
+go 1.21
 
 require (
 	github.com/bytedance/sonic v1.10.2

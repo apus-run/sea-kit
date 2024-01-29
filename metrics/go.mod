@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/metrics
 
-go 1.19
+go 1.21
 
 replace github.com/apus-run/sea-kit/prof => ../prof
 

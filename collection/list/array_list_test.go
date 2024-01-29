@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/apus-run/sea-kit/list/internal/errs"
+	"github.com/apus-run/sea-kit/collection/list/internal/errs"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,4 +1,4 @@
-package collection
+package timingwheel
 
 import (
 	"sort"
@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/apus-run/sea-kit/lang"
+	"github.com/apus-run/sea-kit/stringx"
+	"github.com/apus-run/sea-kit/syncx"
+	"github.com/apus-run/sea-kit/timex"
 	"github.com/stretchr/testify/assert"
-	"github.com/zeromicro/go-zero/core/lang"
-	"github.com/zeromicro/go-zero/core/stringx"
-	"github.com/zeromicro/go-zero/core/syncx"
-	"github.com/zeromicro/go-zero/core/timex"
 )
 
 const (

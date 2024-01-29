@@ -1,6 +1,6 @@
 package slice
 
-import "github.com/apus-run/sea-kit/list/internal/errs"
+import "github.com/apus-run/sea-kit/collection/list/internal/errs"
 
 func Add[T any](src []T, element T, index int) ([]T, error) {
 	length := len(src)

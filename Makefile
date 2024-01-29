@@ -31,3 +31,21 @@ release:
 	trap - ERR;
 
 .PHONY: release
+
+
+.PHONY: lint
+lint:
+	golangci-lint run
+
+.PHONY: fmt
+fmt:
+	@sh ./fmt.sh
+
+.PHONY: tidy
+tidy:
+	@go mod tidy -v
+
+.PHONY: check
+check:
+	@$(MAKE) --no-print-directory fmt
+	@$(MAKE) --no-print-directory tidy

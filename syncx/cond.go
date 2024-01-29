@@ -3,8 +3,8 @@ package syncx
 import (
 	"time"
 
-	"github.com/zeromicro/go-zero/core/lang"
-	"github.com/zeromicro/go-zero/core/timex"
+	"github.com/apus-run/sea-kit/lang"
+	"github.com/apus-run/sea-kit/timex"
 )
 
 // A Cond is used to wait for conditions.

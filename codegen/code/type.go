@@ -83,7 +83,7 @@ type TypeInfo struct {
 	Ident    string
 	PkgPath  string // import path.
 	PkgName  string // local package name.
-	Nillable bool   // slices,map or pointers.
+	Nillable bool   // slices,safemap or pointers.
 	RType    *RType
 }
 

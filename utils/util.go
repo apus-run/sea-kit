@@ -178,8 +178,8 @@ func RepeatJoin(str, sep string, n int) string {
 	return str + strings.Repeat(sep+str, n-1)
 }
 
-// AddParams adds the second instance of map[string]string to the first and
-// returns the first map.
+// AddParams adds the second instance of safemap[string]string to the first and
+// returns the first safemap.
 func AddParams(a map[string]string, b ...map[string]string) map[string]string {
 	if a == nil {
 		a = make(map[string]string, len(b))
@@ -192,8 +192,8 @@ func AddParams(a map[string]string, b ...map[string]string) map[string]string {
 	return a
 }
 
-// CopyStringMap returns a copy of the provided map[string]string such that
-// reflect.DeepEqual returns true for the given map and the returned map. In
+// CopyStringMap returns a copy of the provided safemap[string]string such that
+// reflect.DeepEqual returns true for the given safemap and the returned safemap. In
 // particular, preserves nil input.
 func CopyStringMap(m map[string]string) map[string]string {
 	if m == nil {

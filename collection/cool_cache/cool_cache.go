@@ -27,7 +27,7 @@ type (
 	// CacheOption defines the method to customize a Cache.
 	CacheOption func(cache *Cache)
 
-	// A Cache object is an in-memory cache.
+	// A Cache object is an in-memory cool_cache.
 	Cache struct {
 		name           string
 		lock           sync.Mutex
@@ -130,7 +130,7 @@ func (c *Cache) Take(key string, fetch func() (any, error)) (any, error) {
 	var fresh bool
 	val, err := c.barrier.Do(key, func() (any, error) {
 		// because O(1) on safemap search in memory, and fetch is an IO query
-		// so we do double check, cache might be taken by another call
+		// so we do double check, cool_cache might be taken by another call
 		if val, ok := c.doGet(key); ok {
 			return val, nil
 		}
@@ -301,7 +301,7 @@ func (cs *cacheStat) statLoop() {
 			continue
 		}
 		percent := 100 * float32(hit) / float32(total)
-		log.Printf("cache(%s) - qpm: %d, hit_ratio: %.1f%%, elements: %d, hit: %d, miss: %d",
+		log.Printf("cool_cache(%s) - qpm: %d, hit_ratio: %.1f%%, elements: %d, hit: %d, miss: %d",
 			cs.name, total, percent, cs.sizeCallback(), hit, miss)
 	}
 }

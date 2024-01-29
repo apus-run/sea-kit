@@ -14,8 +14,6 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/apus-run/sea-kit/cache"
 )
 
 type Bar struct {
@@ -57,7 +55,7 @@ func TestCache_All(t *testing.T) {
 			err = mc.Del(ctx, "foo")
 			So(err, ShouldBeNil)
 			val, err = mc.Get(ctx, "foo")
-			So(err, ShouldEqual, cache.ErrKeyNotFound)
+			So(err, ShouldEqual, v1.ErrKeyNotFound)
 		})
 
 		Convey("obj get set", func() {
@@ -187,7 +185,7 @@ func TestCache_e2e_Get(t *testing.T) {
 			key:     "name",
 			before:  func(ctx context.Context, t *testing.T) {},
 			after:   func(ctx context.Context, t *testing.T) {},
-			wantErr: cache.ErrKeyNotFound,
+			wantErr: v1.ErrKeyNotFound,
 		},
 	}
 

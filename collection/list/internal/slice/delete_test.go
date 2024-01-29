@@ -3,8 +3,9 @@ package slice
 import (
 	"testing"
 
-	"github.com/apus-run/sea-kit/list/internal/errs"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/apus-run/sea-kit/collection/list/internal/errs"
 )
 
 func TestDelete(t *testing.T) {

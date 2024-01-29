@@ -63,4 +63,3 @@ func (c *Cursor) Err() error {
 	}
 	return c.cursor.Err()
 }
-

@@ -80,37 +80,37 @@ func TestPopulateRepeatedField(t *testing.T) {
 }
 
 func TestPopulateMapField(t *testing.T) {
-	query, err := url.ParseQuery("map%5Bkratos%5D=https://go-kratos.dev/")
+	query, err := url.ParseQuery("safemap%5Bkratos%5D=https://go-kratos.dev/")
 	if err != nil {
 		t.Fatal(err)
 	}
 	comp := &complex.Complex{}
-	field := getFieldDescriptor(comp.ProtoReflect(), "map")
-	// Fill the comp map field with the url query values
-	err = populateMapField(field, comp.ProtoReflect().Mutable(field).Map(), []string{"map[kratos]"}, query["map[kratos]"])
+	field := getFieldDescriptor(comp.ProtoReflect(), "safemap")
+	// Fill the comp safemap field with the url query values
+	err = populateMapField(field, comp.ProtoReflect().Mutable(field).Map(), []string{"safemap[kratos]"}, query["safemap[kratos]"])
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Get the comp map field value
-	if query["map[kratos]"][0] != comp.Map["kratos"] {
-		t.Errorf("want: %s, got: %s", query["map[kratos]"], comp.Map["kratos"])
+	// Get the comp safemap field value
+	if query["safemap[kratos]"][0] != comp.Map["kratos"] {
+		t.Errorf("want: %s, got: %s", query["safemap[kratos]"], comp.Map["kratos"])
 	}
 }
 
 func TestPopulateMapSepField(t *testing.T) {
-	query, err := url.ParseQuery("map.name=kratos")
+	query, err := url.ParseQuery("safemap.name=kratos")
 	if err != nil {
 		t.Fatal(err)
 	}
 	comp := &complex.Complex{}
-	field := getFieldDescriptor(comp.ProtoReflect(), "map")
-	// Fill the comp map field with the url query values
-	err = populateMapField(field, comp.ProtoReflect().Mutable(field).Map(), []string{"map.name"}, query["map.name"])
+	field := getFieldDescriptor(comp.ProtoReflect(), "safemap")
+	// Fill the comp safemap field with the url query values
+	err = populateMapField(field, comp.ProtoReflect().Mutable(field).Map(), []string{"safemap.name"}, query["safemap.name"])
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Get the comp map field value
-	if query["map.name"][0] != comp.Map["name"] {
+	// Get the comp safemap field value
+	if query["safemap.name"][0] != comp.Map["name"] {
 		t.Errorf("want: %s, got: %s", query, comp.Map)
 	}
 }
@@ -242,10 +242,10 @@ func TestParseURLQueryMapKey(t *testing.T) {
 		err       error
 	}{
 		{
-			fieldName: "map[kratos]", field: "map", fieldKey: "kratos", err: nil,
+			fieldName: "safemap[kratos]", field: "safemap", fieldKey: "kratos", err: nil,
 		},
 		{
-			fieldName: "map[]", field: "map", fieldKey: "", err: nil,
+			fieldName: "safemap[]", field: "safemap", fieldKey: "", err: nil,
 		},
 		{
 			fieldName: "", field: "", fieldKey: "", err: errInvalidFormatMapKey,
@@ -254,16 +254,16 @@ func TestParseURLQueryMapKey(t *testing.T) {
 			fieldName: "[[]", field: "", fieldKey: "", err: errInvalidFormatMapKey,
 		},
 		{
-			fieldName: "map[kratos]=", field: "", fieldKey: "", err: errInvalidFormatMapKey,
+			fieldName: "safemap[kratos]=", field: "", fieldKey: "", err: errInvalidFormatMapKey,
 		},
 		{
 			fieldName: "[kratos]", field: "", fieldKey: "", err: errInvalidFormatMapKey,
 		},
 		{
-			fieldName: "map", field: "", fieldKey: "", err: errInvalidFormatMapKey,
+			fieldName: "safemap", field: "", fieldKey: "", err: errInvalidFormatMapKey,
 		},
 		{
-			fieldName: "map[", field: "", fieldKey: "", err: errInvalidFormatMapKey,
+			fieldName: "safemap[", field: "", fieldKey: "", err: errInvalidFormatMapKey,
 		},
 		{
 			fieldName: "]kratos[", field: "", fieldKey: "", err: errInvalidFormatMapKey,

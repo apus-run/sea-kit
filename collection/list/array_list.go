@@ -1,8 +1,8 @@
 package list
 
 import (
-	"github.com/apus-run/sea-kit/list/internal/errs"
-	"github.com/apus-run/sea-kit/list/internal/slice"
+	"github.com/apus-run/sea-kit/collection/list/internal/errs"
+	"github.com/apus-run/sea-kit/collection/list/internal/slice"
 )
 
 var (

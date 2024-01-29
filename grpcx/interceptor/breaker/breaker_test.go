@@ -2,9 +2,10 @@ package breaker
 
 import (
 	"context"
+	"testing"
+
 	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker"
 	"github.com/apus-run/sea-kit/grpcx/interceptor/breaker/circuitbreaker/sre"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"

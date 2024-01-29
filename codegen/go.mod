@@ -1,6 +1,6 @@
 module github.com/apus-run/sea-kit/codegen
 
-go 1.19
+go 1.21
 
 require (
 	entgo.io/ent v0.12.4

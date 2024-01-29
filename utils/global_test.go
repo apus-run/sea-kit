@@ -22,7 +22,7 @@ const (
 	PostgreSQL
 )
 
-// DriverMap is the map of [driver, name]
+// DriverMap is the safemap of [driver, name]
 var DriverMap = map[DriverType]string{
 	MySQL:      "mysql",
 	Redis:      "redis",
@@ -31,7 +31,7 @@ var DriverMap = map[DriverType]string{
 	Unknown:    "unknown",
 }
 
-// DriverTypeMap is the map of driver [name, driver]
+// DriverTypeMap is the safemap of driver [name, driver]
 var DriverTypeMap = ReverseMap(DriverMap)
 
 // String convert the DriverType to string

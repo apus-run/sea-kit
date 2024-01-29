@@ -5,8 +5,6 @@ import (
 	"context"
 	"runtime"
 	"strconv"
-
-	"github.com/zeromicro/go-zero/core/rescue"
 )
 
 // GoSafe runs the given fn using another goroutine, recovers if fn panics.
@@ -33,14 +31,14 @@ func RoutineId() uint64 {
 
 // RunSafe runs the given fn, recovers if fn panics.
 func RunSafe(fn func()) {
-	defer rescue.Recover()
+	defer Recover()
 
 	fn()
 }
 
 // RunSafeCtx runs the given fn, recovers if fn panics with ctx.
 func RunSafeCtx(ctx context.Context, fn func()) {
-	defer rescue.RecoverCtx(ctx)
+	defer RecoverCtx(ctx)
 
 	fn()
 }

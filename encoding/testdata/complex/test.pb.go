@@ -7,14 +7,15 @@
 package complex
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	duration "github.com/golang/protobuf/ptypes/duration"
 	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	wrappers "github.com/golang/protobuf/ptypes/wrappers"
 	field_mask "google.golang.org/genproto/protobuf/field_mask"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -101,7 +102,7 @@ type Complex struct {
 	Bool      *wrappers.BoolValue   `protobuf:"bytes,22,opt,name=bool,proto3" json:"bool,omitempty"`
 	String_   *wrappers.StringValue `protobuf:"bytes,23,opt,name=string,proto3" json:"string,omitempty"`
 	Bytes     *wrappers.BytesValue  `protobuf:"bytes,24,opt,name=bytes,proto3" json:"bytes,omitempty"`
-	Map       map[string]string     `protobuf:"bytes,25,rep,name=map,proto3" json:"map,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Map       map[string]string     `protobuf:"bytes,25,rep,name=safemap,proto3" json:"safemap,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 func (x *Complex) Reset() {
@@ -489,7 +490,7 @@ var file_test_proto_depIdxs = []int32{
 	13, // 11: complex.Complex.bool:type_name -> google.protobuf.BoolValue
 	14, // 12: complex.Complex.string:type_name -> google.protobuf.StringValue
 	15, // 13: complex.Complex.bytes:type_name -> google.protobuf.BytesValue
-	3,  // 14: complex.Complex.map:type_name -> complex.Complex.MapEntry
+	3,  // 14: complex.Complex.safemap:type_name -> complex.Complex.MapEntry
 	15, // [15:15] is the sub-list for method output_type
 	15, // [15:15] is the sub-list for method input_type
 	15, // [15:15] is the sub-list for extension type_name

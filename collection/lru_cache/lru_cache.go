@@ -14,8 +14,8 @@ type LRUCache struct {
 }
 
 type Pair struct {
-	key   interface{} // cache key
-	value interface{} // cache value
+	key   interface{} // cool_cache key
+	value interface{} // cool_cache value
 }
 
 // NewLRUCache returns a new, empty LRUCache
@@ -27,7 +27,7 @@ func NewLRUCache(capacity int) *LRUCache {
 	return c
 }
 
-// Get get cached value from LRU cache
+// Get get cached value from LRU cool_cache
 // The second return value indicates whether key is found or not, true if found, false if not
 func (c *LRUCache) Get(key interface{}) (interface{}, bool) {
 	c.lock.Lock()
@@ -39,11 +39,11 @@ func (c *LRUCache) Get(key interface{}) (interface{}, bool) {
 	return nil, false
 }
 
-// Add adds a key-value pair to LRU cache, true if eviction occurs, false if not
+// Add adds a key-value pair to LRU cool_cache, true if eviction occurs, false if not
 func (c *LRUCache) Add(key interface{}, value interface{}) bool {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	// update item if found in cache
+	// update item if found in cool_cache
 	if elem, ok := c.cache[key]; ok {
 		c.lru.MoveToFront(elem) // update lru list
 		elem.Value.(*Pair).value = value
@@ -71,7 +71,7 @@ func (c *LRUCache) evict() {
 	delete(c.cache, elem.Value.(*Pair).key)
 }
 
-// Del deletes cached value from cache
+// Del deletes cached value from cool_cache
 func (c *LRUCache) Del(key interface{}) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -81,14 +81,14 @@ func (c *LRUCache) Del(key interface{}) {
 	}
 }
 
-// Len returns number of items in cache
+// Len returns number of items in cool_cache
 func (c *LRUCache) Len() int {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	return c.lru.Len()
 }
 
-// Keys returns keys of items in cache
+// Keys returns keys of items in cool_cache
 func (c *LRUCache) Keys() []interface{} {
 	var keyList []interface{}
 	c.lock.Lock()
@@ -99,7 +99,7 @@ func (c *LRUCache) Keys() []interface{} {
 	return keyList
 }
 
-// EnlargeCapacity enlarges the capacity of cache
+// EnlargeCapacity enlarges the capacity of cool_cache
 func (c *LRUCache) EnlargeCapacity(newCapacity int) error {
 	// lock
 	c.lock.Lock()

@@ -3,12 +3,12 @@ package list
 import (
 	"errors"
 	"fmt"
-	"github.com/apus-run/sea-kit/list/internal"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apus-run/sea-kit/list/internal/errs"
+	"github.com/apus-run/sea-kit/collection/list/internal"
+	"github.com/apus-run/sea-kit/collection/list/internal/errs"
 )
 
 func TestNewSkipList(t *testing.T) {
@@ -83,10 +83,10 @@ func TestNewSkipListFromSlice(t *testing.T) {
 
 func TestSkipList_DeleteElement(t *testing.T) {
 	testCases := []struct {
-		name     string
-		skiplist *SkipList[int]
-		compare  internal.Comparator[int]
-		value    int
+		name      string
+		skiplist  *SkipList[int]
+		compare   internal.Comparator[int]
+		value     int
 		wantSlice []int
 		wantSize  int
 		wantRes   bool
@@ -168,10 +168,10 @@ func TestSkipList_DeleteElement(t *testing.T) {
 
 func TestSkipList_Insert(t *testing.T) {
 	testCases := []struct {
-		name     string
-		skiplist *SkipList[int]
-		compare  internal.Comparator[int]
-		value    int
+		name      string
+		skiplist  *SkipList[int]
+		compare   internal.Comparator[int]
+		value     int
 		wantSlice []int
 		wantSize  int
 	}{
@@ -212,10 +212,10 @@ func TestSkipList_Insert(t *testing.T) {
 
 func TestSkipList_Search(t *testing.T) {
 	testCases := []struct {
-		name     string
-		skiplist *SkipList[int]
-		compare  internal.Comparator[int]
-		value    int
+		name      string
+		skiplist  *SkipList[int]
+		compare   internal.Comparator[int]
+		value     int
 		wantSlice []int
 		wantSize  int
 		wantRes   bool
@@ -347,10 +347,10 @@ func TestSkipList_Peek(t *testing.T) {
 
 func TestSkipList_Get(t *testing.T) {
 	testCases := []struct {
-		name     string
-		skiplist *SkipList[int]
-		compare  internal.Comparator[int]
-		index    int
+		name      string
+		skiplist  *SkipList[int]
+		compare   internal.Comparator[int]
+		index     int
 		wantSlice []int
 		wantVal   int
 		wantErr   error

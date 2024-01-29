@@ -60,14 +60,14 @@ func TestParseGoType(t *testing.T) {
 			wantErr: assert.NoError,
 		},
 		{
-			name: "string map",
+			name: "string safemap",
 			args: args{
 				typ: make(map[string]string),
 			},
 			want: &RType{
 				Name:    "",
 				Kind:    reflect.Map,
-				Ident:   "map[string]string",
+				Ident:   "safemap[string]string",
 				PkgPath: "",
 			},
 			wantErr: assert.NoError,

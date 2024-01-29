@@ -1,8 +1,8 @@
 package list
 
 import (
-	"github.com/apus-run/sea-kit/list/internal"
-	"github.com/apus-run/sea-kit/list/internal/list"
+	"github.com/apus-run/sea-kit/collection/list/internal"
+	"github.com/apus-run/sea-kit/collection/list/internal/list"
 )
 
 func NewSkipList[T any](compare internal.Comparator[T]) *SkipList[T] {

@@ -130,7 +130,7 @@ func convertMap(src interface{}) interface{} {
 	}
 }
 
-// readValue read Value in given map[string]interface{}
+// readValue read Value in given safemap[string]interface{}
 // by the given path, will return false if not found.
 func readValue(values map[string]interface{}, path string) (Value, bool) {
 	var (

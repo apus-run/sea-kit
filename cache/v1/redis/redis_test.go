@@ -5,12 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"github.com/apus-run/sea-kit/cache/v1/mocks"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-
-	"github.com/apus-run/sea-kit/cache"
-	"github.com/apus-run/sea-kit/cache/mocks"
 )
 
 func TestCache_Set(t *testing.T) {
@@ -108,7 +107,7 @@ func TestCache_Get(t *testing.T) {
 			},
 			key: "name",
 
-			wantErr: cache.ErrKeyNotFound,
+			wantErr: v1.ErrKeyNotFound,
 		},
 	}
 	for _, tc := range testCases {

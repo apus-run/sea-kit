@@ -2,11 +2,12 @@ package mongo
 
 import (
 	"context"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 )

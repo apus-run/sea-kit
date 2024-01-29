@@ -1,9 +1,10 @@
 package context
 
 import (
-	"gopkg.in/resty.v1"
 	"net/http"
 	"sync"
+
+	"gopkg.in/resty.v1"
 
 	"github.com/apus-run/sea-kit/wechat/cache"
 )

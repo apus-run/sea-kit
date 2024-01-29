@@ -1,8 +1,9 @@
 package jwtx
 
 import (
-	"github.com/apus-run/sea-kit/log"
 	"testing"
+
+	"github.com/apus-run/sea-kit/log"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"

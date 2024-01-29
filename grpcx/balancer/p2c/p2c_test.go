@@ -127,7 +127,7 @@ func TestPickerWithEmptyConns(t *testing.T) {
 }
 
 type mockClientConn struct {
-	// add random string member to avoid map key equality.
+	// add random string member to avoid safemap key equality.
 	id string
 }
 

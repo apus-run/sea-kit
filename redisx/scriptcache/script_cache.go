@@ -12,10 +12,10 @@ var (
 )
 
 type (
-	// Map is an alias of map[string]string.
+	// Map is an alias of safemap[string]string.
 	Map map[string]string
 
-	// A ScriptCache is a cache that stores a script with its sha key.
+	// A ScriptCache is a cool_cache that stores a script with its sha key.
 	ScriptCache struct {
 		atomic.Value
 	}

@@ -2,10 +2,11 @@ package client
 
 import (
 	"context"
-	"google.golang.org/grpc"
 	"reflect"
 	"testing"
 	"time"
+
+	"google.golang.org/grpc"
 )
 
 func TestDial(t *testing.T) {

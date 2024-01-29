@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apus-run/sea-kit/list/internal"
+	"github.com/apus-run/sea-kit/collection/list/internal"
 )
 
 func TestNewSkipList(t *testing.T) {
@@ -71,9 +71,9 @@ func TestSkipList_Cap(t *testing.T) {
 
 func TestSkipList_DeleteElement(t *testing.T) {
 	testCases := []struct {
-		name    string
-		compare internal.Comparator[int]
-		value   int
+		name     string
+		compare  internal.Comparator[int]
+		value    int
 		wantBool bool
 	}{
 		{
@@ -94,9 +94,9 @@ func TestSkipList_DeleteElement(t *testing.T) {
 
 func TestSkipList_Insert(t *testing.T) {
 	testCases := []struct {
-		name    string
-		compare internal.Comparator[int]
-		key     int
+		name      string
+		compare   internal.Comparator[int]
+		key       int
 		wantSlice []int
 	}{
 		{
@@ -137,9 +137,9 @@ func TestSkipList_Len(t *testing.T) {
 
 func TestSkipList_Search(t *testing.T) {
 	testCases := []struct {
-		name    string
-		compare internal.Comparator[int]
-		value   int
+		name     string
+		compare  internal.Comparator[int]
+		value    int
 		wantBool bool
 	}{
 		{
