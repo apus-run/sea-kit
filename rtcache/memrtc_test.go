@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestMemReadThroughCacheGetSunnyDay checks that we cool_cache the values after reading them
+// TestMemReadThroughCacheGetSunnyDay checks that we tiny_cache the values after reading them
 // from the passed in read-through function.
 func TestMemReadThroughCacheGetSunnyDay(t *testing.T) {
 
@@ -48,7 +48,7 @@ func TestMemReadThroughCacheGetSunnyDay(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, "betabeta", v)
 
-	// Make sure we cool_cache the calls after the first
+	// Make sure we tiny_cache the calls after the first
 	assert.Equal(t, map[string]int{
 		alpha: 1,
 		beta:  1,
@@ -91,7 +91,7 @@ func TestMemReadThroughCacheGetAllSunnyDay(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, []interface{}{"alphaalpha", "betabeta"}, v)
 
-	// Make sure we cool_cache the calls after the first
+	// Make sure we tiny_cache the calls after the first
 	assert.Equal(t, map[string]int{
 		alpha: 1,
 		beta:  1,
@@ -128,7 +128,7 @@ func TestMemReadThroughCacheGetAllPartial(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, []interface{}{"betabeta", "alphaalpha"}, v)
 
-	// Make sure we cool_cache the calls after the first
+	// Make sure we tiny_cache the calls after the first
 	assert.Equal(t, map[string]int{
 		alpha: 1,
 		beta:  1,

@@ -111,7 +111,7 @@ type UserRepo struct {
 }
 
 func NewUserRepo(path string) *UserRepo {
-	db, err := Connect("sqlite3", fmt.Sprintf("%v?cool_cache=shared&_busy_timeout=200", "file://"+path))
+	db, err := Connect("sqlite3", fmt.Sprintf("%v?tiny_cache=shared&_busy_timeout=200", "file://"+path))
 	if err != nil {
 		panic(err)
 	}

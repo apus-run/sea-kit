@@ -38,11 +38,11 @@ func TestCache_Set(t *testing.T) {
 			after: func(t *testing.T) {
 				result, ok := lru.Get("test")
 				assert.Equal(t, true, ok)
-				assert.Equal(t, "hello cool_cache", result.(string))
+				assert.Equal(t, "hello tiny_cache", result.(string))
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:        "test",
-			val:        "hello cool_cache",
+			val:        "hello tiny_cache",
 			expiration: time.Minute,
 		},
 	}
@@ -81,13 +81,13 @@ func TestCache_Get(t *testing.T) {
 		{
 			name: "get value",
 			before: func(t *testing.T) {
-				assert.Equal(t, false, lru.Add("test", "hello cool_cache"))
+				assert.Equal(t, false, lru.Add("test", "hello tiny_cache"))
 			},
 			after: func(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			wantVal: "hello cool_cache",
+			wantVal: "hello tiny_cache",
 		},
 		{
 			name:    "get value err",
@@ -139,14 +139,14 @@ func TestCache_SetNX(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     "hello cool_cache",
+			val:     "hello tiny_cache",
 			expire:  time.Minute,
 			wantVal: true,
 		},
 		{
 			name: "setnx value exist",
 			before: func(t *testing.T) {
-				assert.Equal(t, false, lru.Add("test", "hello cool_cache"))
+				assert.Equal(t, false, lru.Add("test", "hello tiny_cache"))
 			},
 			after: func(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
@@ -194,7 +194,7 @@ func TestCache_GetSet(t *testing.T) {
 		{
 			name: "getset value",
 			before: func(t *testing.T) {
-				assert.Equal(t, false, lru.Add("test", "hello cool_cache"))
+				assert.Equal(t, false, lru.Add("test", "hello tiny_cache"))
 			},
 			after: func(t *testing.T) {
 				result, ok := lru.Get("test")
@@ -204,7 +204,7 @@ func TestCache_GetSet(t *testing.T) {
 			},
 			key:     "test",
 			val:     "hello world",
-			wantVal: "hello cool_cache",
+			wantVal: "hello tiny_cache",
 		},
 		{
 			name:   "getset value not key error",
@@ -357,7 +357,7 @@ func TestCache_LPush(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello cool_cache"},
+			val:     []any{"hello tiny_cache"},
 			wantVal: 1,
 		},
 		{
@@ -367,14 +367,14 @@ func TestCache_LPush(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello cool_cache", "hello world"},
+			val:     []any{"hello tiny_cache", "hello world"},
 			wantVal: 2,
 		},
 		{
 			name: "lpush value exists",
 			before: func(t *testing.T) {
 				val := cache.Value{}
-				val.Value = "hello cool_cache"
+				val.Value = "hello tiny_cache"
 				l := &list.ConcurrentList[cache.Value]{
 					List: list.NewLinkedListOf[cache.Value]([]cache.Value{val}),
 				}
@@ -396,7 +396,7 @@ func TestCache_LPush(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello cool_cache"},
+			val:     []any{"hello tiny_cache"},
 			wantErr: errors.New("当前key不是list类型"),
 		},
 	}
@@ -437,7 +437,7 @@ func TestCache_LPop(t *testing.T) {
 			name: "lpop value",
 			before: func(t *testing.T) {
 				val := cache.Value{}
-				val.Value = "hello cool_cache"
+				val.Value = "hello tiny_cache"
 				l := &list.ConcurrentList[cache.Value]{
 					List: list.NewLinkedListOf[cache.Value]([]cache.Value{val}),
 				}
@@ -447,13 +447,13 @@ func TestCache_LPop(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			wantVal: "hello cool_cache",
+			wantVal: "hello tiny_cache",
 		},
 		{
 			name: "lpop value not nil",
 			before: func(t *testing.T) {
 				val := cache.Value{}
-				val.Value = "hello cool_cache"
+				val.Value = "hello tiny_cache"
 				val2 := cache.Value{}
 				val2.Value = "hello world"
 				l := &list.ConcurrentList[cache.Value]{
@@ -475,7 +475,7 @@ func TestCache_LPop(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			wantVal: "hello cool_cache",
+			wantVal: "hello tiny_cache",
 		},
 		{
 			name: "lpop value type error",
@@ -538,7 +538,7 @@ func TestCache_SAdd(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello cool_cache", "hello world"},
+			val:     []any{"hello tiny_cache", "hello world"},
 			wantVal: 2,
 		},
 		{
@@ -553,7 +553,7 @@ func TestCache_SAdd(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello cool_cache"},
+			val:     []any{"hello tiny_cache"},
 			wantVal: 2,
 		},
 		{
@@ -610,7 +610,7 @@ func TestCache_SRem(t *testing.T) {
 				s := set.NewMapSet[any](8)
 
 				s.Add("hello world")
-				s.Add("hello cool_cache")
+				s.Add("hello tiny_cache")
 
 				assert.Equal(t, false, lru.Add("test", s))
 			},
@@ -633,7 +633,7 @@ func TestCache_SRem(t *testing.T) {
 				assert.Equal(t, true, lru.Remove("test"))
 			},
 			key:     "test",
-			val:     []any{"hello cool_cache"},
+			val:     []any{"hello tiny_cache"},
 			wantVal: 0,
 		},
 		{

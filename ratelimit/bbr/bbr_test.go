@@ -88,7 +88,7 @@ func TestBBRMaxPass(t *testing.T) {
 func TestBBRMaxPassWithCache(t *testing.T) {
 	bucketDuration := windowSizeTest / time.Duration(bucketNumTest)
 	bbr := NewLimiter(optsForTest...)
-	// witch cool_cache, value of latest bucket is not counted instantly.
+	// witch tiny_cache, value of latest bucket is not counted instantly.
 	// after a bucket duration time, this bucket will be fully counted.
 	bbr.passStat.Add(int64(50))
 	time.Sleep(bucketDuration / 2)

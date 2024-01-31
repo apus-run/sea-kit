@@ -4,10 +4,14 @@ import (
 	"context"
 	"testing"
 
+	"github.com/apus-run/sea-kit/redisx"
 	"github.com/stretchr/testify/assert"
-	"github.com/zeromicro/go-zero/core/stores/redis/redistest"
 	"google.golang.org/grpc/metadata"
 )
+
+type Client struct {
+	*redisx.Helper
+}
 
 func TestAuthenticator(t *testing.T) {
 	tests := []struct {
@@ -43,16 +47,31 @@ func TestAuthenticator(t *testing.T) {
 		},
 	}
 
-	store := redistest.CreateRedis(t)
+	ctx := context.Background()
+	h := &Client{redisx.NewHelper()}
+	client, err := h.GetClient(redisx.WithRedisConfig(func(options *redisx.RedisConfig) {
+		options.Addr = "localhost:16379"
+		options.DB = 0
+		options.Username = "root"
+	}))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// 检测数据库是否可以连接
+	cmd := client.Ping(ctx)
+	if cmd.Err() != nil {
+		t.Fatal(cmd.Err())
+	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			if len(test.app) > 0 {
-				assert.Nil(t, store.Hset("apps", test.app, test.token))
-				defer store.Hdel("apps", test.app)
+				assert.Nil(t, client.HSet(context.Background(), "apps", test.app, test.token).Err())
+				defer client.HDel(context.Background(), "apps", test.app)
 			}
 
-			authenticator, err := NewAuthenticator(store, "apps", test.strict)
+			authenticator, err := NewAuthenticator(client, "apps", test.strict)
 			assert.Nil(t, err)
 			assert.NotNil(t, authenticator.Authenticate(context.Background()))
 			md := metadata.New(map[string]string{})

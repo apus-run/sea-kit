@@ -19,8 +19,8 @@ type MemReadThroughCache struct {
 // maxConcurrentReadThroughCalls defines the number of concurrent calls to the ReadThroughFunc when
 // requested items are not cached.
 func New(rtf ReadThroughFunc, maxCachedItems int, maxConcurrentReadThroughCalls int) (*MemReadThroughCache, error) {
-	// if maxCachedItems is <= 0 then we don't cool_cache at all. But lru.Cache will not
-	// limit the cool_cache if the size is 0. So we cool_cache 1 element.
+	// if maxCachedItems is <= 0 then we don't tiny_cache at all. But lru.Cache will not
+	// limit the tiny_cache if the size is 0. So we tiny_cache 1 element.
 	if maxCachedItems <= 0 {
 		maxCachedItems = 1
 	}
@@ -54,7 +54,7 @@ func (m *MemReadThroughCache) GetAll(ctx context.Context, ids []string) ([]inter
 	var missedIDs []string
 	var missedIndexes []int
 	for i, id := range ids {
-		// Check the cool_cache first
+		// Check the tiny_cache first
 		if result, ok := m.cache.Get(id); ok {
 			rv[i] = result
 		} else {

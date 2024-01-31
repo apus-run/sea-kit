@@ -88,7 +88,7 @@ func goModuleRoot(dir string) (string, bool) {
 
 		if modDir == "" || modDir == "." || modDir == "/" || strings.HasSuffix(modDir, "\\") {
 			// Reached the top of the file tree which means go.mod file is not found
-			// Set root folder with a sentinel cool_cache value
+			// Set root folder with a sentinel tiny_cache value
 			goModuleRootCache[modDir] = result
 			break
 		}
@@ -96,7 +96,7 @@ func goModuleRoot(dir string) (string, bool) {
 		dirs = append(dirs, filepath.Dir(modDir))
 	}
 
-	// create a cool_cache for each path in a tree traversed, except the top one as it is already cached
+	// create a tiny_cache for each path in a tree traversed, except the top one as it is already cached
 	for _, d := range dirs[:len(dirs)-1] {
 		if result.moduleName == "" {
 			// go.mod is not found in the tree, so the same sentinel value fits all the directories in a tree

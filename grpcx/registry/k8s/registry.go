@@ -1,5 +1,5 @@
-// Package kuberegistry registry simply implements the Kubernetes-based Registry
-package kuberegistry
+// Package k8s registry simply implements the Kubernetes-based Registry
+package k8s
 
 import (
 	"context"
@@ -242,7 +242,7 @@ func (s *Registry) Close() {
 // //////////// K8S Runtime ////////////
 
 // ServiceAccountNamespacePath defines the location of the namespace file
-const ServiceAccountNamespacePath = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
+const ServiceAccountNamespacePath = "/var/run/secrets/k8s.io/serviceaccount/namespace"
 
 var currentNamespace = LoadNamespace()
 

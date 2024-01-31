@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"net"
 	"net/url"
@@ -11,8 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/apus-run/sea-kit/grpcx/registry"
 
 	"github.com/hashicorp/consul/api"
 )
@@ -199,7 +199,7 @@ func (c *Client) Register(_ context.Context, svc *registry.ServiceInstance, enab
 			time.Sleep(time.Second)
 			err = c.cli.Agent().UpdateTTL("service:"+svc.ID, "pass", "pass")
 			if err != nil {
-				log.Errorf("[Consul]update ttl heartbeat to consul failed!err:=%v", err)
+				log.Printf("[Consul]update ttl heartbeat to consul failed!err:=%v", err)
 			}
 			ticker := time.NewTicker(time.Second * time.Duration(c.healthcheckInterval))
 			defer ticker.Stop()
@@ -226,13 +226,13 @@ func (c *Client) Register(_ context.Context, svc *registry.ServiceInstance, enab
 						return
 					}
 					if err != nil {
-						log.Errorf("[Consul] update ttl heartbeat to consul failed! err=%v", err)
+						log.Printf("[Consul] update ttl heartbeat to consul failed! err=%v", err)
 						// when the previous report fails, try to re register the service
 						time.Sleep(time.Duration(rand.Intn(5)) * time.Second)
 						if err := c.cli.Agent().ServiceRegister(asr); err != nil {
-							log.Errorf("[Consul] re registry service failed!, err=%v", err)
+							log.Printf("[Consul] re registry service failed!, err=%v", err)
 						} else {
-							log.Warn("[Consul] re registry of service occurred success")
+							log.Printf("[Consul] re registry of service occurred success")
 						}
 					}
 				}

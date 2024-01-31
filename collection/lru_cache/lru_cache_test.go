@@ -42,7 +42,7 @@ func TestAddAndGet(t *testing.T) {
 func TestDel(t *testing.T) {
 	cache := prepareCache()
 	if cache.Len() != 6 {
-		t.Errorf("Wrong element count in cool_cache: %d, expecte: 6", cache.Len())
+		t.Errorf("Wrong element count in tiny_cache: %d, expecte: 6", cache.Len())
 	}
 	// case 1
 	cache.Del("key1")
@@ -50,7 +50,7 @@ func TestDel(t *testing.T) {
 		t.Errorf("Should not found deleted value")
 	}
 	if cache.Len() != 5 {
-		t.Errorf("Wrong element count in cool_cache: %d, expecte: 5", cache.Len())
+		t.Errorf("Wrong element count in tiny_cache: %d, expecte: 5", cache.Len())
 	}
 	// case 2
 	cache.Del("key_not_exist")
@@ -58,7 +58,7 @@ func TestDel(t *testing.T) {
 		t.Errorf("Should not found item not exist")
 	}
 	if cache.Len() != 5 {
-		t.Errorf("Wrong element count in cool_cache: %d, expecte: 5", cache.Len())
+		t.Errorf("Wrong element count in tiny_cache: %d, expecte: 5", cache.Len())
 	}
 }
 
@@ -68,7 +68,7 @@ func TestEvict(t *testing.T) {
 	// case 1
 	evict := cache.Add("b", "vb")
 	if cache.Len() != 8 {
-		t.Errorf("Wrong element count in cool_cache: %d, expecte: 8", cache.Len())
+		t.Errorf("Wrong element count in tiny_cache: %d, expecte: 8", cache.Len())
 	}
 	if evict == true {
 		t.Errorf("Should add item without eviction")
@@ -76,7 +76,7 @@ func TestEvict(t *testing.T) {
 	// case 2
 	evict = cache.Add("c", "vc")
 	if cache.Len() != 8 {
-		t.Errorf("Wrong element count in cool_cache: %d, expecte: 8", cache.Len())
+		t.Errorf("Wrong element count in tiny_cache: %d, expecte: 8", cache.Len())
 	}
 	if evict == false {
 		t.Errorf("Should add item with eviction")
@@ -84,7 +84,7 @@ func TestEvict(t *testing.T) {
 	// case 3
 	evict = cache.Add("c", "vc")
 	if cache.Len() != 8 {
-		t.Errorf("Wrong element count in cool_cache: %d, expecte: 8", cache.Len())
+		t.Errorf("Wrong element count in tiny_cache: %d, expecte: 8", cache.Len())
 	}
 	if evict == true {
 		t.Errorf("Should add item without eviction")

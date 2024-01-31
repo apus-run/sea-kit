@@ -9,7 +9,7 @@ const (
 	NoneDuration = time.Duration(-1)
 )
 
-// Cache is the top-level cool_cache interface
+// Cache is the top-level tiny_cache interface
 type Cache interface {
 	// Get 获取某个key对应的值
 	Get(ctx context.Context, key string) (string, error)

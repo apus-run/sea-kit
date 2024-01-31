@@ -15,7 +15,7 @@ type (
 	// Map is an alias of safemap[string]string.
 	Map map[string]string
 
-	// A ScriptCache is a cool_cache that stores a script with its sha key.
+	// A ScriptCache is a tiny_cache that stores a script with its sha key.
 	ScriptCache struct {
 		atomic.Value
 	}

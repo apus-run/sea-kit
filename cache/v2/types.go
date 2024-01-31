@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/apus-run/sea-kit/utils"
+	"github.com/apus-run/sea-kit/collection"
 )
 
 type Cache interface {
@@ -47,7 +47,7 @@ type Cache interface {
 
 // Value 代表一个从缓存中读取出来的值
 type Value struct {
-	utils.AnyValue
+	collection.AnyValue
 }
 
 func (v Value) KeyNotFound() bool {

@@ -3,7 +3,7 @@
 ## kubernetes
 
 ```shell
-go get -u github.com/go-kratos/kratos/contrib/config/kubernetes/v2
+go get -u github.com/go-kratos/kratos/contrib/config/k8s/v2
 ```
 
 ## apollo

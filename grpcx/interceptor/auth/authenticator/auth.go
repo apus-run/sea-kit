@@ -4,26 +4,27 @@ import (
 	"context"
 	"time"
 
-	"github.com/zeromicro/go-zero/core/collection"
-	"github.com/zeromicro/go-zero/core/stores/redis"
+	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+
+	cache "github.com/apus-run/sea-kit/collection/tiny_cache"
 )
 
 const defaultExpiration = 5 * time.Minute
 
 // An Authenticator is used to authenticate the rpc requests.
 type Authenticator struct {
-	store  *redis.Redis
+	store  redis.Cmdable
 	key    string
-	cache  *collection.Cache
+	cache  *cache.Cache
 	strict bool
 }
 
 // NewAuthenticator returns an Authenticator.
-func NewAuthenticator(store *redis.Redis, key string, strict bool) (*Authenticator, error) {
-	cache, err := collection.NewCache(defaultExpiration)
+func NewAuthenticator(store redis.Cmdable, key string, strict bool) (*Authenticator, error) {
+	cache, err := cache.NewCache(defaultExpiration)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +59,11 @@ func (a *Authenticator) Authenticate(ctx context.Context) error {
 
 func (a *Authenticator) validate(app, token string) error {
 	expect, err := a.cache.Take(app, func() (any, error) {
-		return a.store.Hget(a.key, app)
+		val, err := a.store.HGet(context.Background(), a.key, app).Result()
+		if err != nil {
+			return nil, err
+		}
+		return val, err
 	})
 	if err != nil {
 		if a.strict {

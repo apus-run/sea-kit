@@ -10,12 +10,12 @@ import (
 
 	clientv3 "go.etcd.io/etcd/client/v3"
 
-	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/apus-run/sea-kit/grpcx/registry"
 )
 
 func TestRegistry(t *testing.T) {
 	client, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{"127.0.0.1:2379"},
+		Endpoints:   []string{"127.0.0.1:12379"},
 		DialTimeout: time.Second, DialOptions: []grpc.DialOption{grpc.WithBlock()},
 	})
 	if err != nil {
@@ -80,7 +80,7 @@ func TestRegistry(t *testing.T) {
 
 func TestHeartBeat(t *testing.T) {
 	client, err := clientv3.New(clientv3.Config{
-		Endpoints:   []string{"127.0.0.1:2379"},
+		Endpoints:   []string{"127.0.0.1:12379"},
 		DialTimeout: time.Second, DialOptions: []grpc.DialOption{grpc.WithBlock()},
 	})
 	if err != nil {

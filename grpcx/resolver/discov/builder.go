@@ -1,4 +1,4 @@
-package discovery
+package discov
 
 import (
 	"context"
@@ -6,13 +6,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/uuid"
 	"google.golang.org/grpc/resolver"
 
 	"github.com/apus-run/sea-kit/grpcx/registry"
+	log "github.com/apus-run/sea-kit/zlog"
 )
 
-const name = "discovery"
+const name = "discov"
 
 // Option is builder option.
 type Option func(o *builder)
@@ -31,18 +31,10 @@ func WithInsecure(insecure bool) Option {
 	}
 }
 
-// WithSubset with subset size.
-func WithSubset(size int) Option {
+// WithLogger with logger option.
+func WithLogger(log log.Logger) Option {
 	return func(b *builder) {
-		b.subsetSize = size
-	}
-}
-
-// Deprecated: please use PrintDebugLog
-// DisableDebugLog disables update instances log.
-func DisableDebugLog() Option {
-	return func(b *builder) {
-		b.debugLog = false
+		b.log = log
 	}
 }
 
@@ -57,8 +49,9 @@ type builder struct {
 	discoverer registry.Discovery
 	timeout    time.Duration
 	insecure   bool
-	subsetSize int
-	debugLog   bool
+
+	log      log.Logger
+	debugLog bool
 }
 
 // NewBuilder creates a builder which is used to factory registry resolvers.
@@ -68,7 +61,6 @@ func NewBuilder(d registry.Discovery, opts ...Option) resolver.Builder {
 		timeout:    time.Second * 10,
 		insecure:   false,
 		debugLog:   true,
-		subsetSize: 25,
 	}
 	for _, o := range opts {
 		o(b)
@@ -96,7 +88,7 @@ func (b *builder) Build(target resolver.Target, cc resolver.ClientConn, _ resolv
 	case <-done:
 		err = watchRes.err
 	case <-time.After(b.timeout):
-		err = errors.New("discovery create watcher overtime")
+		err = errors.New("discov create watcher overtime")
 	}
 	if err != nil {
 		cancel()
@@ -104,20 +96,19 @@ func (b *builder) Build(target resolver.Target, cc resolver.ClientConn, _ resolv
 	}
 
 	r := &discoveryResolver{
-		w:           watchRes.w,
-		cc:          cc,
-		ctx:         ctx,
-		cancel:      cancel,
-		insecure:    b.insecure,
-		debugLog:    b.debugLog,
-		subsetSize:  b.subsetSize,
-		selecterKey: uuid.New().String(),
+		w:        watchRes.w,
+		cc:       cc,
+		ctx:      ctx,
+		cancel:   cancel,
+		insecure: b.insecure,
+		debugLog: b.debugLog,
+		log:      b.log,
 	}
 	go r.watch()
 	return r, nil
 }
 
-// Scheme return scheme of discovery
+// Scheme return scheme of discov
 func (*builder) Scheme() string {
 	return name
 }

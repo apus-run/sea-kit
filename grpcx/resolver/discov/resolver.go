@@ -1,4 +1,4 @@
-package discovery
+package discov
 
 import (
 	"context"
@@ -9,10 +9,9 @@ import (
 	"google.golang.org/grpc/attributes"
 	"google.golang.org/grpc/resolver"
 
-	"github.com/go-kratos/aegis/subset"
-	"github.com/go-kratos/kratos/v2/internal/endpoint"
-	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/apus-run/sea-kit/grpcx/internal/endpoint"
+	"github.com/apus-run/sea-kit/grpcx/registry"
+	log "github.com/apus-run/sea-kit/zlog"
 )
 
 type discoveryResolver struct {
@@ -22,10 +21,9 @@ type discoveryResolver struct {
 	ctx    context.Context
 	cancel context.CancelFunc
 
-	insecure    bool
-	debugLog    bool
-	selecterKey string
-	subsetSize  int
+	insecure bool
+	debugLog bool
+	log      log.Logger
 }
 
 func (r *discoveryResolver) watch() {
@@ -40,7 +38,8 @@ func (r *discoveryResolver) watch() {
 			if errors.Is(err, context.Canceled) {
 				return
 			}
-			log.Errorf("[resolver] Failed to watch discovery endpoint: %v", err)
+
+			r.log.Errorf("[resolver] Failed to watch discov endpoint: %v", err)
 			time.Sleep(time.Second)
 			continue
 		}
@@ -56,7 +55,7 @@ func (r *discoveryResolver) update(ins []*registry.ServiceInstance) {
 	for _, in := range ins {
 		ept, err := endpoint.ParseEndpoint(in.Endpoints, endpoint.Scheme("grpc", !r.insecure))
 		if err != nil {
-			log.Errorf("[resolver] Failed to parse discovery endpoint: %v", err)
+			r.log.Errorf("[resolver] Failed to parse discov endpoint: %v", err)
 			continue
 		}
 		if ept == "" {
@@ -67,9 +66,6 @@ func (r *discoveryResolver) update(ins []*registry.ServiceInstance) {
 			continue
 		}
 		filtered = append(filtered, in)
-	}
-	if r.subsetSize != 0 {
-		filtered = subset.Subset(r.selecterKey, filtered, r.subsetSize)
 	}
 
 	addrs := make([]resolver.Address, 0, len(filtered))
@@ -84,16 +80,16 @@ func (r *discoveryResolver) update(ins []*registry.ServiceInstance) {
 		addrs = append(addrs, addr)
 	}
 	if len(addrs) == 0 {
-		log.Warnf("[resolver] Zero endpoint found,refused to write, instances: %v", ins)
+		r.log.Warnf("[resolver] Zero endpoint found,refused to write, instances: %v", ins)
 		return
 	}
 	err := r.cc.UpdateState(resolver.State{Addresses: addrs})
 	if err != nil {
-		log.Errorf("[resolver] failed to update state: %s", err)
+		r.log.Errorf("[resolver] failed to update state: %s", err)
 	}
 	if r.debugLog {
 		b, _ := json.Marshal(filtered)
-		log.Infof("[resolver] update instances: %s", b)
+		r.log.Infof("[resolver] update instances: %s", b)
 	}
 }
 
@@ -101,7 +97,7 @@ func (r *discoveryResolver) Close() {
 	r.cancel()
 	err := r.w.Stop()
 	if err != nil {
-		log.Errorf("[resolver] failed to watch top: %s", err)
+		r.log.Errorf("[resolver] failed to watch top: %s", err)
 	}
 }
 

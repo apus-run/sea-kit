@@ -33,7 +33,7 @@ func (d *directBuilder) Build(target resolver.Target, cc resolver.ClientConn, _ 
 	if err != nil {
 		return nil, err
 	}
-	return newDirectResolver(), nil
+	return newDirectResolver(cc), nil
 }
 
 func (d *directBuilder) Scheme() string {

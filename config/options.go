@@ -34,8 +34,8 @@ func WithSource(s ...Source) Option {
 // WithDecoder with config decoder.
 // DefaultDecoder behavior:
 // If KeyValue.Format is non-empty, then KeyValue.Value will be deserialized into safemap[string]interface{}
-// and stored in the config cool_cache(safemap[string]interface{})
-// if KeyValue.Format is empty,{KeyValue.Key : KeyValue.Value} will be stored in config cool_cache(safemap[string]interface{})
+// and stored in the config tiny_cache(safemap[string]interface{})
+// if KeyValue.Format is empty,{KeyValue.Key : KeyValue.Value} will be stored in config tiny_cache(safemap[string]interface{})
 func WithDecoder(d Decoder) Option {
 	return func(o *options) {
 		o.decoder = d

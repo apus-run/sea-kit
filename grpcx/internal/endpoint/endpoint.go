@@ -2,6 +2,9 @@ package endpoint
 
 import (
 	"net/url"
+	"strings"
+
+	"google.golang.org/grpc/resolver"
 )
 
 // NewEndpoint new an Endpoint URL.
@@ -31,4 +34,14 @@ func Scheme(scheme string, isSecure bool) string {
 		return scheme + "s"
 	}
 	return scheme
+}
+
+// GetEndpoints returns the endpoints from the given target.
+func GetEndpoints(target resolver.Target) string {
+	return strings.Trim(target.URL.Path, "/")
+}
+
+// GetAuthority returns the authority of the target.
+func GetAuthority(target resolver.Target) string {
+	return target.URL.Host
 }

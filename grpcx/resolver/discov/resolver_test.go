@@ -1,4 +1,4 @@
-package discovery
+package discov
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/grpc/resolver"
 
-	"github.com/go-kratos/kratos/v2/registry"
+	"github.com/apus-run/sea-kit/grpcx/registry"
 )
 
 type testClientConn struct {
