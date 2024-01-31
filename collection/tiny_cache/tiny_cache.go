@@ -1,4 +1,4 @@
-package collection
+package tiny_cache
 
 import (
 	"container/list"
