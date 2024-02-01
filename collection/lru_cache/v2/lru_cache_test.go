@@ -42,12 +42,12 @@ func TestLRU(t *testing.T) {
 	cache.Put("F", "Felp")
 	assert.Nil(t, cache.Get("D"))
 
-	cache.Delete("A")
+	cache.Del("A")
 	assert.Nil(t, cache.Get("A"))
 }
 
 func TestCompareAndSwap(t *testing.T) {
-	cache := NewLRU(2)
+	cache := NewLRUCache(2)
 
 	item, ok := cache.CompareAndSwap("A", nil, "Foo")
 	assert.True(t, ok)
@@ -123,7 +123,7 @@ func TestDefaultClock(t *testing.T) {
 }
 
 func TestLRUCacheConcurrentAccess(t *testing.T) {
-	cache := NewLRU(5)
+	cache := NewLRUCache(5)
 	values := map[string]string{
 		"A": "foo",
 		"B": "bar",
@@ -169,7 +169,7 @@ func TestRemoveFunc(t *testing.T) {
 	})
 
 	cache.Put("testing", t)
-	cache.Delete("testing")
+	cache.Del("testing")
 	assert.Nil(t, cache.Get("testing"))
 
 	timeout := time.NewTimer(time.Millisecond * 300)

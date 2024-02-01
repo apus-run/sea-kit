@@ -162,8 +162,8 @@ func (c *LRUCache) Len() int {
 }
 
 // Keys returns keys of items in tiny_cache
-func (c *LRUCache) Keys() []interface{} {
-	var keyList []interface{}
+func (c *LRUCache) Keys() []any {
+	var keyList []any
 	c.mux.Lock()
 	for key := range c.cache {
 		keyList = append(keyList, key)
