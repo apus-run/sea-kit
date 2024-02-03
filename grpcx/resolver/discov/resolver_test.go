@@ -59,7 +59,7 @@ func (m *testWatch) Stop() error {
 func TestWatch(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	r := &discoveryResolver{
+	r := &discovResolver{
 		w:        &testWatch{},
 		cc:       &testClientConn{te: t},
 		ctx:      ctx,
@@ -78,7 +78,7 @@ func TestWatch(t *testing.T) {
 func TestWatchError(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	r := &discoveryResolver{
+	r := &discovResolver{
 		w:      &testWatch{err: errors.New("bad")},
 		cc:     &testClientConn{te: t},
 		ctx:    ctx,
@@ -95,7 +95,7 @@ func TestWatchError(t *testing.T) {
 func TestWatchContextCancel(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 
-	r := &discoveryResolver{
+	r := &discovResolver{
 		w:      &testWatch{err: context.Canceled},
 		cc:     &testClientConn{te: t},
 		ctx:    ctx,

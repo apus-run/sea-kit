@@ -14,7 +14,7 @@ import (
 	log "github.com/apus-run/sea-kit/zlog"
 )
 
-type discoveryResolver struct {
+type discovResolver struct {
 	w  registry.Watcher
 	cc resolver.ClientConn
 
@@ -26,7 +26,7 @@ type discoveryResolver struct {
 	log      log.Logger
 }
 
-func (r *discoveryResolver) watch() {
+func (r *discovResolver) watch() {
 	for {
 		select {
 		case <-r.ctx.Done():
@@ -47,7 +47,7 @@ func (r *discoveryResolver) watch() {
 	}
 }
 
-func (r *discoveryResolver) update(ins []*registry.ServiceInstance) {
+func (r *discovResolver) update(ins []*registry.ServiceInstance) {
 	var (
 		endpoints = make(map[string]struct{})
 		filtered  = make([]*registry.ServiceInstance, 0, len(ins))
@@ -93,7 +93,7 @@ func (r *discoveryResolver) update(ins []*registry.ServiceInstance) {
 	}
 }
 
-func (r *discoveryResolver) Close() {
+func (r *discovResolver) Close() {
 	r.cancel()
 	err := r.w.Stop()
 	if err != nil {
@@ -101,7 +101,7 @@ func (r *discoveryResolver) Close() {
 	}
 }
 
-func (r *discoveryResolver) ResolveNow(_ resolver.ResolveNowOptions) {}
+func (r *discovResolver) ResolveNow(_ resolver.ResolveNowOptions) {}
 
 func parseAttributes(md map[string]string) (a *attributes.Attributes) {
 	for k, v := range md {

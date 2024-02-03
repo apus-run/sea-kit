@@ -14,7 +14,7 @@ import (
 )
 
 func TestWithInsecure(t *testing.T) {
-	b := &builder{}
+	b := &discovBuilder{}
 	WithInsecure(true)(b)
 	if !b.insecure {
 		t.Errorf("expected insecure to be true")
@@ -22,7 +22,7 @@ func TestWithInsecure(t *testing.T) {
 }
 
 func TestWithTimeout(t *testing.T) {
-	o := &builder{}
+	o := &discovBuilder{}
 	v := time.Duration(123)
 	WithTimeout(v)(o)
 	if !reflect.DeepEqual(v, o.timeout) {
@@ -31,7 +31,7 @@ func TestWithTimeout(t *testing.T) {
 }
 
 func TestPrintDebugLog(t *testing.T) {
-	o := &builder{}
+	o := &discovBuilder{}
 	PrintDebugLog(true)(o)
 	if !o.debugLog {
 		t.Errorf("expected PrintdebugLog true, got %v", o.debugLog)

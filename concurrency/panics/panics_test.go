@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/sourcegraph/conc/panics"
+	"github.com/apus-run/sea-kit/concurrency/panics"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

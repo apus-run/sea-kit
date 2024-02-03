@@ -29,6 +29,13 @@ func String(key, v string) Field {
 	}
 }
 
+func Strings(key string, ss []string) Field {
+	return Field{
+		Key:   key,
+		Value: ss,
+	}
+}
+
 func Uint64(key string, v uint64) Field {
 	return Field{
 		Key:   key,

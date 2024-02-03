@@ -1,17 +1,3 @@
-// Copyright (c) 2021 The Jaeger Authors.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package fswatcher
 
 import (
@@ -23,13 +9,13 @@ import (
 	"path/filepath"
 	"sync"
 
+	log "github.com/apus-run/sea-kit/zlog"
 	"github.com/fsnotify/fsnotify"
-	"go.uber.org/zap"
 )
 
 type FSWatcher struct {
 	watcher            *fsnotify.Watcher
-	logger             *zap.Logger
+	logger             log.Logger
 	fileHashContentMap map[string]string
 	onChange           func()
 	mu                 sync.RWMutex
@@ -57,7 +43,7 @@ type FSWatcher struct {
 // indicate that the files were replaced, even if event.Name is not any of the
 // files we are monitoring. We check the hashes of the files to detect if they
 // were really changed.
-func New(filepaths []string, onChange func(), logger *zap.Logger) (*FSWatcher, error) {
+func New(filepaths []string, onChange func(), logger log.Logger) (*FSWatcher, error) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		return nil, err
@@ -114,7 +100,7 @@ func (w *FSWatcher) watch() {
 			if !ok {
 				return
 			}
-			w.logger.Info("Received event", zap.String("event", event.String()))
+			w.logger.Info("Received event", log.String("event", event.String()))
 			var changed bool
 			w.mu.Lock()
 			for file, hash := range w.fileHashContentMap {
@@ -132,7 +118,7 @@ func (w *FSWatcher) watch() {
 			if !ok {
 				return
 			}
-			w.logger.Error("fsnotifier reported an error", zap.Error(err))
+			w.logger.Error("fsnotifier reported an error", log.Error(err))
 		}
 	}
 }
@@ -146,7 +132,7 @@ func (w *FSWatcher) Close() error {
 func (w *FSWatcher) isModified(filepath string, previousHash string) (bool, string) {
 	hash, err := hashFile(filepath)
 	if err != nil {
-		w.logger.Warn("Unable to read the file", zap.String("file", filepath), zap.Error(err))
+		w.logger.Warn("Unable to read the file", log.String("file", filepath), log.Error(err))
 		return true, ""
 	}
 	return previousHash != hash, hash

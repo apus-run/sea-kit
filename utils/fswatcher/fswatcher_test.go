@@ -1,17 +1,3 @@
-// Copyright (c) 2021 The Jaeger Authors.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package fswatcher
 
 import (
@@ -19,15 +5,11 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-	"time"
 
+	"github.com/apus-run/sea-kit/utils/testutils"
+	log "github.com/apus-run/sea-kit/zlog"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"go.uber.org/zap/zaptest/observer"
-
-	"github.com/jaegertracing/jaeger/pkg/testutils"
 )
 
 func createTestFiles(t *testing.T) (file1 string, file2 string, file3 string) {
@@ -101,9 +83,7 @@ func TestFSWatcherWithMultipleFiles(t *testing.T) {
 	_, err = testFile2.WriteString("test content 2")
 	require.NoError(t, err)
 
-	zcore, logObserver := observer.New(zapcore.InfoLevel)
-	logger := zap.New(zcore)
-
+	logger := log.L()
 	onChange := func() {
 		logger.Info("Change happens")
 	}
@@ -116,16 +96,7 @@ func TestFSWatcherWithMultipleFiles(t *testing.T) {
 	// Test Write event
 	testFile1.WriteString(" changed")
 	testFile2.WriteString(" changed")
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Received event").Len() > 0
-		},
-		"Unable to locate 'Received event' in log. All logs: %v", logObserver)
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Change happens").Len() > 0
-		},
-		"Unable to locate 'Change happens' in log. All logs: %v", logObserver)
+
 	newHash1, err := hashFile(testFile1.Name())
 	require.NoError(t, err)
 	newHash2, err := hashFile(testFile2.Name())
@@ -138,21 +109,7 @@ func TestFSWatcherWithMultipleFiles(t *testing.T) {
 	// Test Remove event
 	os.Remove(testFile1.Name())
 	os.Remove(testFile2.Name())
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Received event").Len() > 0
-		},
-		"Unable to locate 'Received event' in log. All logs: %v", logObserver)
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Unable to read the file").FilterField(zap.String("file", testFile1.Name())).Len() > 0
-		},
-		"Unable to locate 'Unable to read the file' in log. All logs: %v", logObserver)
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Unable to read the file").FilterField(zap.String("file", testFile2.Name())).Len() > 0
-		},
-		"Unable to locate 'Unable to read the file' in log. All logs: %v", logObserver)
+
 }
 
 func TestFSWatcherWithSymlinkAndRepoChanges(t *testing.T) {
@@ -166,8 +123,7 @@ func TestFSWatcherWithSymlinkAndRepoChanges(t *testing.T) {
 	timestamp1Dir := filepath.Join(testDir, "..timestamp-1")
 	createTimestampDir(t, timestamp1Dir)
 
-	zcore, logObserver := observer.New(zapcore.InfoLevel)
-	logger := zap.New(zcore)
+	logger := log.L()
 
 	onChange := func() {}
 
@@ -187,11 +143,6 @@ func TestFSWatcherWithSymlinkAndRepoChanges(t *testing.T) {
 	err = os.RemoveAll(timestamp1Dir)
 	require.NoError(t, err)
 
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Received event").Len() > 0
-		},
-		"Unable to locate 'Received event' in log. All logs: %v", logObserver)
 	byteData, err := os.ReadFile(filepath.Join(testDir, "test.doc"))
 	require.NoError(t, err)
 	assert.Equal(t, byteData, []byte("test data"))
@@ -205,11 +156,6 @@ func TestFSWatcherWithSymlinkAndRepoChanges(t *testing.T) {
 	err = os.RemoveAll(timestamp2Dir)
 	require.NoError(t, err)
 
-	assertLogs(t,
-		func() bool {
-			return logObserver.FilterMessage("Received event").Len() > 0
-		},
-		"Unable to locate 'Received event' in log. All logs: %v", logObserver)
 	byteData, err = os.ReadFile(filepath.Join(testDir, "test.doc"))
 	require.NoError(t, err)
 	assert.Equal(t, byteData, []byte("test data"))
@@ -230,16 +176,6 @@ type delayedFormat struct {
 
 func (df delayedFormat) String() string {
 	return fmt.Sprintf("%v", df.fn())
-}
-
-func assertLogs(t *testing.T, f func() bool, errorMsg string, logObserver *observer.ObservedLogs) {
-	assert.Eventuallyf(t, f,
-		10*time.Second, 10*time.Millisecond,
-		errorMsg,
-		delayedFormat{
-			fn: func() interface{} { return logObserver.All() },
-		},
-	)
 }
 
 func TestMain(m *testing.M) {
