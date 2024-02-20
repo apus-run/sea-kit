@@ -183,6 +183,18 @@ func (l *ZapLogger) Panicf(format string, args ...any) {
 	l.logger.Panic(msg, zap.Any("args", args))
 }
 
+func (l *ZapLogger) Print(args ...any) {
+	l.logger.Info(fmt.Sprint(args...))
+}
+
+func (l *ZapLogger) Printf(format string, args ...any) {
+	l.logger.Info(fmt.Sprintf(format, args...))
+}
+
+func (l *ZapLogger) Println(args ...any) {
+	l.logger.Info(fmt.Sprintln(args...))
+}
+
 func (l *ZapLogger) Close() error {
 	return l.logger.Sync()
 }

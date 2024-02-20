@@ -3,6 +3,7 @@
 package slogx
 
 import (
+	"context"
 	"fmt"
 	"go/build"
 	"io"
@@ -11,10 +12,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"sync"
 	"time"
 
-	"github.com/natefinch/lumberjack"
 	"github.com/pkg/errors"
 
 	"github.com/apus-run/sea-kit/errorsx"
@@ -23,72 +22,77 @@ import (
 const LOGGER_KEY = "slogLogger"
 const AttrErrorKey = "error"
 
-var factory = &LoggerFactory{
-	loggers: make(map[string]*slog.Logger),
+type Logger struct {
+	*slog.Logger
 }
 
-type LoggerFactory struct {
-	mu      sync.Mutex
-	loggers map[string]*slog.Logger
+// NewLogger 只包装了 slog
+func NewLogger(l *slog.Logger) *Logger {
+	return &Logger{l}
+}
+
+// Log send log records with caller depth
+func (l *Logger) Log(ctx context.Context, depth int, err error, level slog.Level, msg string, attrs ...any) {
+	if !l.Enabled(ctx, level) {
+		return
+	}
+
+	var pcs [1]uintptr
+	runtime.Callers(depth, pcs[:])
+	r := slog.NewRecord(time.Now(), level, msg, pcs[0])
+	if err != nil {
+		r.Add(AttrErrorKey, err)
+	}
+	r.Add(attrs...)
+	if ctx == nil {
+		ctx = context.Background()
+	}
+	_ = l.Handler().Handle(ctx, r)
 }
 
 var defaultHandler *Handler
 
-func NewLogger(opts ...Option) *slog.Logger {
-	options := Apply(opts...)
-
-	factory.mu.Lock()
-	if logger, ok := factory.loggers[options.LogFilename]; ok {
-		factory.mu.Unlock()
-		return logger
-	}
-	defer factory.mu.Unlock()
-
-	// 日志文件切割归档
-	writerSyncer := getLogWriter(options)
-
-	// 日志级别
-	level := getLogLevel(options.LogLevel)
+// New 包装了 slog
+func New(options ...Option) *slog.Logger {
+	opts := Apply(options...)
 
 	var handler slog.Handler
 	handlerOptions := &slog.HandlerOptions{
-		Level:       level,
+		Level:       getLogLevel(opts.LogLevel),
 		AddSource:   true,
 		ReplaceAttr: ReplaceAttr,
 	}
-	if len(options.LogFilename) == 0 && strings.ToLower(options.Encoding) == "console" {
+	if opts.Format == FormatText {
 		handler = slog.NewTextHandler(os.Stdout, handlerOptions)
 	} else {
-		handler = slog.NewJSONHandler(writerSyncer, handlerOptions)
+		handler = slog.NewJSONHandler(opts.Writer, handlerOptions)
 	}
 
-	if options.LogGroup != "" {
-		handler = handler.WithGroup(options.LogGroup)
+	if opts.LogGroup != "" {
+		handler = handler.WithGroup(opts.LogGroup)
 	}
-	if len(options.LogAttrs) > 0 {
-		handler = handler.WithAttrs(options.LogAttrs)
+	if len(opts.LogAttrs) > 0 {
+		handler = handler.WithAttrs(opts.LogAttrs)
 	}
 
 	defaultHandler = NewHandler(handler).(*Handler)
-	logger := slog.New(defaultHandler)
-	// 此处设置默认日志, 最好手动设置
-	// slog.SetDefault(l)
 
-	factory.loggers[options.LogFilename] = logger
-
-	logger.Info("the log module has been initialized successfully.", slog.Any("options", options))
-
-	return logger
+	return slog.New(defaultHandler)
 }
 
-func getLogWriter(opts *Options) io.WriteCloser {
-	return &lumberjack.Logger{
-		Filename:   opts.LogFilename,
-		MaxSize:    opts.MaxSize, // megabytes
-		MaxBackups: opts.MaxBackups,
-		MaxAge:     opts.MaxAge, //days
-		Compress:   opts.Compress,
+// NewNop returns a no-op logger
+func NewNop() *slog.Logger {
+	nopLevel := slog.Level(-99)
+	ops := &slog.HandlerOptions{
+		Level: nopLevel,
 	}
+	handler := slog.NewTextHandler(io.Discard, ops)
+	return slog.New(handler)
+}
+
+// NewWithHandler build *slog.Logger with slog Handler
+func NewWithHandler(handler slog.Handler) *slog.Logger {
+	return slog.New(handler)
 }
 
 func getLogLevel(logLevel string) slog.Level {

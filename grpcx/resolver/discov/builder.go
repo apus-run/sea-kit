@@ -12,7 +12,7 @@ import (
 	log "github.com/apus-run/sea-kit/zlog"
 )
 
-const name = "discov"
+const name = "discovery"
 
 // Option is builder option.
 type Option func(o *discovBuilder)
@@ -108,7 +108,7 @@ func (b *discovBuilder) Build(target resolver.Target, cc resolver.ClientConn, _ 
 	return r, nil
 }
 
-// Scheme return scheme of discov
+// Scheme return scheme of discovery
 func (b *discovBuilder) Scheme() string {
 	return name
 }

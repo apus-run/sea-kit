@@ -51,8 +51,8 @@ func (m *mockDiscovery) Watch(_ context.Context, _ string) (registry.Watcher, er
 
 func TestBuilder_Scheme(t *testing.T) {
 	b := NewBuilder(&mockDiscovery{})
-	if !reflect.DeepEqual("discov", b.Scheme()) {
-		t.Errorf("expected %v, got %v", "discov", b.Scheme())
+	if !reflect.DeepEqual("discovery", b.Scheme()) {
+		t.Errorf("expected %v, got %v", "discovery", b.Scheme())
 	}
 }
 

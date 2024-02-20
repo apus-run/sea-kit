@@ -40,4 +40,10 @@ use (
 	./lang
 	./syncx
 	./mathx
+	./task
+	./elasticsearch
+	./mq
+	./printer
+	./retry
+	./errorsx
 )

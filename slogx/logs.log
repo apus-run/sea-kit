@@ -1,7 +1,0 @@
-{"time":"2023-10-10T17:19:58.621462+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{}}
-{"time":"2023-11-03T20:58:54.655648+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{}}
-{"time":"2023-11-03T21:09:19.372632+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{}}
-{"time":"2023-11-03T21:09:43.837184+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{}}
-{"time":"2023-11-03T21:10:35.650897+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{}}
-{"time":"2023-11-03T21:12:06.595865+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{}}
-{"time":"2023-11-12T14:14:12.038711+08:00","level":"INFO","source":"/Users/moocss/work/GoProjects/sea-kit/slogx/log.go:71","msg":"the log module has been initialized successfully.","options":{"LogLevel":"info","Encoding":"console","LogFilename":"logs.log","MaxSize":500,"MaxBackups":3,"MaxAge":28,"Compress":true}}

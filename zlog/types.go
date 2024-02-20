@@ -19,6 +19,10 @@ type Logger interface {
 	Stack(msg string)
 	Stat(msg string, fields ...Field)
 
+	Print(args ...any)
+	Printf(format string, args ...any)
+	Println(args ...any)
+
 	Close() error
 	Sync() error
 }
