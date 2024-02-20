@@ -1,0 +1,2 @@
+{"time":"2024-02-20T21:47:40+08:00","level":"info","source":"sea-kit/slogx/log.go:79","msg":"the log module has been initialized successfully.","options":{"LogLevel":"debug","Encoding":"json","LogGroup":"","LogAttrs":null,"LogFilename":"test.log","MaxSize":500,"MaxBackups":3,"MaxAge":28,"Compress":true}}
+{"time":"2024-02-20T21:47:40+08:00","level":"info","source":"sea-kit/slogx/log_test.go:64","msg":"print something","sub_logger":"true","value":"helloworld"}
