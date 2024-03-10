@@ -6,9 +6,10 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/pocketbase/pocketbase/tools/inflector"
-	"github.com/pocketbase/pocketbase/tools/security"
 	"github.com/spf13/cast"
+
+	"github.com/apus-run/sea-kit/utils/inflector"
+	"github.com/apus-run/sea-kit/utils/security"
 )
 
 const optionsParam = "options"

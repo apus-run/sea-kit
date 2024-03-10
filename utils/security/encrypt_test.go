@@ -3,7 +3,7 @@ package security_test
 import (
 	"testing"
 
-	"github.com/apus-run/sea-kit/security"
+	"github.com/apus-run/sea-kit/utils/security"
 )
 
 func TestEncrypt(t *testing.T) {

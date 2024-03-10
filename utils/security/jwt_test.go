@@ -3,8 +3,9 @@ package security_test
 import (
 	"testing"
 
-	"github.com/apus-run/sea-kit/security"
 	"github.com/golang-jwt/jwt/v4"
+
+	"github.com/apus-run/sea-kit/utils/security"
 )
 
 func TestParseUnverifiedJWT(t *testing.T) {

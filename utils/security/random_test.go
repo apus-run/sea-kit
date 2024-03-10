@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/apus-run/sea-kit/security"
+	"github.com/apus-run/sea-kit/utils/security"
 )
 
 func TestRandomString(t *testing.T) {
