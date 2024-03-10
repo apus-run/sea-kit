@@ -6,6 +6,8 @@ import (
 	"time"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	v1 "github.com/apus-run/sea-kit/cache/v1"
 )
 
 func TestMemory_All(t *testing.T) {

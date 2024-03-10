@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/redis/go-redis/v9"
+
+	v1 "github.com/apus-run/sea-kit/cache/v1"
 )
 
 var _ v1.Cache = (*Cache)(nil)

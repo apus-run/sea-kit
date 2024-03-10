@@ -65,6 +65,16 @@ type Request interface {
 	Cookie(key string) (string, bool)
 }
 
+// 获取请求地址中的参数
+func (ctx *Context) Query(key string) string {
+	return ctx.Context.Query(key)
+}
+
+// 获取cookie
+func (ctx *Context) Cookie(key string) (string, error) {
+	return ctx.Context.Cookie(key)
+}
+
 // 获取请求地址中所有参数
 func (ctx *Context) QueryAll() map[string][]string {
 	// 获取请求地址中所有参数
@@ -191,10 +201,7 @@ func (ctx *Context) DefaultParamString(key string, def string) (string, bool) {
 
 // 获取路由参数
 func (ctx *Context) Param(key string) interface{} {
-	if val, ok := ctx.Params.Get(key); ok {
-		return val
-	}
-	return nil
+	return ctx.Context.Param(key)
 }
 
 func (ctx *Context) FormAll() map[string][]string {

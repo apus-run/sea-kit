@@ -37,16 +37,16 @@ func (l *Logger) LogMode(level logger.LogLevel) logger.Interface {
 	return l
 }
 
-func (l *Logger) Info(ctx context.Context, s string, i ...interface{}) {
-	l.logger.Log(ctx, 5, nil, slog.LevelInfo, s, i...)
+func (l *Logger) Info(ctx context.Context, msg string, i ...interface{}) {
+	l.logger.Log(ctx, 5, nil, slog.LevelInfo, msg, i...)
 }
 
-func (l *Logger) Warn(ctx context.Context, s string, i ...interface{}) {
-	l.logger.Log(ctx, 5, nil, slog.LevelWarn, s, i...)
+func (l *Logger) Warn(ctx context.Context, msg string, i ...interface{}) {
+	l.logger.Log(ctx, 5, nil, slog.LevelWarn, msg, i...)
 }
 
-func (l *Logger) Error(ctx context.Context, s string, i ...interface{}) {
-	l.logger.Log(ctx, 5, nil, slog.LevelError, s, i...)
+func (l *Logger) Error(ctx context.Context, msg string, i ...interface{}) {
+	l.logger.Log(ctx, 5, nil, slog.LevelError, msg, i...)
 }
 
 func (l *Logger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {

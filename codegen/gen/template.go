@@ -21,20 +21,20 @@ type ExtensionTemplate struct {
 	ExtendPatterns []string
 }
 
-// Template wraps the standard template.Template to
+// Template wraps the standard templatex.Template to
 // provide additional functionality for ent extensions.
 type Template struct {
 	*template.Template
 	FuncMap template.FuncMap
 }
 
-// NewTemplate creates an empty template with the standard codegen functions.
+// NewTemplate creates an empty templatex with the standard codegen functions.
 func NewTemplate(name string) *Template {
 	t := &Template{Template: template.New(name)}
 	return t.Funcs(Funcs)
 }
 
-// Funcs merges the given funcMap with the template functions.
+// Funcs merges the given funcMap with the templatex functions.
 func (t *Template) Funcs(funcMap template.FuncMap) *Template {
 	t.Template.Funcs(funcMap)
 	if t.FuncMap == nil {
@@ -48,7 +48,7 @@ func (t *Template) Funcs(funcMap template.FuncMap) *Template {
 	return t
 }
 
-// Parse parses text as a template body for t.
+// Parse parses text as a templatex body for t.
 func (t *Template) Parse(text string) (*Template, error) {
 	if _, err := t.Template.Parse(text); err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (t *Template) Parse(text string) (*Template, error) {
 }
 
 // ParseFiles parses a list of files as templates and associate them with t.
-// Each file can be a standalone template.
+// Each file can be a standalone templatex.
 func (t *Template) ParseFiles(filenames ...string) (*Template, error) {
 	if _, err := t.Template.ParseFiles(filenames...); err != nil {
 		return nil, err
@@ -98,7 +98,7 @@ func (t *Template) ParseFS(fsys fs.FS, patterns ...string) (*Template, error) {
 	return t, nil
 }
 
-// AddParseTree adds the given parse tree to the template.
+// AddParseTree adds the given parse tree to the templatex.
 func (t *Template) AddParseTree(name string, tree *parse.Tree) (*Template, error) {
 	if _, err := t.Template.AddParseTree(name, tree); err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func ParseT(name string, templates embed.FS, funcs template.FuncMap, pattern ...
 		ParseFS(templates, pattern...))
 }
 
-// InitTemplates initializes the given templates with the given patterns and return import package by specified importname template.
+// InitTemplates initializes the given templates with the given patterns and return import package by specified importname templatex.
 func InitTemplates(templates *Template, importname string, checkData any) (importPkg map[string]string) {
 	if importname == "" {
 		return nil

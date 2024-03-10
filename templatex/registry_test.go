@@ -1,4 +1,4 @@
-package template
+package templatex
 
 import (
 	"fmt"
@@ -27,7 +27,7 @@ func TestNewRegistry(t *testing.T) {
 		t.Fatalf("Expected cache store to be initialized, got nil")
 	}
 
-	if v := r.cache.Length(); v != 0 {
+	if v := r.cache.Len(); v != 0 {
 		t.Fatalf("Expected cache store length to be 0, got %d", v)
 	}
 
@@ -61,14 +61,14 @@ func TestRegistryLoadFiles(t *testing.T) {
 		r.LoadFiles("file1.missing", "file2.missing")
 
 		key := "file1.missing,file2.missing"
-		renderer := r.cache.Get(key)
+		renderer, _ := r.cache.Get(key)
 
 		if renderer == nil {
 			t.Fatal("Expected renderer to be initialized even if invalid, got nil")
 		}
 
 		if renderer.template != nil {
-			t.Fatalf("Expected renderer template to be nil, got %v", renderer.template)
+			t.Fatalf("Expected renderer templatex to be nil, got %v", renderer.template)
 		}
 
 		if renderer.parseError == nil {
@@ -82,7 +82,7 @@ func TestRegistryLoadFiles(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		if err := os.WriteFile(filepath.Join(dir, "base.html"), []byte(`Base:{{template "content" .}}`), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(dir, "base.html"), []byte(`Base:{{templatex "content" .}}`), 0644); err != nil {
 			t.Fatal(err)
 		}
 		if err := os.WriteFile(filepath.Join(dir, "content.html"), []byte(`{{define "content"}}Content:{{.|raw}}{{end}}`), 0644); err != nil {
@@ -94,14 +94,14 @@ func TestRegistryLoadFiles(t *testing.T) {
 
 		r.LoadFiles(files...)
 
-		renderer := r.cache.Get(strings.Join(files, ","))
+		renderer, _ := r.cache.Get(strings.Join(files, ","))
 
 		if renderer == nil {
 			t.Fatal("Expected renderer to be initialized even if invalid, got nil")
 		}
 
 		if renderer.template == nil {
-			t.Fatal("Expected renderer template to be set, got nil")
+			t.Fatal("Expected renderer templatex to be set, got nil")
 		}
 
 		if renderer.parseError != nil {
@@ -123,19 +123,19 @@ func TestRegistryLoadFiles(t *testing.T) {
 func TestRegistryLoadString(t *testing.T) {
 	r := NewRegistry()
 
-	t.Run("invalid template string", func(t *testing.T) {
+	t.Run("invalid templatex string", func(t *testing.T) {
 		txt := `test {{define "content"}}`
 
 		r.LoadString(txt)
 
-		renderer := r.cache.Get(txt)
+		renderer, _ := r.cache.Get(txt)
 
 		if renderer == nil {
 			t.Fatal("Expected renderer to be initialized even if invalid, got nil")
 		}
 
 		if renderer.template != nil {
-			t.Fatalf("Expected renderer template to be nil, got %v", renderer.template)
+			t.Fatalf("Expected renderer templatex to be nil, got %v", renderer.template)
 		}
 
 		if renderer.parseError == nil {
@@ -143,19 +143,19 @@ func TestRegistryLoadString(t *testing.T) {
 		}
 	})
 
-	t.Run("valid template string", func(t *testing.T) {
+	t.Run("valid templatex string", func(t *testing.T) {
 		txt := `test {{.|raw}}`
 
 		r.LoadString(txt)
 
-		renderer := r.cache.Get(txt)
+		renderer, _ := r.cache.Get(txt)
 
 		if renderer == nil {
 			t.Fatal("Expected renderer to be initialized even if invalid, got nil")
 		}
 
 		if renderer.template == nil {
-			t.Fatal("Expected renderer template to be set, got nil")
+			t.Fatal("Expected renderer templatex to be set, got nil")
 		}
 
 		if renderer.parseError != nil {
@@ -186,14 +186,14 @@ func TestRegistryLoadFS(t *testing.T) {
 
 		r.LoadFS(fs, files...)
 
-		renderer := r.cache.Get(key)
+		renderer, _ := r.cache.Get(key)
 
 		if renderer == nil {
 			t.Fatal("Expected renderer to be initialized even if invalid, got nil")
 		}
 
 		if renderer.template != nil {
-			t.Fatalf("Expected renderer template to be nil, got %v", renderer.template)
+			t.Fatalf("Expected renderer templatex to be nil, got %v", renderer.template)
 		}
 
 		if renderer.parseError == nil {
@@ -223,7 +223,7 @@ func TestRegistryLoadFS(t *testing.T) {
 
 		r.LoadFS(fs, files...)
 
-		renderer := r.cache.Get(key)
+		renderer, _ := r.cache.Get(key)
 
 		if renderer == nil {
 			t.Fatal("Expected renderer to be initialized even if invalid, got nil")

@@ -1,4 +1,4 @@
-// Package template is a thin wrapper around the standard html/template
+// Package templatex is a thin wrapper around the standard html/template
 // and text/template packages that implements a convenient registry to
 // load and cache templates on the fly concurrently.
 //
@@ -6,20 +6,20 @@
 //
 // Example:
 //
-// 	registry := template.NewRegistry()
+//	registry := templatex.NewRegistry()
 //
-// 	html1, err := registry.LoadFiles(
-// 		// the files set wil be parsed only once and then cached
-// 		"layout.html",
-// 		"content.html",
-// 	).Render(map[string]any{"name": "John"})
+//	html1, err := registry.LoadFiles(
+//		// the files set wil be parsed only once and then cached
+//		"layout.html",
+//		"content.html",
+//	).Render(map[string]any{"name": "John"})
 //
-// 	html2, err := registry.LoadFiles(
-// 		// reuse the already parsed and cached files set
-// 		"layout.html",
-// 		"content.html",
-// 	).Render(map[string]any{"name": "Jane"})
-package template
+//	html2, err := registry.LoadFiles(
+//		// reuse the already parsed and cached files set
+//		"layout.html",
+//		"content.html",
+//	).Render(map[string]any{"name": "Jane"})
+package templatex
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pocketbase/pocketbase/tools/store"
+	"github.com/hashicorp/golang-lru/v2"
 )
 
 // NewRegistry creates and initializes a new templates registry with
@@ -36,8 +36,12 @@ import (
 //
 // Use the Registry.Load* methods to load templates into the registry.
 func NewRegistry() *Registry {
+	l, err := lru.New[string, *Renderer](65536)
+	if err != nil {
+		return nil
+	}
 	return &Registry{
-		cache: store.New[*Renderer](nil),
+		cache: l,
 		funcs: template.FuncMap{
 			"raw": func(str string) template.HTML {
 				return template.HTML(str)
@@ -50,7 +54,7 @@ func NewRegistry() *Registry {
 //
 // Use the Registry.Load* methods to load templates into the registry.
 type Registry struct {
-	cache *store.Store[*Renderer]
+	cache *lru.Cache[string, *Renderer]
 	funcs template.FuncMap
 }
 
@@ -64,12 +68,12 @@ type Registry struct {
 //
 // Example:
 //
-//  r.AddFuncs(map[string]any{
-//    "toUpper": func(str string) string {
-//        return strings.ToUppser(str)
-//    },
-//    ...
-//  })
+//	r.AddFuncs(map[string]any{
+//	  "toUpper": func(str string) string {
+//	      return strings.ToUppser(str)
+//	  },
+//	  ...
+//	})
 func (r *Registry) AddFuncs(funcs map[string]any) *Registry {
 	for name, f := range funcs {
 		r.funcs[name] = f
@@ -85,31 +89,33 @@ func (r *Registry) AddFuncs(funcs map[string]any) *Registry {
 func (r *Registry) LoadFiles(filenames ...string) *Renderer {
 	key := strings.Join(filenames, ",")
 
-	found := r.cache.Get(key)
-
-	if found == nil {
-		// parse and cache
-		tpl, err := template.New(filepath.Base(filenames[0])).Funcs(r.funcs).ParseFiles(filenames...)
-		found = &Renderer{template: tpl, parseError: err}
-		r.cache.Set(key, found)
+	v, ok := r.cache.Get(key)
+	if ok {
+		return v
 	}
 
-	return found
+	// parse and cache
+	tpl, err := template.New(filepath.Base(filenames[0])).Funcs(r.funcs).ParseFiles(filenames...)
+	v = &Renderer{template: tpl, parseError: err}
+	r.cache.Add(key, v)
+
+	return v
 }
 
 // LoadString caches (if not already) the specified inline string as a
 // single template and returns a ready to use Renderer instance.
 func (r *Registry) LoadString(text string) *Renderer {
-	found := r.cache.Get(text)
-
-	if found == nil {
-		// parse and cache (using the text as key)
-		tpl, err := template.New("").Funcs(r.funcs).Parse(text)
-		found = &Renderer{template: tpl, parseError: err}
-		r.cache.Set(text, found)
+	v, ok := r.cache.Get(text)
+	if ok {
+		return v
 	}
 
-	return found
+	// parse and cache (using the text as key)
+	tpl, err := template.New("").Funcs(r.funcs).Parse(text)
+	v = &Renderer{template: tpl, parseError: err}
+	r.cache.Add(text, v)
+
+	return v
 }
 
 // LoadFS caches (if not already) the specified fs and globPatterns
@@ -120,22 +126,23 @@ func (r *Registry) LoadString(text string) *Renderer {
 func (r *Registry) LoadFS(fsys fs.FS, globPatterns ...string) *Renderer {
 	key := fmt.Sprintf("%v%v", fsys, globPatterns)
 
-	found := r.cache.Get(key)
-
-	if found == nil {
-		// find the first file to use as template name (it is required when specifying Funcs)
-		var firstFilename string
-		if len(globPatterns) > 0 {
-			list, _ := fs.Glob(fsys, globPatterns[0])
-			if len(list) > 0 {
-				firstFilename = filepath.Base(list[0])
-			}
-		}
-
-		tpl, err := template.New(firstFilename).Funcs(r.funcs).ParseFS(fsys, globPatterns...)
-		found = &Renderer{template: tpl, parseError: err}
-		r.cache.Set(key, found)
+	v, ok := r.cache.Get(key)
+	if ok {
+		return v
 	}
 
-	return found
+	// find the first file to use as template name (it is required when specifying Funcs)
+	var firstFilename string
+	if len(globPatterns) > 0 {
+		list, _ := fs.Glob(fsys, globPatterns[0])
+		if len(list) > 0 {
+			firstFilename = filepath.Base(list[0])
+		}
+	}
+
+	tpl, err := template.New(firstFilename).Funcs(r.funcs).ParseFS(fsys, globPatterns...)
+	v = &Renderer{template: tpl, parseError: err}
+	r.cache.Add(key, v)
+
+	return v
 }

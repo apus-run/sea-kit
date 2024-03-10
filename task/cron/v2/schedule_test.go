@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pocketbase/pocketbase/tools/cron"
+	"github.com/apus-run/sea-kit/task/cron/v2"
 )
 
 func TestNewMoment(t *testing.T) {

@@ -46,7 +46,7 @@ replicas: 5
 selector:
   matchLabels:
     app: nginx
-template:
+templatex:
   metadata:
     labels:
       app: nginx

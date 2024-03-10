@@ -1,4 +1,4 @@
-package template
+package templatex
 
 import (
 	"errors"
@@ -16,7 +16,7 @@ func TestRendererRender(t *testing.T) {
 		expectedHasErr bool
 		expectedResult string
 	}{
-		"with nil template": {
+		"with nil templatex": {
 			&Renderer{},
 			nil,
 			true,

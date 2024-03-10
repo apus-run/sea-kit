@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/pocketbase/pocketbase/tools/archive"
+	"github.com/apus-run/sea-kit/utils/archive"
 )
 
 func TestExtractFailure(t *testing.T) {
