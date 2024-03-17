@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package jwt
 
 import (
@@ -21,7 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ecodeclub/ekit/bean/option"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
@@ -547,20 +532,20 @@ func TestNewManagement(t *testing.T) {
 func TestWithAllowTokenHeader(t *testing.T) {
 	type testCase[T any] struct {
 		name string
-		fn   func() option.Option[Management[T]]
+		fn   func() Option[Management[T]]
 		want string
 	}
 	tests := []testCase[data]{
 		{
 			name: "default",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return nil
 			},
 			want: "authorization",
 		},
 		{
 			name: "set_another_header",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return WithAllowTokenHeader[data]("jwt")
 			},
 			want: "jwt",
@@ -587,20 +572,20 @@ func TestWithAllowTokenHeader(t *testing.T) {
 func TestWithExposeAccessHeader(t *testing.T) {
 	type testCase[T any] struct {
 		name string
-		fn   func() option.Option[Management[T]]
+		fn   func() Option[Management[T]]
 		want string
 	}
 	tests := []testCase[data]{
 		{
 			name: "default",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return nil
 			},
 			want: "x-access-token",
 		},
 		{
 			name: "set_another_header",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return WithExposeAccessHeader[data]("token")
 			},
 			want: "token",
@@ -627,20 +612,20 @@ func TestWithExposeAccessHeader(t *testing.T) {
 func TestWithExposeRefreshHeader(t *testing.T) {
 	type testCase[T any] struct {
 		name string
-		fn   func() option.Option[Management[T]]
+		fn   func() Option[Management[T]]
 		want string
 	}
 	tests := []testCase[data]{
 		{
 			name: "default",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return nil
 			},
 			want: "x-refresh-token",
 		},
 		{
 			name: "set_another_header",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return WithExposeRefreshHeader[data]("refresh-token")
 			},
 			want: "refresh-token",
@@ -667,20 +652,20 @@ func TestWithExposeRefreshHeader(t *testing.T) {
 func TestWithRotateRefreshToken(t *testing.T) {
 	type testCase[T any] struct {
 		name string
-		fn   func() option.Option[Management[T]]
+		fn   func() Option[Management[T]]
 		want bool
 	}
 	tests := []testCase[data]{
 		{
 			name: "default",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return nil
 			},
 			want: false,
 		},
 		{
 			name: "set_another_header",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return WithRotateRefreshToken[data](true)
 			},
 			want: true,
@@ -707,20 +692,20 @@ func TestWithRotateRefreshToken(t *testing.T) {
 func TestWithNowFunc(t *testing.T) {
 	type testCase[T any] struct {
 		name string
-		fn   func() option.Option[Management[T]]
+		fn   func() Option[Management[T]]
 		want time.Time
 	}
 	tests := []testCase[data]{
 		{
 			name: "default",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return nil
 			},
 			want: time.Now(),
 		},
 		{
 			name: "set_another_now_func",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return WithNowFunc[data](func() time.Time {
 					return nowTime
 				})
@@ -750,20 +735,20 @@ func TestWithRefreshJWTOptions(t *testing.T) {
 	var genIDFn func() string
 	type testCase[T any] struct {
 		name string
-		fn   func() option.Option[Management[T]]
+		fn   func() Option[Management[T]]
 		want *Options
 	}
 	tests := []testCase[data]{
 		{
 			name: "default",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return nil
 			},
 			want: nil,
 		},
 		{
 			name: "set_refresh_jwt_options",
-			fn: func() option.Option[Management[data]] {
+			fn: func() Option[Management[data]] {
 				return WithRefreshJWTOptions[data](
 					NewOptions(
 						24*60*time.Minute,

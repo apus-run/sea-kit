@@ -1,6 +1,7 @@
 package ginx
 
 import (
+	"github.com/apus-run/sea-kit/collection"
 	"mime/multipart"
 
 	"github.com/spf13/cast"
@@ -66,8 +67,8 @@ type Request interface {
 }
 
 // 获取请求地址中的参数
-func (ctx *Context) Query(key string) string {
-	return ctx.Context.Query(key)
+func (ctx *Context) Query(key string) collection.AnyValue {
+	return collection.AnyValue{Value: ctx.Context.Query(key)}
 }
 
 // 获取cookie
@@ -157,7 +158,7 @@ func (ctx *Context) DefaultQueryStringSlice(key string, def []string) ([]string,
 // 路由匹配中带的参数
 // 形如 /book/:id
 func (ctx *Context) DefaultParamInt(key string, def int) (int, bool) {
-	if val := ctx.Param(key); val != nil {
+	if val := ctx.ParamAny(key); val != nil {
 		// 通过cast进行类型转换
 		return cast.ToInt(val), true
 	}
@@ -165,43 +166,50 @@ func (ctx *Context) DefaultParamInt(key string, def int) (int, bool) {
 }
 
 func (ctx *Context) DefaultParamInt64(key string, def int64) (int64, bool) {
-	if val := ctx.Param(key); val != nil {
+	if val := ctx.ParamAny(key); val != nil {
 		return cast.ToInt64(val), true
 	}
 	return def, false
 }
 
 func (ctx *Context) DefaultParamFloat64(key string, def float64) (float64, bool) {
-	if val := ctx.Param(key); val != nil {
+	if val := ctx.ParamAny(key); val != nil {
 		return cast.ToFloat64(val), true
 	}
 	return def, false
 }
 
 func (ctx *Context) DefaultParamFloat32(key string, def float32) (float32, bool) {
-	if val := ctx.Param(key); val != nil {
+	if val := ctx.ParamAny(key); val != nil {
 		return cast.ToFloat32(val), true
 	}
 	return def, false
 }
 
 func (ctx *Context) DefaultParamBool(key string, def bool) (bool, bool) {
-	if val := ctx.Param(key); val != nil {
+	if val := ctx.ParamAny(key); val != nil {
 		return cast.ToBool(val), true
 	}
 	return def, false
 }
 
 func (ctx *Context) DefaultParamString(key string, def string) (string, bool) {
-	if val := ctx.Param(key); val != nil {
+	if val := ctx.ParamAny(key); val != nil {
 		return cast.ToString(val), true
 	}
 	return def, false
 }
 
-// 获取路由参数
-func (ctx *Context) Param(key string) interface{} {
+// ParamAny 获取路由参数
+func (ctx *Context) ParamAny(key string) any {
 	return ctx.Context.Param(key)
+}
+
+// Param 获取路由参数
+func (ctx *Context) Param(key string) collection.AnyValue {
+	return collection.AnyValue{
+		Value: ctx.Context.Param(key),
+	}
 }
 
 func (ctx *Context) FormAll() map[string][]string {

@@ -1,24 +1,9 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package jwt
 
 import (
 	"testing"
 	"time"
 
-	"github.com/ecodeclub/ekit/bean/option"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/assert"
 )
@@ -56,19 +41,19 @@ func TestNewOptions(t *testing.T) {
 func TestWithDecryptKey(t *testing.T) {
 	tests := []struct {
 		name string
-		fn   func() option.Option[Options]
+		fn   func() Option[Options]
 		want string
 	}{
 		{
 			name: "normal",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return nil
 			},
 			want: encryptionKey,
 		},
 		{
 			name: "set_another_key",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return WithDecryptKey("another sign key")
 			},
 			want: "another sign key",
@@ -92,19 +77,19 @@ func TestWithDecryptKey(t *testing.T) {
 func TestWithMethod(t *testing.T) {
 	tests := []struct {
 		name string
-		fn   func() option.Option[Options]
+		fn   func() Option[Options]
 		want jwt.SigningMethod
 	}{
 		{
 			name: "normal",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return nil
 			},
 			want: jwt.SigningMethodHS256,
 		},
 		{
 			name: "set_another_method",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return WithMethod(jwt.SigningMethodHS384)
 			},
 			want: jwt.SigningMethodHS384,
@@ -128,18 +113,18 @@ func TestWithMethod(t *testing.T) {
 func TestWithIssuer(t *testing.T) {
 	tests := []struct {
 		name string
-		fn   func() option.Option[Options]
+		fn   func() Option[Options]
 		want string
 	}{
 		{
 			name: "normal",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return nil
 			},
 		},
 		{
 			name: "set_another_issuer",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return WithIssuer("foo")
 			},
 			want: "foo",
@@ -163,18 +148,18 @@ func TestWithIssuer(t *testing.T) {
 func TestWithGenIDFunc(t *testing.T) {
 	tests := []struct {
 		name string
-		fn   func() option.Option[Options]
+		fn   func() Option[Options]
 		want string
 	}{
 		{
 			name: "normal",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return nil
 			},
 		},
 		{
 			name: "set_another_gen_id_func",
-			fn: func() option.Option[Options] {
+			fn: func() Option[Options] {
 				return WithGenIDFunc(func() string {
 					return "unique id"
 				})

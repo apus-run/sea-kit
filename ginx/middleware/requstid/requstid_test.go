@@ -2,6 +2,8 @@ package requstid
 
 import (
 	"context"
+	"fmt"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -9,12 +11,40 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/apus-run/sea-kit/utils"
 )
 
+// GetLocalHTTPAddrPairs get available http server and request address
+func GetLocalHTTPAddrPairs() (serverAddr string, requestAddr string) {
+	port, err := GetAvailablePort()
+	if err != nil {
+		fmt.Printf("GetAvailablePort error: %v\n", err)
+		return "", ""
+	}
+	serverAddr = fmt.Sprintf(":%d", port)
+	requestAddr = fmt.Sprintf("http://127.0.0.1:%d", port)
+	return serverAddr, requestAddr
+}
+
+// GetAvailablePort get available port
+func GetAvailablePort() (int, error) {
+	address, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:0", "0.0.0.0"))
+	if err != nil {
+		return 0, err
+	}
+
+	listener, err := net.ListenTCP("tcp", address)
+	if err != nil {
+		return 0, err
+	}
+
+	port := listener.Addr().(*net.TCPAddr).Port
+	err = listener.Close()
+
+	return port, err
+}
+
 func runRequestIDHTTPServer(fn func(c *gin.Context)) string {
-	serverAddr, requestAddr := utils.GetLocalHTTPAddrPairs()
+	serverAddr, requestAddr := GetLocalHTTPAddrPairs()
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()

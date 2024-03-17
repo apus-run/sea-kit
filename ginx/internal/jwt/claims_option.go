@@ -17,7 +17,6 @@ package jwt
 import (
 	"time"
 
-	"github.com/ecodeclub/ekit/bean/option"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -34,7 +33,7 @@ type Options struct {
 // DecryptKey: 默认与 EncryptionKey 相同.
 // Method: 默认使用 jwt.SigningMethodHS256 签名方式.
 func NewOptions(expire time.Duration, encryptionKey string,
-	opts ...option.Option[Options]) Options {
+	opts ...Option[Options]) Options {
 	dOpts := Options{
 		Expire:        expire,
 		EncryptionKey: encryptionKey,
@@ -43,27 +42,27 @@ func NewOptions(expire time.Duration, encryptionKey string,
 		genIDFn:       func() string { return "" },
 	}
 
-	option.Apply[Options](&dOpts, opts...)
+	Apply[Options](&dOpts, opts...)
 
 	return dOpts
 }
 
 // WithDecryptKey 设置解密密钥.
-func WithDecryptKey(decryptKey string) option.Option[Options] {
+func WithDecryptKey(decryptKey string) Option[Options] {
 	return func(o *Options) {
 		o.DecryptKey = decryptKey
 	}
 }
 
 // WithMethod 设置 JWT 的签名方法.
-func WithMethod(method jwt.SigningMethod) option.Option[Options] {
+func WithMethod(method jwt.SigningMethod) Option[Options] {
 	return func(o *Options) {
 		o.Method = method
 	}
 }
 
 // WithIssuer 设置签发人.
-func WithIssuer(issuer string) option.Option[Options] {
+func WithIssuer(issuer string) Option[Options] {
 	return func(o *Options) {
 		o.Issuer = issuer
 	}
@@ -71,7 +70,7 @@ func WithIssuer(issuer string) option.Option[Options] {
 
 // WithGenIDFunc 设置生成 JWT ID 的函数.
 // 可以设置成 WithGenIDFunc(uuid.NewString).
-func WithGenIDFunc(fn func() string) option.Option[Options] {
+func WithGenIDFunc(fn func() string) Option[Options] {
 	return func(o *Options) {
 		o.genIDFn = fn
 	}

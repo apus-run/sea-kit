@@ -3,37 +3,10 @@ package ginx
 import (
 	"context"
 	"net/http"
-	"net/http/httputil"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
-
-const (
-	// CodeOK means a successful response
-	CodeOK = 0
-	// CodeErr means a failure response
-	CodeErr = 1
-)
-
-const requestIdFieldKey = "REQUEST_ID"
-
-// AcceptLanguageHeaderName represents the header name of accept language
-const AcceptLanguageHeaderName = "Accept-Language"
-
-// ClientTimezoneOffsetHeaderName represents the header name of client timezone offset
-const ClientTimezoneOffsetHeaderName = "X-Timezone-Offset"
-
-// Context a wrapper of gin.Context
-type Context struct {
-	*gin.Context
-}
-
-// HandlerFunc defines the handler to wrap gin.Context
-type HandlerFunc func(*Context)
-
-// ProxyHandlerFunc represents the reverse proxy handler function
-type ProxyHandlerFunc func(*Context) (*httputil.ReverseProxy, error)
 
 // WrapContext returns a context wrapped by this file
 func WrapContext(c *gin.Context) *Context {
@@ -75,14 +48,6 @@ func NewGinContext(ctx context.Context, c *gin.Context) context.Context {
 func FromGinContext(ctx context.Context) (c *gin.Context, ok bool) {
 	c, ok = ctx.Value(ginKey{}).(*gin.Context)
 	return
-}
-
-// Result defines HTTP JSON response
-type Result struct {
-	Code    int      `json:"code"`
-	Msg     string   `json:"msg"`
-	Data    any      `json:"data"`
-	Details []string `json:"details,omitempty"`
 }
 
 // JSON returns JSON response

@@ -1,17 +1,3 @@
-// Copyright 2023 ecodeclub
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package jwt
 
 import (
@@ -22,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ecodeclub/ekit/bean/option"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -53,10 +38,10 @@ type Management[T any] struct {
 // rotateRefreshToken: 默认不轮换刷新令牌.
 // 该配置需要设置 refreshJWTOptions 才有效.
 func NewManagement[T any](accessJWTOptions Options,
-	opts ...option.Option[Management[T]]) *Management[T] {
+	opts ...Option[Management[T]]) *Management[T] {
 	dOpts := defaultManagementOptions[T]()
 	dOpts.accessJWTOptions = accessJWTOptions
-	option.Apply[Management[T]](&dOpts, opts...)
+	Apply[Management[T]](&dOpts, opts...)
 
 	return &dOpts
 }
@@ -72,35 +57,35 @@ func defaultManagementOptions[T any]() Management[T] {
 }
 
 // WithAllowTokenHeader 设置允许 token 的请求头.
-func WithAllowTokenHeader[T any](header string) option.Option[Management[T]] {
+func WithAllowTokenHeader[T any](header string) Option[Management[T]] {
 	return func(m *Management[T]) {
 		m.allowTokenHeader = header
 	}
 }
 
 // WithExposeAccessHeader 设置公开资源令牌的请求头.
-func WithExposeAccessHeader[T any](header string) option.Option[Management[T]] {
+func WithExposeAccessHeader[T any](header string) Option[Management[T]] {
 	return func(m *Management[T]) {
 		m.exposeAccessHeader = header
 	}
 }
 
 // WithExposeRefreshHeader 设置公开刷新令牌的请求头.
-func WithExposeRefreshHeader[T any](header string) option.Option[Management[T]] {
+func WithExposeRefreshHeader[T any](header string) Option[Management[T]] {
 	return func(m *Management[T]) {
 		m.exposeRefreshHeader = header
 	}
 }
 
 // WithRefreshJWTOptions 设置刷新令牌相关的配置.
-func WithRefreshJWTOptions[T any](refreshOpts Options) option.Option[Management[T]] {
+func WithRefreshJWTOptions[T any](refreshOpts Options) Option[Management[T]] {
 	return func(m *Management[T]) {
 		m.refreshJWTOptions = &refreshOpts
 	}
 }
 
 // WithRotateRefreshToken 设置轮换刷新令牌.
-func WithRotateRefreshToken[T any](isRotate bool) option.Option[Management[T]] {
+func WithRotateRefreshToken[T any](isRotate bool) Option[Management[T]] {
 	return func(m *Management[T]) {
 		m.rotateRefreshToken = isRotate
 	}
@@ -108,7 +93,7 @@ func WithRotateRefreshToken[T any](isRotate bool) option.Option[Management[T]] {
 
 // WithNowFunc 设置当前时间.
 // 一般用于测试固定 jwt.
-func WithNowFunc[T any](nowFunc func() time.Time) option.Option[Management[T]] {
+func WithNowFunc[T any](nowFunc func() time.Time) Option[Management[T]] {
 	return func(m *Management[T]) {
 		m.nowFunc = nowFunc
 	}
