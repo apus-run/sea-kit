@@ -14,6 +14,7 @@ require (
 	github.com/xo/dburl v0.14.2
 	go.uber.org/zap v1.13.0
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
+	github.com/blockloop/scan v1.3.0
 )
 
 require (

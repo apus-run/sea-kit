@@ -20,6 +20,8 @@ import (
 	"golang.org/x/sync/singleflight"
 
 	"github.com/apus-run/sea-kit/log"
+
+	"github.com/apus-run/sea-kit/sqlx/hooks"
 )
 
 var (
@@ -110,23 +112,23 @@ func (data *database) GetWithHooks(ctx context.Context, name string) *DB {
 		}
 
 		driverName = fmt.Sprintf("%s:%s", u.Driver, name)
-		hooks := combineHooks(
-			&logHooks{
-				log: data.log,
+		hs := hooks.CombineHooks(
+			&hooks.LogHooks{
+				Log: data.log,
 			},
-			&metricHooks{},
-			&tracingHooks{},
+			&hooks.MetricHooks{},
+			&hooks.TracingHooks{},
 		)
 
 		switch u.Driver {
 		case "sqlite":
-			d = sqlhooks.Wrap(&sqlite3.SQLiteDriver{}, hooks)
+			d = sqlhooks.Wrap(&sqlite3.SQLiteDriver{}, hs)
 		case "mysql":
-			d = sqlhooks.Wrap(&mysql.MySQLDriver{}, hooks)
+			d = sqlhooks.Wrap(&mysql.MySQLDriver{}, hs)
 		case "postgres":
-			d = sqlhooks.Wrap(stdlib.GetDefaultDriver(), hooks)
+			d = sqlhooks.Wrap(stdlib.GetDefaultDriver(), hs)
 		default:
-			d = sqlhooks.Wrap(&sqlite3.SQLiteDriver{}, hooks)
+			d = sqlhooks.Wrap(&sqlite3.SQLiteDriver{}, hs)
 		}
 		// 设置用户名和密码
 		// u.User = url.UserPassword(db.opts.username, db.opts.password)

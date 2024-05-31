@@ -3,11 +3,15 @@ package sqlx
 import (
 	"context"
 	"database/sql"
+	"database/sql/driver"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"testing"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/stretchr/testify/assert"
 
@@ -24,14 +28,44 @@ CREATE TABLE IF NOT EXISTS users (
 )
 `
 
+type KV map[string]string
+
+func (kv KV) Scan(value any) error {
+	return json.Unmarshal([]byte(value.(string)), &kv)
+}
+
+func (kv KV) Value() (driver.Value, error) {
+	if len(kv) == 0 {
+		return "{}", nil
+	}
+	b, err := json.Marshal(kv)
+	if err != nil {
+		return nil, err
+	}
+	return string(b), nil
+}
+
 type user struct {
 	ID     int    `db:"id" json:"id"`
 	UserID int    `db:"user_id" json:"user_id"`
 	Name   string `db:"name" json:"name"`
 	Age    int    `db:"age" json:"age"`
 
+	Username string `db:"username"`          // 登录名字
+	Password []byte `db:"password" json:"-"` // 登录密码
+	Extra    KV     `db:"extra" json:"-"`    // 扩展信息，如支付宝ID等
+
 	Created time.Time `db:"created" json:"created"` // 创建时间
 	Updated time.Time `db:"updated" json:"updated"` // 更新时间
+}
+
+func (u *user) SetPassword(value string) (err error) {
+	u.Password, err = bcrypt.GenerateFromPassword([]byte(value), 16)
+	return
+}
+
+func (u *user) CheckPassword(value string) bool {
+	return bcrypt.CompareHashAndPassword(u.Password, []byte(value)) == nil
 }
 
 func (u *user) TableName() string { return "users" }
@@ -40,6 +74,9 @@ func (u *user) Schema() string {
 	return `CREATE TABLE ` + u.TableName() + `(
 	` + u.KeyName() + ` INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
+    extra TEXT,
+	username TEXT default '',
+	password BLOB default '',
 	name TEXT,
 	age INTEGER,
    	created DATETIME,
@@ -176,9 +213,18 @@ func TestUser(t *testing.T) {
 	assert.Nil(t, err)
 
 	u := user{
-		UserID:  1,
-		Name:    "bob",
-		Age:     28,
+		UserID: 1,
+		Name:   "bob",
+		Age:    28,
+		Extra: KV{
+			"alipay": "moocss",
+		},
+
+		// Extra: map[string]string{
+		// 	"from_id":  strconv.Itoa(w.ID),
+		// 	"from_oid": strconv.FormatInt(id, 10),
+		// },
+
 		Created: time.Now(),
 	}
 

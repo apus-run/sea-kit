@@ -2,6 +2,7 @@ package slogx
 
 import (
 	"context"
+	"github.com/apus-run/sea-kit/slogx/v2/prettylog"
 	"log"
 	"log/slog"
 	"sync/atomic"
@@ -63,4 +64,16 @@ func TestNewLogger(t *testing.T) {
 	if atomic.LoadInt32(&called) != 1 {
 		t.FailNow()
 	}
+}
+
+func TestPrettyLog(t *testing.T) {
+	prettyHandler := prettylog.NewHandler(&slog.HandlerOptions{
+		Level:       slog.LevelInfo,
+		AddSource:   false,
+		ReplaceAttr: nil,
+	})
+	logger := slog.New(prettyHandler)
+	logger.Info("hello")
+	logger.Info("敏感数据", slog.Any("password", Password("1234567890")))
+
 }

@@ -1,5 +1,7 @@
 # opt
 
+> 来源: https://github.com/Southclaws/opt
+
 > Optional types and utilities for egonomic data transformation.
 
 [![GoDoc](https://pkg.go.dev/badge/github.com/Southclaws/opt)](https://pkg.go.dev/github.com/Southclaws/opt?tab=doc)

@@ -2,6 +2,8 @@ package zlog
 
 import (
 	"time"
+
+	"go.uber.org/zap"
 )
 
 // TimeValue returns a Value for a time.Time.
@@ -74,4 +76,12 @@ func Time(key string, v time.Time) Field {
 
 func Duration(key string, v time.Duration) Field {
 	return Field{Key: key, Value: DurationValue(v)}
+}
+
+func Any(key string, v any) Field {
+	f := zap.Any(key, v)
+	return Field{
+		Key:   f.Key,
+		Value: f.String,
+	}
 }

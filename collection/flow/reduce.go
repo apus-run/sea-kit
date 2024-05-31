@@ -1,4 +1,4 @@
-package dt
+package flow
 
 // Reduce applies fn to the collection, reducing the output to a single value.
 func Reduce[T any, R any](collection []T, accumulator func(R, T) R, initial R) R {

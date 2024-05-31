@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -299,4 +300,40 @@ func TestJSON(t *testing.T) {
 	a.Equal("southclaws", out.ID)
 	a.Empty(out.Name)
 	a.Empty(out.Age)
+}
+
+type User struct {
+	ID uint64
+
+	Name  string
+	Bio   Optional[string]
+	Admin bool
+	Auths []string
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt Optional[time.Time]
+}
+
+func (a *User) IsSuspended() bool {
+	return a.DeletedAt.Ok()
+}
+
+func TestDemo(t *testing.T) {
+	a := assert.New(t)
+
+	user := User{
+		ID:        1,
+		Name:      "southclaws",
+		Bio:       New("I am a developer"),
+		Admin:     true,
+		Auths:     []string{"github", "twitter"},
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+
+		DeletedAt: NewSafe(time.Now(), false),
+	}
+
+	a.True(user.Bio.Ok())
+	a.False(user.IsSuspended())
 }

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Southclaws/opt"
+	opt "github.com/apus-run/sea-kit/collection/optional"
 )
 
 func Example_get() {

@@ -13,13 +13,13 @@ import (
 const LOGGER_KEY = "zapLogger"
 
 type ZapLogger struct {
-	logger *zap.Logger
+	*zap.Logger
 }
 
 // NewZapLogger 只包装了 zap
 func NewZapLogger(l *zap.Logger) Logger {
 	return &ZapLogger{
-		logger: l,
+		l,
 	}
 }
 
@@ -40,11 +40,11 @@ func NewLogger(opts ...Option) *ZapLogger {
 	core := zapcore.NewCore(encoder, writerSyncer, level)
 	if options.Mode != "prod" {
 		return &ZapLogger{
-			zap.New(core, zap.Development(), zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel)),
+			zap.New(core, zap.Development(), zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(zap.ErrorLevel)),
 		}
 	}
 	return &ZapLogger{
-		zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel)),
+		zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(zap.ErrorLevel)),
 	}
 }
 
@@ -113,94 +113,94 @@ func getLogLevel(logLevel string) zapcore.Level {
 }
 
 func (l *ZapLogger) With(args ...Field) Logger {
-	z := l.logger.With(l.toZapFields(args)...)
+	z := l.Logger.With(l.toZapFields(args)...)
 	return NewZapLogger(z)
 }
 
 func (l *ZapLogger) Info(msg string, tags ...Field) {
-	l.logger.Info(msg, l.toZapFields(tags)...)
+	l.Logger.Info(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Error(msg string, tags ...Field) {
-	l.logger.Error(msg, l.toZapFields(tags)...)
+	l.Logger.Error(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Debug(msg string, tags ...Field) {
-	l.logger.Debug(msg, l.toZapFields(tags)...)
+	l.Logger.Debug(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Warn(msg string, tags ...Field) {
-	l.logger.Warn(msg, l.toZapFields(tags)...)
+	l.Logger.Warn(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Fatal(msg string, tags ...Field) {
-	l.logger.Fatal(msg, l.toZapFields(tags)...)
+	l.Logger.Fatal(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Panic(msg string, tags ...Field) {
-	l.logger.Panic(msg, l.toZapFields(tags)...)
+	l.Logger.Panic(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Slow(msg string, tags ...Field) {
-	l.logger.Warn(msg, l.toZapFields(tags)...)
+	l.Logger.Warn(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Stack(msg string) {
-	l.logger.Error(fmt.Sprint(msg), zap.Stack("stack"))
+	l.Logger.Error(fmt.Sprint(msg), zap.Stack("stack"))
 }
 
 func (l *ZapLogger) Stat(msg string, tags ...Field) {
-	l.logger.Info(msg, l.toZapFields(tags)...)
+	l.Logger.Info(msg, l.toZapFields(tags)...)
 }
 
 func (l *ZapLogger) Debugf(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
-	l.logger.Debug(msg, zap.Any("args", args))
+	l.Logger.Debug(msg, zap.Any("args", args))
 }
 
 func (l *ZapLogger) Infof(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
-	l.logger.Info(msg, zap.Any("args", args))
+	l.Logger.Info(msg, zap.Any("args", args))
 }
 
 func (l *ZapLogger) Warnf(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
-	l.logger.Warn(msg, zap.Any("args", args))
+	l.Logger.Warn(msg, zap.Any("args", args))
 }
 
 func (l *ZapLogger) Errorf(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
-	l.logger.Error(msg, zap.Any("args", args))
+	l.Logger.Error(msg, zap.Any("args", args))
 }
 
 func (l *ZapLogger) Fatalf(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
-	l.logger.Fatal(msg, zap.Any("args", args))
+	l.Logger.Fatal(msg, zap.Any("args", args))
 }
 
 func (l *ZapLogger) Panicf(format string, args ...any) {
 	msg := fmt.Sprintf(format, args...)
-	l.logger.Panic(msg, zap.Any("args", args))
+	l.Logger.Panic(msg, zap.Any("args", args))
 }
 
 func (l *ZapLogger) Print(args ...any) {
-	l.logger.Info(fmt.Sprint(args...))
+	l.Logger.Info(fmt.Sprint(args...))
 }
 
 func (l *ZapLogger) Printf(format string, args ...any) {
-	l.logger.Info(fmt.Sprintf(format, args...))
+	l.Logger.Info(fmt.Sprintf(format, args...))
 }
 
 func (l *ZapLogger) Println(args ...any) {
-	l.logger.Info(fmt.Sprintln(args...))
+	l.Logger.Info(fmt.Sprintln(args...))
 }
 
 func (l *ZapLogger) Close() error {
-	return l.logger.Sync()
+	return l.Logger.Sync()
 }
 
 func (l *ZapLogger) Sync() error {
-	return l.logger.Sync()
+	return l.Logger.Sync()
 }
 
 func (l *ZapLogger) toZapFields(fields []Field) []zap.Field {

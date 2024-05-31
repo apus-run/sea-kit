@@ -9,7 +9,7 @@ import (
 )
 
 func TestWithTraceAll(t *testing.T) {
-	actual := &logger{}
+	actual := &Logger{}
 
 	WithTraceAll()(actual)
 
@@ -17,7 +17,7 @@ func TestWithTraceAll(t *testing.T) {
 }
 
 func TestWithErrorField(t *testing.T) {
-	actual := &logger{}
+	actual := &Logger{}
 	expected := "error"
 
 	WithErrorField(expected)(actual)
@@ -26,7 +26,7 @@ func TestWithErrorField(t *testing.T) {
 }
 
 func TestWithIgnoreTrace(t *testing.T) {
-	actual := &logger{}
+	actual := &Logger{}
 
 	WithIgnoreTrace()(actual)
 
@@ -34,7 +34,7 @@ func TestWithIgnoreTrace(t *testing.T) {
 }
 
 func TestWithLogger(t *testing.T) {
-	actual := &logger{}
+	actual := &Logger{}
 	log := slog.Default()
 
 	WithLogger(log)(actual)
@@ -54,7 +54,7 @@ func TestSetLogLevel(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(string(tt.lType), func(t *testing.T) {
-			actual := &logger{
+			actual := &Logger{
 				logLevel: map[LogType]slog.Level{
 					tt.lType: slog.LevelInfo,
 				},
@@ -68,7 +68,7 @@ func TestSetLogLevel(t *testing.T) {
 }
 
 func TestWithRecordNotFoundError(t *testing.T) {
-	actual := &logger{
+	actual := &Logger{
 		ignoreRecordNotFoundError: true,
 	}
 
@@ -78,7 +78,7 @@ func TestWithRecordNotFoundError(t *testing.T) {
 }
 
 func TestWithSlowThreshold(t *testing.T) {
-	actual := &logger{}
+	actual := &Logger{}
 	expected := 1 * time.Second
 
 	WithSlowThreshold(expected)(actual)
@@ -87,7 +87,7 @@ func TestWithSlowThreshold(t *testing.T) {
 }
 
 func TestWithSourceField(t *testing.T) {
-	actual := &logger{}
+	actual := &Logger{}
 	expected := "source"
 
 	WithSourceField(expected)(actual)

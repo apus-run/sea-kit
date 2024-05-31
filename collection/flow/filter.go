@@ -1,4 +1,4 @@
-package dt
+package flow
 
 // Filter returns a new slice with only items where the predicate returns true.
 func Filter[V any](collection []V, predicate func(V) bool) []V {

@@ -23,6 +23,8 @@ type Logger interface {
 	Printf(format string, args ...any)
 	Println(args ...any)
 
+	With(args ...Field) Logger
+
 	Close() error
 	Sync() error
 }

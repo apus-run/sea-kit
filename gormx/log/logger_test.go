@@ -32,7 +32,7 @@ func TestNew(t *testing.T) {
 }
 
 func Test_logger_LogMode(t *testing.T) {
-	l := logger{}
+	l := Logger{}
 	actual := l.LogMode(gormlogger.Info)
 
 	assert.Equal(t, l, actual)
@@ -254,7 +254,7 @@ func Test_logger_Trace(t *testing.T) {
 
 // private functions
 
-func getReceiverAndLogger(options []Option) (*DummyHandler, *logger) {
+func getReceiverAndLogger(options []Option) (*DummyHandler, *Logger) {
 	receiver := NewDummyHandler()
 	options = append(options, WithLogger(slog.New(receiver)))
 

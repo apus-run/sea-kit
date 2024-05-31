@@ -1,6 +1,6 @@
 // https://github.com/booscaaa/go-paginate
 
-package sqlx
+package pagination
 
 import (
 	"fmt"

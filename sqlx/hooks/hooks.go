@@ -1,4 +1,4 @@
-package sqlx
+package hooks
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type hookCollection struct {
 	errorHooks  []sqlhooks.ErrorHook
 }
 
-func combineHooks(hooks ...sqlhooks.Hooks) sqlhooks.Hooks {
+func CombineHooks(hooks ...sqlhooks.Hooks) sqlhooks.Hooks {
 	beforeHooks := make([]sqlhooks.Hook, 0, len(hooks))
 	afterHooks := make([]sqlhooks.Hook, 0, len(hooks))
 	errorHooks := make([]sqlhooks.ErrorHook, 0, len(hooks))

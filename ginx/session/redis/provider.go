@@ -43,11 +43,9 @@ func (rsp *SessionProvider) RenewAccessToken(ctx *ginx.Context) error {
 	}
 	claims := jwtClaims.Data
 	sess := newRedisSession(claims.SSID, rsp.expiration, rsp.client, claims)
-	defer func() {
-		// refresh_token 只能用一次，不管成功与否
-		_ = sess.Del(ctx, keyRefreshToken)
-	}()
 	oldToken := sess.Get(ctx, keyRefreshToken).StringOrDefault("")
+	// refresh_token 只能用一次，不管成功与否
+	_ = sess.Del(ctx, keyRefreshToken)
 	// 说明这个 rt 是已经用过的 refreshToken
 	// 或者 session 本身就已经过期了
 	if oldToken != rt {
@@ -111,7 +109,8 @@ func (rsp *SessionProvider) extractTokenString(ctx *ginx.Context) string {
 // Get 返回 Session，如果没有拿到 session 或者 session 已经过期，会返回 error
 func (rsp *SessionProvider) Get(ctx *ginx.Context) (session.Session, error) {
 	val, _ := ctx.Get(session.CtxSessionKey)
-	res, ok := val.(*Session)
+	// 对接口断言，而不是对实现断言
+	res, ok := val.(session.Session)
 	if ok {
 		return res, nil
 	}

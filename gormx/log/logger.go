@@ -28,8 +28,8 @@ const (
 )
 
 // New creates a new logger for gorm.io/gorm
-func New(options ...Option) *logger {
-	l := logger{
+func New(options ...Option) *Logger {
+	l := Logger{
 		ignoreRecordNotFoundError: true,
 		errorField:                ErrorField,
 		sourceField:               SourceField,
@@ -55,7 +55,7 @@ func New(options ...Option) *logger {
 	return &l
 }
 
-type logger struct {
+type Logger struct {
 	slogger                   *slog.Logger
 	ignoreTrace               bool
 	ignoreRecordNotFoundError bool
@@ -68,28 +68,28 @@ type logger struct {
 }
 
 // LogMode log mode
-func (l logger) LogMode(_ gormlogger.LogLevel) gormlogger.Interface {
+func (l Logger) LogMode(_ gormlogger.LogLevel) gormlogger.Interface {
 	// log level is set by slog
 	return l
 }
 
 // Info logs info
-func (l logger) Info(ctx context.Context, msg string, args ...any) {
+func (l Logger) Info(ctx context.Context, msg string, args ...any) {
 	l.slogger.InfoContext(ctx, msg, args...)
 }
 
 // Warn logs warn messages
-func (l logger) Warn(ctx context.Context, msg string, args ...any) {
+func (l Logger) Warn(ctx context.Context, msg string, args ...any) {
 	l.slogger.WarnContext(ctx, msg, args...)
 }
 
 // Error logs error messages
-func (l logger) Error(ctx context.Context, msg string, args ...any) {
+func (l Logger) Error(ctx context.Context, msg string, args ...any) {
 	l.slogger.ErrorContext(ctx, msg, args...)
 }
 
 // Trace logs sql message
-func (l logger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
+func (l Logger) Trace(ctx context.Context, begin time.Time, fc func() (sql string, rowsAffected int64), err error) {
 	if l.ignoreTrace {
 		return // Silent
 	}

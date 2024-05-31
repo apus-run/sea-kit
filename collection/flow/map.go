@@ -1,4 +1,4 @@
-package dt
+package flow
 
 // Map applies fn to each item in the list and returns a new list of equal size.
 func Map[T any, R any](collection []T, fn func(T) R) []R {
