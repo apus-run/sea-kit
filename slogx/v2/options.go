@@ -72,6 +72,7 @@ func WithWriter(writer io.Writer) Option {
 type Format string
 
 const (
-	FormatText Format = "text"
-	FormatJSON Format = "json"
+	FormatText   Format = "text"
+	FormatJSON   Format = "json"
+	FormatPretty Format = "pretty"
 )

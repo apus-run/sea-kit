@@ -17,6 +17,7 @@ import (
 	"github.com/pkg/errors"
 
 	"github.com/apus-run/sea-kit/errorsx"
+	"github.com/apus-run/sea-kit/slogx/v2/prettylog"
 )
 
 const LOGGER_KEY = "slogLogger"
@@ -62,9 +63,18 @@ func New(options ...Option) *slog.Logger {
 		AddSource:   true,
 		ReplaceAttr: ReplaceAttr,
 	}
-	if opts.Format == FormatText {
+
+	switch f := opts.Format; f {
+	case FormatText:
 		handler = slog.NewTextHandler(os.Stdout, handlerOptions)
-	} else {
+	case FormatJSON:
+		handler = slog.NewJSONHandler(opts.Writer, handlerOptions)
+	case FormatPretty:
+		handler = prettylog.NewHandler(&slog.HandlerOptions{
+			Level:     getLogLevel(opts.LogLevel),
+			AddSource: true,
+		})
+	default:
 		handler = slog.NewJSONHandler(opts.Writer, handlerOptions)
 	}
 
@@ -135,6 +145,20 @@ func ReplaceAttr(groups []string, a slog.Attr) slog.Attr {
 		return a
 	}
 	return a
+}
+
+func suppressDefaults(next func([]string, slog.Attr) slog.Attr) func([]string, slog.Attr) slog.Attr {
+	return func(groups []string, a slog.Attr) slog.Attr {
+		if a.Key == slog.TimeKey ||
+			a.Key == slog.LevelKey ||
+			a.Key == slog.MessageKey {
+			return slog.Attr{}
+		}
+		if next == nil {
+			return a
+		}
+		return next(groups, a)
+	}
 }
 
 func projectPath() string {

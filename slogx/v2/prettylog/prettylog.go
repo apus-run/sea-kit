@@ -124,9 +124,11 @@ func (h *Handler) Handle(ctx context.Context, r slog.Record) error {
 		Key:   slog.TimeKey,
 		Value: slog.StringValue(r.Time.Format(timeFormat)),
 	}
+
 	if h.r != nil {
 		timeAttr = h.r([]string{}, timeAttr)
 	}
+
 	if !timeAttr.Equal(slog.Attr{}) {
 		timestamp = colorize(lightGray, timeAttr.Value.String())
 	}
