@@ -1,27 +1,39 @@
 package metadata
 
 import (
-	"context"
-	"reflect"
+	"net/http"
 	"testing"
 )
 
-func TestFromRequest(t *testing.T) {
-	type args struct {
-		r *http.Request
-	}
-	tests := []struct {
-		name string
-		args args
-		want context.Context
+func TestRequestToContext(t *testing.T) {
+	testData := []struct {
+		request *http.Request
+		expect  Metadata
 	}{
-		// TODO: Add test cases.
+		{
+			&http.Request{
+				Header: http.Header{
+					"Foo1": []string{"bar"},
+					"Foo2": []string{"bar", "baz"},
+				},
+			},
+			Metadata{
+				"Foo1": "bar",
+				"Foo2": "bar,baz",
+			},
+		},
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := FromRequest(tt.args.r); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("FromRequest() = %v, want %v", got, tt.want)
+
+	for _, d := range testData {
+		ctx := FromRequest(d.request)
+		md, ok := FromContext(ctx)
+		if !ok {
+			t.Fatalf("Expected metadata for request %+v", d.request)
+		}
+		for k, v := range d.expect {
+			if val := md[k]; val != v {
+				t.Fatalf("Expected %s for key %s for expected md %+v, got md %+v", v, k, d.expect, md)
 			}
-		})
+		}
 	}
 }

@@ -24,3 +24,7 @@ func FromContext(ctx context.Context) *slog.Logger {
 	}
 	return slog.Default()
 }
+
+//func log(ctx context.Context, level slog.Level, msg string, args ...any) {
+//	FromContext(ctx).Log(ctx, level, msg, args...)
+//}

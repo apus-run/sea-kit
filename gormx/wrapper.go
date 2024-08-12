@@ -214,13 +214,13 @@ func (h *Helper) CloseAllDB() {
 	for name, db := range h.dbs {
 		sqlDB, err := db.DB()
 		if err != nil {
-			log.Errorf("get db instance error: ", err.Error())
+			log.Errorf("get db instance error: %v", err.Error())
 			continue
 		}
 
 		err = sqlDB.Close()
 		if err != nil {
-			log.Errorf("close current db error: ", err)
+			log.Errorf("close current db error: %v", err)
 			continue
 		}
 

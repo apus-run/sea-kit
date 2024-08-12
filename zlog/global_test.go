@@ -23,4 +23,5 @@ func TestGlobalLog(t *testing.T) {
 		Time("time", time.Now()),
 		Duration("duration", time.Duration(int64(10))),
 	)
+
 }

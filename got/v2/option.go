@@ -1,4 +1,4 @@
-package ngx
+package got
 
 import (
 	"io"

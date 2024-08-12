@@ -41,26 +41,26 @@ func GenerateToken(keyProvider jwt.Keyfunc, opts ...Option) (string, error) {
 }
 
 // ParseToken 解析jwt token
-func ParseToken(jwtToken string, keyFunc jwt.Keyfunc, opts ...Option) (tokenInfo *jwt.Token, err error) {
+func ParseToken(jwtToken string, keyFunc jwt.Keyfunc, opts ...Option) (token *jwt.Token, err error) {
 	o := Apply(opts...)
 	if keyFunc == nil {
 		return nil, ErrMissingKeyFunc
 	}
 
 	if o.claims != nil {
-		tokenInfo, err = jwt.ParseWithClaims(jwtToken, o.claims(), keyFunc)
+		token, err = jwt.ParseWithClaims(jwtToken, o.claims(), keyFunc)
 	} else {
-		tokenInfo, err = jwt.Parse(jwtToken, keyFunc)
+		token, err = jwt.Parse(jwtToken, keyFunc)
 	}
 
 	// 过期的, 伪造的, 都可以认为是无效token
-	if err != nil || !tokenInfo.Valid {
+	if err != nil || !token.Valid {
 		return nil, ErrTokenInvalid
 	}
 
-	if tokenInfo.Method != o.signingMethod {
+	if token.Method != o.signingMethod {
 		return nil, ErrUnSupportSigningMethod
 	}
 
-	return tokenInfo, nil
+	return token, nil
 }

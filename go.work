@@ -25,7 +25,7 @@ use (
     ./encoding
     ./config
     ./mediator
-    ./http_client
+    ./got
     ./bash
     ./prof
     ./codegen
@@ -46,4 +46,13 @@ use (
 	./retry
 	./errorsx
 	./templatex
+	./id
+	./idempotent
+	./authx
+	./atomicx
+	./errx
+	./logic
+	./mapx
+	./cast
+	.
 )

@@ -4,3 +4,9 @@
 {"level":"info","ts":"2024-05-31T11:07:13.830+0800","caller":"zlog/log_test.go:11","msg":"This is an info message"}
 {"level":"info","ts":"2024-05-31T11:07:13.831+0800","caller":"zlog/log_test.go:12","msg":"我是日志: {route /hello}, {port 8090}","args":[{"Key":"route","Value":"/hello"},{"Key":"port","Value":8090}]}
 {"level":"error","ts":"2024-05-31T11:07:13.831+0800","caller":"zlog/log_test.go:13","msg":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/log_test.go:13\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-06-20T08:52:03.155+0800","caller":"zlog/log_test.go:11","message":"This is an info message"}
+{"level":"info","timestamp":"2024-06-20T08:52:03.156+0800","caller":"zlog/log_test.go:12","message":"我是日志: {route /hello}, {port 8090}","args":[{"Key":"route","Value":"/hello"},{"Key":"port","Value":8090}]}
+{"level":"error","timestamp":"2024-06-20T08:52:03.156+0800","caller":"zlog/log_test.go:13","message":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/log_test.go:13\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-06-20 08:53:05.075","caller":"zlog/log_test.go:11","message":"This is an info message"}
+{"level":"info","timestamp":"2024-06-20 08:53:05.075","caller":"zlog/log_test.go:12","message":"我是日志: {route /hello}, {port 8090}","args":[{"Key":"route","Value":"/hello"},{"Key":"port","Value":8090}]}
+{"level":"error","timestamp":"2024-06-20 08:53:05.076","caller":"zlog/log_test.go:13","message":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/log_test.go:13\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}

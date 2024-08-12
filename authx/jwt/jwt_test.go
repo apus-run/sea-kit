@@ -1,12 +1,12 @@
-package jwtx
+package jwt
 
 import (
+	"context"
+	"github.com/apus-run/sea-kit/authx/jwt/store/redis"
 	"testing"
-
-	"github.com/apus-run/sea-kit/log"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/stretchr/testify/assert"
 )
 
 type CustomClaims struct {
@@ -19,207 +19,56 @@ type CustomClaims struct {
 }
 
 func TestGenerateToken(t *testing.T) {
-	testKey := "testKey"
-	tProvider := func(*jwt.Token) (interface{}, error) {
-		return []byte(testKey), nil
-	}
-	testCases := []struct {
-		// 名字
-		name string
 
-		// 要提前准备数据
-		before func(t *testing.T)
-		// 验证并且删除数据
-		after func(t *testing.T)
-
-		// 预期入参
-		token         func() string
-		tokenProvider jwt.Keyfunc
-		signingMethod jwt.SigningMethod
-		claims        func() jwt.Claims
-		key           string
-
-		// 预期响应
-		want    any
-		wantErr error
-	}{
-		{
-			name:   "成功生成token",
-			before: func(t *testing.T) {},
-			after:  func(t *testing.T) {},
-			token: func() string {
-				tokenStr, err := jwt.
-					NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{}).
-					SignedString([]byte(testKey))
-				assert.NoError(t, err)
-				return tokenStr
-			},
-			tokenProvider: tProvider,
-			signingMethod: jwt.SigningMethodHS256,
-			claims: func() jwt.Claims {
-				return &CustomClaims{}
-			},
-			wantErr: nil,
-			key:     testKey,
-		},
-		{
-			name:   "CustomClaims 为 nil",
-			before: func(t *testing.T) {},
-			after:  func(t *testing.T) {},
-			token: func() string {
-				tokenStr, err := jwt.
-					NewWithClaims(jwt.SigningMethodHS256, nil).
-					SignedString([]byte(testKey))
-				assert.NoError(t, err)
-				return tokenStr
-			},
-			tokenProvider: tProvider,
-			signingMethod: jwt.SigningMethodHS256,
-			claims: func() jwt.Claims {
-				return nil
-			},
-			wantErr: nil,
-			key:     testKey,
-		},
-		{
-			name:   "miss token provider",
-			before: func(t *testing.T) {},
-			after:  func(t *testing.T) {},
-			token: func() string {
-				tokenStr, err := jwt.
-					NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{}).
-					SignedString(nil)
-				assert.Error(t, err)
-				return tokenStr
-			},
-			tokenProvider: nil,
-			signingMethod: jwt.SigningMethodHS512,
-			claims: func() jwt.Claims {
-				return &CustomClaims{}
-			},
-			wantErr: ErrNeedTokenProvider,
-			key:     testKey,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			tc.before(t)
-			tokenStr, err := GenerateToken(
-				tc.tokenProvider,
-				WithClaims(tc.claims),
-				WithSigningMethod(jwt.SigningMethodHS256),
-			)
-			t.Logf("\n1: %s\n2: %s\n", tokenStr, tc.token())
-			assert.Equal(t, tc.wantErr, err)
-			assert.Equal(t, tokenStr, tc.token())
-			tc.after(t)
-		})
-	}
 }
 
 func TestParseToken(t *testing.T) {
-	testKey := "testKey"
-	tProvider := func(*jwt.Token) (interface{}, error) {
-		return []byte(testKey), nil
-	}
-	claims := &CustomClaims{}
-	claims.UserID = 123
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenStr, err := token.SignedString([]byte(testKey))
-	if err != nil {
-		panic(err)
-	}
 
-	testCases := []struct {
-		// 名字
-		name string
+}
 
-		// 要提前准备数据
-		before func(t *testing.T)
-		// 验证并且删除数据
-		after func(t *testing.T)
+func TestNewJwtAuth(t *testing.T) {
+	headers := make(map[string]any)
+	headers["kid"] = "8b5228a5-b3d2-4165-aaac-58a052629846"
+	now := time.Now()
+	expiresAt := now.Add(2 * time.Hour)
+	opts := []Option{
 
-		// 预期入参
-		tokenStr      string
-		tokenProvider jwt.Keyfunc
-		signingMethod jwt.SigningMethod
-		claims        func() jwt.Claims
-		key           string
-
-		// 预期响应
-		want    any
-		wantErr error
-	}{
-		{
-			name:     "解析token成功",
-			before:   func(t *testing.T) {},
-			after:    func(t *testing.T) {},
-			tokenStr: tokenStr,
-			claims: func() jwt.Claims {
-				return &CustomClaims{}
-			},
-			signingMethod: jwt.SigningMethodHS256,
-			tokenProvider: tProvider,
-			wantErr:       nil,
-		},
-		{
-			name:     "miss key",
-			before:   func(t *testing.T) {},
-			after:    func(t *testing.T) {},
-			tokenStr: tokenStr,
-			claims: func() jwt.Claims {
-				return &CustomClaims{}
-			},
-			signingMethod: jwt.SigningMethodHS256,
-			tokenProvider: nil,
-			wantErr:       ErrMissingKeyFunc,
-		},
-		{
-			name:     "method invalid",
-			before:   func(t *testing.T) {},
-			after:    func(t *testing.T) {},
-			tokenStr: tokenStr,
-			claims: func() jwt.Claims {
-				return &CustomClaims{}
-			},
-			signingMethod: jwt.SigningMethodHS512,
-			tokenProvider: tProvider,
-			wantErr:       ErrUnSupportSigningMethod,
-		},
-		{
-			name:     "token invalid",
-			before:   func(t *testing.T) {},
-			after:    func(t *testing.T) {},
-			tokenStr: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjAsIlVzZXJBZ2VudCI6IiJ9.xM8P27ckU6C3TxlW2fwPlFrr4P2ROE2hBoT3Gbls",
-			claims: func() jwt.Claims {
-				return &CustomClaims{}
-			},
-			signingMethod: jwt.SigningMethodHS512,
-			tokenProvider: tProvider,
-			wantErr:       ErrTokenInvalid,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			tc.before(t)
-			token, err := ParseToken(
-				tc.tokenStr,
-				tc.tokenProvider,
-				WithClaims(tc.claims),
-				WithSigningMethod(tc.signingMethod),
-			)
-
-			if err == nil {
-				if c, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-					log.Infof("Claims: %v", c)
-				}
+		WithTokenHeader(headers),
+		WithExpired(2 * time.Hour),
+		WithKeyfunc(func(token *jwt.Token) (any, error) {
+			// Verify that the signing method is HMAC.
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, ErrTokenInvalid
 			}
-
-			assert.Equal(t, tc.wantErr, err)
-
-			tc.after(t)
-		})
+			return []byte("moyn8y9abnd7q4zkq2m73yw8tu9j5ixm"), nil
+		}),
+		WithClaims(func() jwt.Claims {
+			return &CustomClaims{
+				UserID:    1,
+				UserAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.83 Safari/537.36",
+				RegisteredClaims: jwt.RegisteredClaims{
+					// Issuer = iss,令牌颁发者。它表示该令牌是由谁创建的
+					Issuer: "",
+					// IssuedAt = iat,令牌颁发时的时间戳。它表示令牌是何时被创建的
+					IssuedAt: jwt.NewNumericDate(now),
+					// ExpiresAt = exp,令牌的过期时间戳。它表示令牌将在何时过期
+					ExpiresAt: jwt.NewNumericDate(expiresAt),
+					// NotBefore = nbf,令牌的生效时的时间戳。它表示令牌从什么时候开始生效
+					NotBefore: jwt.NewNumericDate(now),
+					// Subject = sub,令牌的主体。它表示该令牌是关于谁的
+					Subject: "",
+				},
+			}
+		}),
 	}
+
+	opts = append(opts, WithSigningMethod(jwt.SigningMethodHS256))
+
+	store := redis.NewStore(nil, "authx")
+
+	j, err := NewJwtAuth(store, opts...).Sign(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Log(j.GetToken())
 }

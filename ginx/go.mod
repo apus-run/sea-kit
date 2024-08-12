@@ -18,6 +18,7 @@ require (
 	github.com/redis/go-redis/v9 v9.4.0
 	github.com/spf13/cast v1.5.1
 	github.com/stretchr/testify v1.8.4
+	github.com/unrolled/secure v1.15.0
 	go.opentelemetry.io/contrib v1.20.0
 	go.opentelemetry.io/otel v1.19.0
 	go.opentelemetry.io/otel/trace v1.19.0

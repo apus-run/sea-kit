@@ -1,6 +1,6 @@
 // 源码来自: github.com/davesavic/clink
 
-package http_client
+package got
 
 import (
 	"bytes"

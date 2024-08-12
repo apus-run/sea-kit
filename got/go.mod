@@ -1,4 +1,4 @@
-module github.com/apus-run/sea-kit/http_client
+module github.com/apus-run/sea-kit/got
 
 go 1.21
 

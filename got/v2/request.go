@@ -1,4 +1,6 @@
-package ngx
+// 源码来自: github.com/smartwalle/ngx
+
+package got
 
 import (
 	"bytes"

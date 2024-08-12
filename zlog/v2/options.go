@@ -1,55 +1,104 @@
-// Copyright 2022 Lingfei Kong <colin404@foxmail.com>. All rights reserved.
-// Use of this source code is governed by a MIT style
-// license that can be found in the LICENSE file. The original repo for
-// this file is https://github.com/superproj/onex.
-//
+package zlog
 
-package log
+// Option is config option.
+type Option func(*Options)
 
-import (
-	"github.com/spf13/pflag"
-	"go.uber.org/zap/zapcore"
-)
-
-// Options contains configuration options for logging.
 type Options struct {
-	// DisableCaller specifies whether to include caller information in the log.
-	DisableCaller bool `json:"disable-caller,omitempty" mapstructure:"disable-caller"`
-	// DisableStacktrace specifies whether to record a stack trace for all messages at or above panic level.
-	DisableStacktrace bool `json:"disable-stacktrace,omitempty" mapstructure:"disable-stacktrace"`
-	// EnableColor specifies whether to output colored logs.
-	EnableColor bool `json:"enable-color"       mapstructure:"enable-color"`
-	// Level specifies the minimum log level. Valid values are: debug, info, warn, error, dpanic, panic, and fatal.
-	Level string `json:"level,omitempty" mapstructure:"level"`
-	// Format specifies the log output format. Valid values are: console and json.
-	Format string `json:"format,omitempty" mapstructure:"format"`
-	// OutputPaths specifies the output paths for the logs.
-	OutputPaths []string `json:"output-paths,omitempty" mapstructure:"output-paths"`
+	// logger options
+	Mode     string // dev or prod
+	LogLevel string // debug, info, warn, error, panic, panic, fatal
+	Encoding string // console or json
+
+	// lumberjack options
+	LogFilename string
+	MaxSize     int
+	MaxBackups  int
+	MaxAge      int
+	Compress    bool
 }
 
-// NewOptions creates a new Options object with default values.
-func NewOptions() *Options {
+// DefaultOptions .
+func DefaultOptions() *Options {
 	return &Options{
-		Level:       zapcore.InfoLevel.String(),
-		Format:      "console",
-		OutputPaths: []string{"stdout"},
+		Mode:     "dev",
+		LogLevel: "info",
+		Encoding: "console",
+
+		LogFilename: "logs.log",
+		MaxSize:     500, // megabytes
+		MaxBackups:  3,
+		MaxAge:      28, //days
+		Compress:    true,
 	}
 }
 
-// Validate verifies flags passed to LogsOptions.
-func (o *Options) Validate() []error {
-	errs := []error{}
-
-	return errs
+func Apply(opts ...Option) *Options {
+	options := DefaultOptions()
+	for _, o := range opts {
+		o(options)
+	}
+	return options
 }
 
-// AddFlags adds command line flags for the configuration.
-func (o *Options) AddFlags(fs *pflag.FlagSet) {
-	fs.StringVar(&o.Level, "log.level", o.Level, "Minimum log output `LEVEL`.")
-	fs.BoolVar(&o.DisableCaller, "log.disable-caller", o.DisableCaller, "Disable output of caller information in the log.")
-	fs.BoolVar(&o.DisableStacktrace, "log.disable-stacktrace", o.DisableStacktrace, ""+
-		"Disable the log to record a stack trace for all messages at or above panic level.")
-	fs.BoolVar(&o.EnableColor, "log.enable-color", o.EnableColor, "Enable output ansi colors in plain format logs.")
-	fs.StringVar(&o.Format, "log.format", o.Format, "Log output `FORMAT`, support plain or json format.")
-	fs.StringSliceVar(&o.OutputPaths, "log.output-paths", o.OutputPaths, "Output paths of log.")
+// WithMode 运行模式
+func WithMode(mode string) Option {
+	return func(o *Options) {
+		o.Mode = mode
+	}
+}
+
+// WithLogLevel 日志级别
+func WithLogLevel(level string) Option {
+	return func(o *Options) {
+		o.LogLevel = level
+	}
+}
+
+// WithEncoding 日志编码
+func WithEncoding(encoding string) Option {
+	return func(o *Options) {
+		o.Encoding = encoding
+	}
+}
+
+// WithFilename 日志文件路径，建议 /logs/log.log，如果为空则不输出日志到文件
+func WithFilename(filename string) Option {
+	return func(o *Options) {
+		o.LogFilename = filename
+	}
+}
+
+// WithMaxSize 日志文件大小
+func WithMaxSize(maxSize int) Option {
+	return func(o *Options) {
+		o.MaxSize = maxSize
+	}
+}
+
+// WithMaxBackups 日志文件最大备份数, 保留日志文件最大的数量，为 0 是保留所有旧的日志文件
+func WithMaxBackups(maxBackups int) Option {
+	return func(o *Options) {
+		o.MaxBackups = maxBackups
+	}
+}
+
+// WithMaxAge 日志文件最大保存时间
+func WithMaxAge(maxAge int) Option {
+	return func(o *Options) {
+		o.MaxAge = maxAge
+	}
+}
+
+// WithCompress 日志文件是否压缩
+func WithCompress(compress bool) Option {
+	return func(o *Options) {
+		o.Compress = compress
+	}
+}
+
+// WithOptions 设置所有配置
+func WithOptions(fn func(options *Options)) Option {
+	return func(options *Options) {
+		fn(options)
+	}
 }

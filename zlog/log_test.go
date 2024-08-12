@@ -14,10 +14,18 @@ func TestLog(t *testing.T) {
 }
 
 /*
-func InitLogger() logger.Logger {
+// InitZapLogger 日志
+func InitZapLogger(mode string) logger.Logger {
+	var cfg zap.Config
 	// 这里我们用一个小技巧，
 	// 就是直接使用 zap 本身的配置结构体来处理
-	cfg := zap.NewDevelopmentConfig()
+	if mode == "prod" {
+		cfg = zap.NewProductionConfig()
+		cfg.InitialFields = map[string]any{"version": "1.0.0"}
+	} else {
+		cfg = zap.NewDevelopmentConfig()
+		cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	}
 	err := viper.UnmarshalKey("log", &cfg)
 	if err != nil {
 		panic(err)

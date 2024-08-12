@@ -1,0 +1,36 @@
+2024-06-20T10:54:20.951+0800	[34mINFO[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:14	test info
+2024-06-20T10:54:20.952+0800	[31mERROR[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:15	test error
+github.com/apus-run/sea-kit/zlog.TestGlobalLog
+	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:15
+testing.tRunner
+	/usr/local/go/src/testing/testing.go:1689
+2024-06-20T10:54:20.952+0800	[33mWARN[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:16	test warn
+2024-06-20T10:54:20.952+0800	[31mERROR[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:18	处理业务逻辑出错	{"path": "/global.go", "route": "/hello", "error": "自定义错误", "time": 1718852060952372000, "duration": 10}
+github.com/apus-run/sea-kit/zlog.TestGlobalLog
+	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:18
+testing.tRunner
+	/usr/local/go/src/testing/testing.go:1689
+2024-06-20T10:58:17.295+0800	[34mINFO[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:14	test info
+2024-06-20T10:58:17.296+0800	[31mERROR[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:15	test error
+github.com/apus-run/sea-kit/zlog.TestGlobalLog
+	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:15
+testing.tRunner
+	/usr/local/go/src/testing/testing.go:1689
+2024-06-20T10:58:17.296+0800	[33mWARN[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:16	test warn
+2024-06-20T10:58:17.297+0800	[31mERROR[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:18	处理业务逻辑出错	{"path": "/global.go", "route": "/hello", "error": "自定义错误", "time": 1718852297296786000, "duration": 10}
+github.com/apus-run/sea-kit/zlog.TestGlobalLog
+	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:18
+testing.tRunner
+	/usr/local/go/src/testing/testing.go:1689
+2024-06-20T11:09:18.689+0800	[34mINFO[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:14	test info
+2024-06-20T11:09:18.690+0800	[31mERROR[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:15	test error
+github.com/apus-run/sea-kit/zlog.TestGlobalLog
+	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:15
+testing.tRunner
+	/usr/local/go/src/testing/testing.go:1689
+2024-06-20T11:09:18.690+0800	[33mWARN[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:16	test warn
+2024-06-20T11:09:18.690+0800	[31mERROR[0m	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:18	处理业务逻辑出错	{"path": "/global.go", "route": "/hello", "error": "自定义错误", "time": 1718852958690905000, "duration": 10}
+github.com/apus-run/sea-kit/zlog.TestGlobalLog
+	/Users/moocss/work/GoProjects/sea-kit/zlog/global_test.go:18
+testing.tRunner
+	/usr/local/go/src/testing/testing.go:1689

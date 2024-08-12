@@ -1,5 +1,10 @@
 package zlog
 
+import (
+	"context"
+	"go.uber.org/zap/zapcore"
+)
+
 type Logger interface {
 	Debugf(format string, args ...any)
 	Infof(format string, args ...any)
@@ -23,13 +28,13 @@ type Logger interface {
 	Printf(format string, args ...any)
 	Println(args ...any)
 
-	With(args ...Field) Logger
+	With(fields ...Field) Logger
+	AddCallerSkip(skip int) Logger
 
 	Close() error
 	Sync() error
+
+	WithContext(ctx context.Context, keyvals ...any) context.Context
 }
 
-type Field struct {
-	Key   string
-	Value any
-}
+type Field = zapcore.Field

@@ -1,7 +1,13 @@
-package jwtx
+package jwt
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"time"
+)
+
+const (
+	// defaultKey holds the default key used to sign a jwt token.
+	defaultKey = "authx::jwt(#)9527"
 )
 
 // Option is jwt option.
@@ -12,12 +18,24 @@ type options struct {
 	signingMethod jwt.SigningMethod
 	claims        func() jwt.Claims
 	tokenHeader   map[string]any
+
+	expired   time.Duration
+	keyfunc   jwt.Keyfunc
+	tokenType string
 }
 
 // DefaultOptions .
 func DefaultOptions() *options {
 	return &options{
+		tokenType:     "Bearer",
+		expired:       2 * time.Hour,
 		signingMethod: jwt.SigningMethodHS256,
+		keyfunc: func(token *jwt.Token) (any, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, ErrTokenInvalid
+			}
+			return []byte(defaultKey), nil
+		},
 	}
 }
 
@@ -49,5 +67,19 @@ func WithClaims(f func() jwt.Claims) Option {
 func WithTokenHeader(header map[string]any) Option {
 	return func(o *options) {
 		o.tokenHeader = header
+	}
+}
+
+// WithKeyfunc set the callback function for verifying the key.
+func WithKeyfunc(keyFunc jwt.Keyfunc) Option {
+	return func(o *options) {
+		o.keyfunc = keyFunc
+	}
+}
+
+// WithExpired set the token expiration time (in seconds, default 2h).
+func WithExpired(expired time.Duration) Option {
+	return func(o *options) {
+		o.expired = expired
 	}
 }

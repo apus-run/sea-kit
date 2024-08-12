@@ -9,9 +9,9 @@ import (
 
 func main() {
 	// Create a new client with retries enabled.
-	client := http_client.NewClient(
+	client := got.NewClient(
 		// Retry the request if the status code is 429 (Too Many Requests).
-		http_client.WithRetries(3, func(req *http.Request, resp *http.Response, err error) bool {
+		got.WithRetries(3, func(req *http.Request, resp *http.Response, err error) bool {
 			fmt.Println("Retrying request")
 
 			return resp.StatusCode == http.StatusTooManyRequests

@@ -95,3 +95,10 @@ func WithCompress(compress bool) Option {
 		o.Compress = compress
 	}
 }
+
+// WithOptions 设置所有配置
+func WithOptions(fn func(options *Options)) Option {
+	return func(options *Options) {
+		fn(options)
+	}
+}

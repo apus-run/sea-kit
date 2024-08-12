@@ -1,0 +1,41 @@
+{"level":"info","ts":"2024-06-18T14:45:23.506+0800","caller":"v2/log_test.go:12","msg":"This is an info message"}
+{"level":"info","ts":"2024-06-18T14:45:23.507+0800","caller":"v2/log_test.go:13","msg":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","ts":"2024-06-18T14:45:23.507+0800","caller":"v2/log_test.go:14","msg":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","ts":"2024-06-18T15:05:03.062+0800","caller":"v2/log_test.go:12","msg":"This is an info message"}
+{"level":"info","ts":"2024-06-18T15:05:03.062+0800","caller":"v2/log_test.go:13","msg":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","ts":"2024-06-18T15:05:03.063+0800","caller":"v2/log_test.go:14","msg":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","ts":"2024-06-18T15:06:55.762+0800","caller":"v2/log_test.go:12","msg":"This is an info message"}
+{"level":"info","ts":"2024-06-18T15:06:55.762+0800","caller":"v2/log_test.go:13","msg":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","ts":"2024-06-18T15:06:55.762+0800","caller":"v2/log_test.go:14","msg":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","ts":"2024-06-18T15:07:22.098+0800","caller":"v2/log_test.go:12","msg":"This is an info message","route":"/hello","port":""}
+{"level":"info","ts":"2024-06-18T15:07:22.098+0800","caller":"v2/log_test.go:13","msg":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","ts":"2024-06-18T15:07:22.099+0800","caller":"v2/log_test.go:14","msg":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","ts":"2024-06-19T21:37:22.816+0800","caller":"v2/log_test.go:12","msg":"This is an info message","route":"/hello","port":""}
+{"level":"info","ts":"2024-06-19T21:37:22.817+0800","caller":"v2/log_test.go:13","msg":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","ts":"2024-06-19T21:37:22.817+0800","caller":"v2/log_test.go:14","msg":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-06-20 11:10:02.489","caller":"v2/log_test.go:12","message":"This is an info message","route":"/hello","port":""}
+{"level":"info","timestamp":"2024-06-20 11:10:02.491","caller":"v2/log_test.go:13","message":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","timestamp":"2024-06-20 11:10:02.491","caller":"v2/log_test.go:14","message":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-07-04 15:16:37.482","caller":"v2/log_test.go:12","message":"This is an info message","route":"/hello","port":""}
+{"level":"info","timestamp":"2024-07-04 15:16:37.482","caller":"v2/log_test.go:13","message":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","timestamp":"2024-07-04 15:16:37.482","caller":"v2/log_test.go:14","message":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-07-04 15:17:56.032","caller":"v2/log_test.go:12","message":"This is an info message","route":"/hello","port":""}
+{"level":"info","timestamp":"2024-07-04 15:17:56.033","caller":"v2/log_test.go:13","message":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","timestamp":"2024-07-04 15:17:56.033","caller":"v2/log_test.go:14","message":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-07-04 15:19:10.782","caller":"v2/global_test.go:17","message":"test info"}
+{"level":"error","timestamp":"2024-07-04 15:19:10.782","caller":"v2/global_test.go:18","message":"test error","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:18\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"warn","timestamp":"2024-07-04 15:19:10.782","caller":"v2/global_test.go:19","message":"test warn"}
+{"level":"error","timestamp":"2024-07-04 15:19:10.782","caller":"v2/global_test.go:21","message":"处理业务逻辑出错","path":"/global.go","route":"/hello","error":"","time":"","duration":"","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:21\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"error","timestamp":"2024-07-04 15:28:52.449","caller":"v2/global_test.go:53","message":"test error","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestContext\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:53\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"error","timestamp":"2024-07-04 15:29:45.565","caller":"v2/global_test.go:53","message":"test error","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestContext\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:53\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-07-04 15:41:11.588","caller":"v2/global_test.go:17","message":"test info"}
+{"level":"error","timestamp":"2024-07-04 15:41:11.589","caller":"v2/global_test.go:18","message":"test error","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:18\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"warn","timestamp":"2024-07-04 15:41:11.589","caller":"v2/global_test.go:19","message":"test warn"}
+{"level":"error","timestamp":"2024-07-04 15:41:11.589","caller":"v2/global_test.go:21","message":"处理业务逻辑出错","path":"/global.go","route":"/hello","error":"","time":"","duration":"","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:21\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-07-04 15:41:11.589","caller":"v2/global_test.go:31","message":"test info"}
+{"level":"info","timestamp":"2024-07-04 15:42:28.480","caller":"v2/global_test.go:16","message":"test info"}
+{"level":"info","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:19","message":"test info"}
+{"level":"error","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:20","message":"test error","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:20\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"warn","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:21","message":"test warn"}
+{"level":"error","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:23","message":"处理业务逻辑出错","path":"/global.go","route":"/hello","error":"","time":"","duration":"","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:23\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
+{"level":"info","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:32","message":"test info"}

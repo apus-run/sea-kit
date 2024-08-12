@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// Create a new client with default options.
-	client := http_client.NewClient()
+	client := got.NewClient()
 
 	// Create a new request with default options.
 	req, err := http.NewRequest(http.MethodGet, "https://httpbin.org/anything", nil)
@@ -22,7 +22,7 @@ func main() {
 
 	// Hydrate the response body into a safemap.
 	var target map[string]any
-	err = http_client.ResponseToJson(resp, &target)
+	err = got.ResponseToJson(resp, &target)
 
 	// Print the target safemap.
 	fmt.Println(target)

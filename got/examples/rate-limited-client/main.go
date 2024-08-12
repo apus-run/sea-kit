@@ -9,8 +9,8 @@ import (
 
 func main() {
 	// Create a new client with a limit of 60 requests per minute (1 per second).
-	client := http_client.NewClient(
-		http_client.WithRateLimit(60),
+	client := got.NewClient(
+		got.WithRateLimit(60),
 	)
 
 	// Create a new request with default options.

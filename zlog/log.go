@@ -210,3 +210,19 @@ func (l *ZapLogger) toZapFields(fields []Field) []zap.Field {
 	}
 	return zapFields
 }
+
+// AddCallerSkip increases the number of callers skipped by caller annotation
+// (as enabled by the AddCaller option). When building wrappers around the
+// Logger and SugaredLogger, supplying this Option prevents zap from always
+// reporting the wrapper code as the caller.
+func (l *ZapLogger) AddCallerSkip(skip int) Logger {
+	lc := l.clone()
+	lc.Logger = lc.Logger.WithOptions(zap.AddCallerSkip(skip))
+	return lc
+}
+
+// clone 深度拷贝 zapLogger.
+func (l *ZapLogger) clone() *ZapLogger {
+	copied := *l
+	return &copied
+}

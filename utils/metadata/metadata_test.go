@@ -2,9 +2,8 @@ package metadata
 
 import (
 	"context"
+	"reflect"
 	"testing"
-
-	"github.com/stretchr/testify/require"
 )
 
 func TestMetadataSet(t *testing.T) {
@@ -21,14 +20,14 @@ func TestMetadataSet(t *testing.T) {
 
 func TestMetadataDelete(t *testing.T) {
 	md := Metadata{
-		"foo": "bar",
-		"baz": "empty",
+		"Foo": "bar",
+		"Baz": "empty",
 	}
 
-	ctx := md.To(context.TODO())
+	ctx := NewContext(context.TODO(), md)
 	ctx = Delete(ctx, "Baz")
 
-	emd, ok := From(ctx)
+	emd, ok := FromContext(ctx)
 	if !ok {
 		t.Fatal("key Key not found")
 	}
@@ -41,7 +40,7 @@ func TestMetadataDelete(t *testing.T) {
 
 func TestMetadataCopy(t *testing.T) {
 	md := Metadata{
-		"foo": "bar",
+		"Foo": "bar",
 		"bar": "baz",
 	}
 
@@ -56,17 +55,17 @@ func TestMetadataCopy(t *testing.T) {
 
 func TestMetadataContext(t *testing.T) {
 	md := Metadata{
-		"foo": "bar",
+		"Foo": "bar",
 	}
 
-	ctx := md.To(context.TODO())
+	ctx := NewContext(context.TODO(), md)
 
-	emd, ok := From(ctx)
+	emd, ok := FromContext(ctx)
 	if !ok {
 		t.Errorf("Unexpected error retrieving metadata, got %t", ok)
 	}
 
-	if emd["foo"] != md["foo"] {
+	if emd["Foo"] != md["Foo"] {
 		t.Errorf("Expected key: %s val: %s, got key: %s val: %s", "Foo", md["Foo"], "Foo", emd["Foo"])
 	}
 
@@ -89,26 +88,27 @@ func TestMergeContext(t *testing.T) {
 		{
 			name: "matching key, overwrite false",
 			args: args{
-				existing:  Metadata{"foo": "bar", "sumo": "demo"},
-				append:    Metadata{"sumo": "demo2"},
+				existing:  Metadata{"Foo": "bar", "Sumo": "demo"},
+				append:    Metadata{"Sumo": "demo2"},
 				overwrite: false,
 			},
-			want: Metadata{"foo": "bar", "sumo": "demo"},
+			want: Metadata{"Foo": "bar", "Sumo": "demo"},
 		},
 		{
 			name: "matching key, overwrite true",
 			args: args{
-				existing:  Metadata{"foo": "bar", "sumo": "demo"},
-				append:    Metadata{"sumo": "demo2"},
+				existing:  Metadata{"Foo": "bar", "Sumo": "demo"},
+				append:    Metadata{"Sumo": "demo2"},
 				overwrite: true,
 			},
-			want: Metadata{"foo": "bar", "sumo": "demo2"},
+			want: Metadata{"Foo": "bar", "Sumo": "demo2"},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := From(Merge(tt.args.existing.To(context.TODO()), tt.args.append, tt.args.overwrite))
-			require.Equal(t, tt.want, got)
+			if got, _ := FromContext(MergeContext(NewContext(context.TODO(), tt.args.existing), tt.args.append, tt.args.overwrite)); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("MergeContext() = %v, want %v", got, tt.want)
+			}
 		})
 	}
 }

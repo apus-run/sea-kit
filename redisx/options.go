@@ -36,7 +36,7 @@ func Apply(opts ...RedisOption) *RedisConfig {
 	return options
 }
 
-// WithRedisConfig 表示自行配置Gorm的配置信息
+// WithRedisConfig 表示自行配置Redis的配置信息
 func WithRedisConfig(f func(options *RedisConfig)) RedisOption {
 	return func(config *RedisConfig) {
 		f(config)
