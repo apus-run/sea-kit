@@ -13,3 +13,5 @@ require (
 replace (
 	github.com/apus-run/sea-kit/errorsx => ../errorsx
 )
+
+exclude github.com/mitchellh/osext v0.0.0-20151018003038-5e2d6d41470f

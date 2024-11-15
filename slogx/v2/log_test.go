@@ -54,7 +54,7 @@ func TestNewLogger(t *testing.T) {
 	//logger = FromContext(ctx)
 	//logger.InfoContext(ctx, "print something")
 
-	l := logger.With(slog.String("sub_logger", "true"))
+	l := logger.WithGroup("moocss").With(slog.String("sub_logger", "true"))
 	ctx = WithContext(ctx, l)
 	logger = FromContext(ctx)
 	t.Logf("%#v", logger)

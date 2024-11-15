@@ -67,7 +67,7 @@ func GetValidator() *Validator {
 
 // V 是 GetValidator 简写
 func V() *Validator {
-	return v
+	return GetValidator()
 }
 
 // ValidateStruct 验证结构体
