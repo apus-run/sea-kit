@@ -1,59 +1,62 @@
-go 1.21
+go 1.21.0
+
+toolchain go1.23.2
 
 use (
-	./utils
-	./conf
-	./log
-	./tls
-	./ginx
-	./gormx
-	./sqlx
-	./websocket
-	./etcd
+	.
+	./algo
+	./atomicx
+	./authx
+	./bash
 	./cache
-	./metrics
-  ./validator
-  ./jwtx
-  ./pagination
-  ./concurrency
-  ./trace
-  ./redisx
-  ./ratelimit
-  ./zlog
-  ./stringx
-  ./slogx
-  ./encoding
-  ./config
-  ./mediator
-  ./got
-  ./bash
-  ./prof
-  ./codegen
-  ./mongo
-  ./ws
-  ./grpcx
-  ./algo
-  ./wechat
-  ./collection
-	./timex
-	./lang
-	./syncx
-	./mathx
-	./task
+	./cast
+	./codegen
+	./collection
+	./concurrency
+	./conf
+	./config
 	./elasticsearch
-	./mq
-	./printer
-	./retry
+	./encoding
 	./errorsx
-	./templatex
+	./errx
+	./etcd
+	./ginx
+	./git
+	./gormx
+	./got
+	./grpcx
 	./id
 	./idempotent
-	./authx
-	./atomicx
-	./errx
+	./jwtx
+	./lang
+	./log
 	./logic
-	./mapx
-	./cast
 	./mail
-	.
+	./mapx
+	./mathx
+	./mediator
+	./metrics
+	./mongo
+	./mq
+	./pagination
+	./printer
+	./prof
+	./ratelimit
+	./redisx
+	./retry
+	./slogx
+	./sqlx
+	./stringx
+	./syncx
+	./task
+	./templatex
+	./timex
+	./tls
+	./trace
+	./utils
+	./validator
+	./websocket
+	./wechat
+	./ws
+	./zlog
 )
