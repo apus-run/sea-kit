@@ -1,6 +1,7 @@
 package retry
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -36,7 +37,7 @@ func TestNewExponentialBackoffRetryStrategy_New(t *testing.T) {
 			maxInterval:     2 * time.Minute,
 			maxRetries:      5,
 			want:            nil,
-			wantErr:         fmt.Errorf("无效的间隔时间 %d, 预期值应大于 0", 0*time.Second),
+			wantErr:         fmt.Errorf("ekit: 无效的间隔时间 %d, 预期值应大于 0", 0*time.Second),
 		},
 		{
 			name:            "return error, initialInterval equals -60",
@@ -44,7 +45,7 @@ func TestNewExponentialBackoffRetryStrategy_New(t *testing.T) {
 			maxInterval:     2 * time.Minute,
 			maxRetries:      5,
 			want:            nil,
-			wantErr:         fmt.Errorf("无效的间隔时间 %d, 预期值应大于 0", -1*time.Second),
+			wantErr:         fmt.Errorf("ekit: 无效的间隔时间 %d, 预期值应大于 0", -1*time.Second),
 		},
 		{
 			name:            "return error, maxInternal > initialInterval",
@@ -52,7 +53,7 @@ func TestNewExponentialBackoffRetryStrategy_New(t *testing.T) {
 			maxInterval:     1 * time.Second,
 			maxRetries:      5,
 			want:            nil,
-			wantErr:         fmt.Errorf("最大重试间隔的时间 [%d] 应大于等于初始重试的间隔时间 [%d] ", 1*time.Second, 5*time.Second),
+			wantErr:         fmt.Errorf("ekit: 最大重试间隔的时间 [%d] 应大于等于初始重试的间隔时间 [%d] ", 1*time.Second, 5*time.Second),
 		},
 	}
 
@@ -68,12 +69,14 @@ func TestNewExponentialBackoffRetryStrategy_New(t *testing.T) {
 func TestExponentialBackoffRetryStrategy_Next(t *testing.T) {
 	testCases := []struct {
 		name     string
+		ctx      context.Context
 		strategy *ExponentialBackoffRetryStrategy
 
 		wantIntervals []time.Duration
 	}{
 		{
 			name: "stop if retries reaches maxRetries",
+			ctx:  context.Background(),
 			strategy: func() *ExponentialBackoffRetryStrategy {
 				s, err := NewExponentialBackoffRetryStrategy(1*time.Second, 10*time.Second, 3)
 				require.NoError(t, err)
@@ -84,6 +87,7 @@ func TestExponentialBackoffRetryStrategy_Next(t *testing.T) {
 		},
 		{
 			name: "initialInterval over maxInterval",
+			ctx:  context.Background(),
 			strategy: func() *ExponentialBackoffRetryStrategy {
 				s, err := NewExponentialBackoffRetryStrategy(1*time.Second, 4*time.Second, 5)
 				require.NoError(t, err)

@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+var _ Strategy = (*ExponentialBackoffRetryStrategy)(nil)
+
 // ExponentialBackoffRetryStrategy 指数退避重试
 type ExponentialBackoffRetryStrategy struct {
 	// 初始重试间隔
@@ -23,15 +25,19 @@ type ExponentialBackoffRetryStrategy struct {
 
 func NewExponentialBackoffRetryStrategy(initialInterval, maxInterval time.Duration, maxRetries int32) (*ExponentialBackoffRetryStrategy, error) {
 	if initialInterval <= 0 {
-		return nil, fmt.Errorf("无效的间隔时间 %d, 预期值应大于 0", initialInterval)
+		return nil, fmt.Errorf("ekit: 无效的初始重试间隔 %d, 预期值应大于 0", initialInterval)
 	} else if initialInterval > maxInterval {
-		return nil, fmt.Errorf("最大重试间隔的时间 [%d] 应大于等于初始重试的间隔时间 [%d] ", maxInterval, initialInterval)
+		return nil, fmt.Errorf("ekit: 无效的最大重试间隔 %d, 预期值应大于等于 %d", maxInterval, initialInterval)
 	}
 	return &ExponentialBackoffRetryStrategy{
 		initialInterval: initialInterval,
 		maxInterval:     maxInterval,
 		maxRetries:      maxRetries,
 	}, nil
+}
+
+func (s *ExponentialBackoffRetryStrategy) Report(err error) Strategy {
+	return s
 }
 
 func (s *ExponentialBackoffRetryStrategy) Next() (time.Duration, bool) {

@@ -39,3 +39,11 @@
 {"level":"warn","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:21","message":"test warn"}
 {"level":"error","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:23","message":"处理业务逻辑出错","path":"/global.go","route":"/hello","error":"","time":"","duration":"","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:23\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1689"}
 {"level":"info","timestamp":"2024-07-04 15:42:28.481","caller":"v2/global_test.go:32","message":"test info"}
+{"level":"info","timestamp":"2024-11-22 16:09:14.995","caller":"v2/global_test.go:17","message":"test info"}
+{"level":"error","timestamp":"2024-11-22 16:09:14.996","caller":"v2/global_test.go:18","message":"test error","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:18\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1690"}
+{"level":"warn","timestamp":"2024-11-22 16:09:14.996","caller":"v2/global_test.go:19","message":"test warn"}
+{"level":"error","timestamp":"2024-11-22 16:09:14.996","caller":"v2/global_test.go:21","message":"处理业务逻辑出错","path":"/global.go","route":"/hello","error":"","time":"","duration":"","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestGlobalLogInit\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/global_test.go:21\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1690"}
+{"level":"info","timestamp":"2024-11-22 16:09:14.996","caller":"v2/global_test.go:30","message":"test info"}
+{"level":"info","timestamp":"2024-11-22 16:10:05.966","caller":"v2/log_test.go:12","message":"This is an info message","route":"/hello","port":""}
+{"level":"info","timestamp":"2024-11-22 16:10:05.967","caller":"v2/log_test.go:13","message":"我是日志: {route 15 0 /hello <nil>}, {port 11 8090  <nil>}"}
+{"level":"error","timestamp":"2024-11-22 16:10:05.967","caller":"v2/log_test.go:14","message":"This is an error message","stacktrace":"github.com/apus-run/sea-kit/zlog/v2.TestLog\n\t/Users/moocss/work/GoProjects/sea-kit/zlog/v2/log_test.go:14\ntesting.tRunner\n\t/usr/local/go/src/testing/testing.go:1690"}

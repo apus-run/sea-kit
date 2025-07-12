@@ -6,6 +6,8 @@ import (
 	"time"
 )
 
+var _ Strategy = (*FixedIntervalRetryStrategy)(nil)
+
 // FixedIntervalRetryStrategy 等间隔重试
 type FixedIntervalRetryStrategy struct {
 	maxRetries int32         // 最大重试次数，如果是 0 或负数，表示无限重试
@@ -15,7 +17,7 @@ type FixedIntervalRetryStrategy struct {
 
 func NewFixedIntervalRetryStrategy(interval time.Duration, maxRetries int32) (*FixedIntervalRetryStrategy, error) {
 	if interval <= 0 {
-		return nil, fmt.Errorf("无效的间隔时间 %d, 预期值应大于 0", interval)
+		return nil, fmt.Errorf("ekit: 无效的间隔时间 %d, 预期值应大于 0", interval)
 	}
 	return &FixedIntervalRetryStrategy{
 		maxRetries: maxRetries,
@@ -29,4 +31,8 @@ func (s *FixedIntervalRetryStrategy) Next() (time.Duration, bool) {
 		return s.interval, true
 	}
 	return 0, false
+}
+
+func (s *FixedIntervalRetryStrategy) Report(err error) Strategy {
+	return s
 }

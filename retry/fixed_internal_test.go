@@ -1,18 +1,21 @@
 package retry
 
 import (
+	"context"
 	"fmt"
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFixedIntervalRetryStrategy_Next(t *testing.T) {
 
 	testCases := []struct {
 		name     string
+		ctx      context.Context
 		s        *FixedIntervalRetryStrategy
 		interval time.Duration
 
@@ -20,16 +23,17 @@ func TestFixedIntervalRetryStrategy_Next(t *testing.T) {
 	}{
 		{
 			name: "init case, retries 0",
+			ctx:  context.Background(),
 			s: &FixedIntervalRetryStrategy{
 				maxRetries: 3,
 				interval:   time.Second,
 			},
-
 			interval:   time.Second,
 			isContinue: true,
 		},
 		{
 			name: "retries equals to MaxRetries 3 after the increase",
+			ctx:  context.Background(),
 			s: &FixedIntervalRetryStrategy{
 				maxRetries: 3,
 				interval:   time.Second,
@@ -40,6 +44,7 @@ func TestFixedIntervalRetryStrategy_Next(t *testing.T) {
 		},
 		{
 			name: "retries over MaxRetries after the increase",
+			ctx:  context.Background(),
 			s: &FixedIntervalRetryStrategy{
 				maxRetries: 3,
 				interval:   time.Second,
@@ -50,6 +55,7 @@ func TestFixedIntervalRetryStrategy_Next(t *testing.T) {
 		},
 		{
 			name: "MaxRetries equals to 0",
+			ctx:  context.Background(),
 			s: &FixedIntervalRetryStrategy{
 				maxRetries: 0,
 				interval:   time.Second,
@@ -59,6 +65,7 @@ func TestFixedIntervalRetryStrategy_Next(t *testing.T) {
 		},
 		{
 			name: "negative MaxRetries",
+			ctx:  context.Background(),
 			s: &FixedIntervalRetryStrategy{
 				maxRetries: -1,
 				interval:   time.Second,
@@ -103,7 +110,7 @@ func TestFixedIntervalRetryStrategy_New(t *testing.T) {
 			interval:   0,
 
 			want:    nil,
-			wantErr: fmt.Errorf("无效的间隔时间 %d, 预期值应大于 0", 0),
+			wantErr: fmt.Errorf("ekit: 无效的重试间隔 %d, 预期值应大于 0", 0),
 		},
 		{
 			name:       "returns error, interval equals to -1",
@@ -111,7 +118,7 @@ func TestFixedIntervalRetryStrategy_New(t *testing.T) {
 			interval:   -1,
 
 			want:    nil,
-			wantErr: fmt.Errorf("无效的间隔时间 %d, 预期值应大于 0", -1),
+			wantErr: fmt.Errorf("ekit: 无效的重试间隔 %d, 预期值应大于 0", -1),
 		},
 	}
 	for _, tt := range testCases {
